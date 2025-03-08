@@ -28,6 +28,10 @@ class Voiture
     #[ORM\Column(length: 255)]
     private ?string $date_premiere_immatriculation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'voitures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $User = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +93,18 @@ class Voiture
     public function setDatePremiereImmatriculation(string $date_premiere_immatriculation): static
     {
         $this->date_premiere_immatriculation = $date_premiere_immatriculation;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): static
+    {
+        $this->User = $User;
 
         return $this;
     }

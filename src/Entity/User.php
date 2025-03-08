@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -48,6 +47,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::BLOB)]
     private $photo = null;
+
+    /**
+     * @var Collection<int, Voiture>
+     */
+    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'User')]
+    private Collection $voitures;
+
+    /**
+     * @var Collection<int, Covoiturage>
+     */
+    #[ORM\ManyToMany(targetEntity: Covoiturage::class, mappedBy: 'User')]
+    private Collection $covoiturages;
+
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'User')]
+    private Collection $avis;
+
+    public function __construct()
+    {
+        $this->voitures = new ArrayCollection();
+        $this->covoiturages = new ArrayCollection();
+        $this->avis = new ArrayCollection();
+    }
 
 
     public function __toString()
@@ -193,6 +217,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto($photo): static
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Voiture>
+     */
+    public function getVoitures(): Collection
+    {
+        return $this->voitures;
+    }
+
+    public function addVoiture(Voiture $voiture): static
+    {
+        if (!$this->voitures->contains($voiture)) {
+            $this->voitures->add($voiture);
+            $voiture->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoiture(Voiture $voiture): static
+    {
+        if ($this->voitures->removeElement($voiture)) {
+            // set the owning side to null (unless already changed)
+            if ($voiture->getUser() === $this) {
+                $voiture->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Covoiturage>
+     */
+    public function getCovoiturages(): Collection
+    {
+        return $this->covoiturages;
+    }
+
+    public function addCovoiturage(Covoiturage $covoiturage): static
+    {
+        if (!$this->covoiturages->contains($covoiturage)) {
+            $this->covoiturages->add($covoiturage);
+            $covoiturage->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCovoiturage(Covoiturage $covoiturage): static
+    {
+        if ($this->covoiturages->removeElement($covoiturage)) {
+            $covoiturage->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getUser() === $this) {
+                $avi->setUser(null);
+            }
+        }
 
         return $this;
     }

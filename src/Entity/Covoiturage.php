@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CovoiturageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +42,17 @@ class Covoiturage
 
     #[ORM\Column]
     private ?float $prix_personne = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'covoiturages')]
+    private Collection $User;
+
+    public function __construct()
+    {
+        $this->User = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -150,6 +163,30 @@ class Covoiturage
     public function setPrixPersonne(float $prix_personne): static
     {
         $this->prix_personne = $prix_personne;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
+    {
+        return $this->User;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->User->contains($user)) {
+            $this->User->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        $this->User->removeElement($user);
 
         return $this;
     }

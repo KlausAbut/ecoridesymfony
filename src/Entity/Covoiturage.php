@@ -17,16 +17,16 @@ class Covoiturage
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?\DateTimeInterface $date_depart = null;
+    private ?\DateTime $date_depart = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $heure_depart = null;
+    private ?\DateTime $heure_depart = null;
 
     #[ORM\Column(length: 255)]
     private ?string $lieu_depart = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_arrivee = null;
+    private ?\DateTime $date_arrivee = null;
 
     #[ORM\Column(length: 255)]
     private ?string $heure_arrivee = null;
@@ -59,24 +59,24 @@ class Covoiturage
         return $this->id;
     }
 
-    public function getDateDepart(): ?\DateTimeInterface
+    public function getDateDepart(): ?\DateTime
     {
         return $this->date_depart;
     }
 
-    public function setDateDepart(\DateTimeInterface $date_depart): static
+    public function setDateDepart(\DateTime $date_depart): static
     {
         $this->date_depart = $date_depart;
 
         return $this;
     }
 
-    public function getHeureDepart(): ?\DateTimeInterface
+    public function getHeureDepart(): ?\DateTime
     {
         return $this->heure_depart;
     }
 
-    public function setHeureDepart(\DateTimeInterface $heure_depart): static
+    public function setHeureDepart(\DateTime $heure_depart): static
     {
         $this->heure_depart = $heure_depart;
 
@@ -95,12 +95,12 @@ class Covoiturage
         return $this;
     }
 
-    public function getDateArrivee(): ?\DateTimeInterface
+    public function getDateArrivee(): ?\DateTime
     {
         return $this->date_arrivee;
     }
 
-    public function setDateArrivee(\DateTimeInterface $date_arrivee): static
+    public function setDateArrivee(\DateTime $date_arrivee): static
     {
         $this->date_arrivee = $date_arrivee;
 

@@ -166,6 +166,18 @@ class Covoiturage
 
         return $this;
     }
+    private $publishedAt;
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
+        return $this;
+    }
 
     /**
      * @return Collection<int, User>

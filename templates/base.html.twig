@@ -12,6 +12,12 @@
         {% endblock %}
     </head>
     <body>
+        <nav>
+            <ul>
+                <li><a href="{{ path('covoiturage_list') }}">Liste Covoiturage</a></li>
+                <li><a href="{{ path('covoiturage_create') }}">Creé Covoiturage</a></li>
+            </ul>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>

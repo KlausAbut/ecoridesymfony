@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>List covoiturage</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date_Depart</th>
+                <th>heure_depart</th>
+                <th>Actions</th>
+            </tr>
+        </thead>    
+    
+         <tbody>
+            {% for covoiturage in covoiturages %}
+                <tr>
+                    <td>{{ covoiturage.dateDepart|date('Y-m-d H:i:s')  }}</td>
+                    <td>{{ covoiturage.heureDepart|date('Y-m-d H:i:s')  }}</td>
+                    <td>
+                        <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}">Show</a>
+                        <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}">Editer</a>
+                        <a href="{{ path('covoiturage_delete', {'id': covoiturage.id}) }}">Supprimer</a>
+                    </td>
+                </tr>
+             {% else %}
+                <tr>
+                    <td colspan="3">Aucun covoiturage trouvé</td>
+                </tr> 
+            {% endfor %} 
+        </tbody>
+    </table>
+{% endblock %} 

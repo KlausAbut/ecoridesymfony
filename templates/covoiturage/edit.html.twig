@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    <h2>Ajuter un Covoiturage</h2>
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.date_depart) }}
+    {{ form_row(form.heure_depart) }}
+    {{ form_row(form.lieu_depart) }}
+    
+    {{ form_end(form) }}
+
+{% endblock %} 

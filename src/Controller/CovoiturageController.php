@@ -19,7 +19,7 @@ class CovoiturageController extends AbstractController
     #[Route('/', name:'list')]
     public function list(CovoiturageRepository $covoiturageRepository): Response
     {
-        return $this->render('covoiturage/list.html.twig', [
+        return $this->render('covoiturage/listco.html.twig', [
             'covoiturages' => $covoiturageRepository->findAll(),
         ]);
     }
@@ -27,7 +27,7 @@ class CovoiturageController extends AbstractController
     #[Route('/show/{id}', name:'show')]
     public function show(Covoiturage $covoiturage = null)
     {
-        return $this->render('covoiturage/show.html.twig', [
+        return $this->render('covoiturage/showco.html.twig', [
             'covoiturage' => $covoiturage
         ]);
 
@@ -61,9 +61,9 @@ class CovoiturageController extends AbstractController
             return $this->redirectToRoute('covoiturage_list');
         }
 
-        return $this->render('covoiturage/edit.html.twig', [
+        return $this->render('covoiturage/editco.html.twig', [
             'form' => $form,
-            'is_Create' => $isCreate
+            'is_create' => $isCreate,
         ]);
     }
 

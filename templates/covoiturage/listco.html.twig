@@ -2,22 +2,22 @@
 
 {% block body %}
 
-    <h1>List covoiturage</h1>
+    <h1>List des covoiturage</h1>
 
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <th>Date_Depart</th>
+                <th>date_depart</th>
                 <th>heure_depart</th>
-                <th>Actions</th>
+                <th>date_arrivee</th>
             </tr>
         </thead>    
     
          <tbody>
             {% for covoiturage in covoiturages %}
                 <tr>
-                    <td>{{ covoiturage.dateDepart|date('Y-m-d H:i:s')  }}</td>
-                    <td>{{ covoiturage.heureDepart|date('Y-m-d H:i:s')  }}</td>
+                    <td>{{ covoiturage.dateDepart|date('Y-m-d')  }}</td>
+                    <td>{{ covoiturage.heureDepart|date('Y-m-d')  }}</td>
                     <td>
                         <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}">Show</a>
                         <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}">Editer</a>

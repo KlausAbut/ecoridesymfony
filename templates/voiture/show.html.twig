@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <article>
+        <h2>{{ voiture.model }}</h2>
+       {# 
+
+        {{ voiture.content }} #}
+
+        <p>Voiture créé le {{ voiture.publishedAt|date('Y-m-d H:i:s') }} </p>
+    </article>
+
+{% endblock %} 

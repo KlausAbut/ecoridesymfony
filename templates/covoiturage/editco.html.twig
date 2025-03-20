@@ -3,13 +3,13 @@
 
 {% block body %}
 
-    <h2>Ajuter un Covoiturage</h2>
+    <h2>{{ is_create ? 'Ajouter une covoiturage' : 'Modifier cet covoiturage' }}</h2>
 
     {{ form_start(form) }}
 
     {{ form_row(form.date_depart) }}
     {{ form_row(form.heure_depart) }}
-    {{ form_row(form.lieu_depart) }}
+    {{ form_row(form.date_arrivee) }}
     
     {{ form_end(form) }}
 

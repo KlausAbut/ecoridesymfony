@@ -25,7 +25,7 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/show/{id}', name:'show')]
-    public function show(Covoiturage $covoiturage = null)
+    public function show(Covoiturage $covoiturage = null): Response
     {
         return $this->render('covoiturage/showco.html.twig', [
             'covoiturage' => $covoiturage
@@ -41,12 +41,15 @@ class CovoiturageController extends AbstractController
         if(!$covoiturage){
             $isCreate = true;
             $covoiturage = new Covoiturage();
+
+            $covoiturage->setCreatedBy($this->getUser());
+            
         }
-        $covoiturage = new Covoiturage();
+        /**$covoiturage = new Covoiturage();*/
 
         $form = $this->createForm(CovoiturageType::class, $covoiturage);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Covoiturage $covoiturage */
             $covoiturage = $form->getData();

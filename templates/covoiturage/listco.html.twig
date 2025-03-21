@@ -7,17 +7,43 @@
     <table class="table">
         <thead>
             <tr>
-                <th>date_depart</th>
-                <th>heure_depart</th>
-                <th>date_arrivee</th>
+                <th>Créé par</th>
+                <th>Voiture utilisée</th>
+                <th>Date départ</th>
+                <th>Heure départ</th>
+                <th>Lieu départ</th>
+                <th>Date arrivée</th>
+                <th>Heure arrivée</th>
+                <th>Lieu arrivée</th>
+                <th>Actions</th>
             </tr>
         </thead>    
     
          <tbody>
             {% for covoiturage in covoiturages %}
                 <tr>
-                    <td>{{ covoiturage.dateDepart|date('Y-m-d')  }}</td>
-                    <td>{{ covoiturage.heureDepart|date('Y-m-d')  }}</td>
+                    <td>
+                        {% if covoiturage.createdBy is not null %}
+                        <strong>{{ covoiturage.createdBy.username }}</strong>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if covoiturage.voiture is not null %}
+                        <strong>{{ covoiturage.voiture.modele }}</strong><br>
+                        Immatriculation : {{ covoiturage.voiture.immatriculation }}<br>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ covoiturage.dateDepart|date('Y-m-d') }}</td>
+                    <td>{{ covoiturage.heureDepart|date('H:i') }}</td>
+                    <td>{{ covoiturage.lieuDepart }}</td>
+                    <td>{{ covoiturage.dateArrivee|date('Y-m-d') }}</td>
+                    <td>{{ covoiturage.heureArrivee|date('H:i') }}</td>
+                    <td>{{ covoiturage.lieuArrivee }}</td>
+                    
                     <td>
                         <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}">Show</a>
                         <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}">Editer</a>

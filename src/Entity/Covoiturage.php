@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CovoiturageRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -16,20 +17,20 @@ class Covoiturage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?\DateTime $date_depart = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $heure_depart = null;
+    private ?\DateTimeInterface $date_depart = null;
+
+    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    private ?\DateTimeInterface $heure_depart = null;
 
     #[ORM\Column(length: 255)]
     private ?string $lieu_depart = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $date_arrivee = null;
+    private ?\DateTimeInterface $date_arrivee = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $heure_arrivee = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    private ?DateTimeInterface $heure_arrivee = null;
 
     #[ORM\Column(length: 255)]
     private ?string $lieu_arrivee = null;
@@ -43,15 +44,28 @@ class Covoiturage
     #[ORM\Column]
     private ?float $prix_personne = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'covoiturages')]
-    private Collection $User;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $publishedAt = null;
+
+    // Propriété pour stocker l'utilisateur qui a créé le covoiturage
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $createdBy = null;
+
+    // Propriété pour la voiture utilisée dans le covoiturage
+    #[ORM\ManyToOne(targetEntity: Voiture::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Voiture $voiture = null;
+
+    // Propriété pour les participants au covoiturage (autres utilisateurs)
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'participatedCovoiturages')]
+    #[ORM\JoinTable(name: "covoiturage_participant")]
+    private Collection $participants;
+    
 
     public function __construct()
     {
-        $this->User = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,24 +73,24 @@ class Covoiturage
         return $this->id;
     }
 
-    public function getDateDepart(): ?\DateTime
+    public function getDateDepart(): ?\DateTimeInterface
     {
         return $this->date_depart;
     }
 
-    public function setDateDepart(\DateTime $date_depart): static
+    public function setDateDepart(\DateTimeInterface $date_depart): static
     {
         $this->date_depart = $date_depart;
 
         return $this;
     }
 
-    public function getHeureDepart(): ?\DateTime
+    public function getHeureDepart(): ?\DateTimeInterface
     {
         return $this->heure_depart;
     }
 
-    public function setHeureDepart(\DateTime $heure_depart): static
+    public function setHeureDepart(\DateTimeInterface $heure_depart): static
     {
         $this->heure_depart = $heure_depart;
 
@@ -95,24 +109,24 @@ class Covoiturage
         return $this;
     }
 
-    public function getDateArrivee(): ?\DateTime
+    public function getDateArrivee(): ?\DateTimeInterface
     {
         return $this->date_arrivee;
     }
 
-    public function setDateArrivee(\DateTime $date_arrivee): static
+    public function setDateArrivee(\DateTimeInterface $date_arrivee): static
     {
         $this->date_arrivee = $date_arrivee;
 
         return $this;
     }
 
-    public function getHeureArrivee(): ?string
+    public function getHeureArrivee(): ?\DateTimeInterface
     {
         return $this->heure_arrivee;
     }
 
-    public function setHeureArrivee(string $heure_arrivee): static
+    public function setHeureArrivee(\DateTimeInterface $heure_arrivee): static
     {
         $this->heure_arrivee = $heure_arrivee;
 
@@ -166,7 +180,7 @@ class Covoiturage
 
         return $this;
     }
-    private $publishedAt;
+    
 
     public function getPublishedAt(): ?\DateTimeInterface
     {
@@ -179,27 +193,47 @@ class Covoiturage
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getCreatedBy(): ?User
     {
-        return $this->User;
+        return $this->createdBy;
     }
 
-    public function addUser(User $user): static
+    public function setCreatedBy(User $user): self
     {
-        if (!$this->User->contains($user)) {
-            $this->User->add($user);
-        }
-
+        $this->createdBy = $user;
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function getVoiture(): ?Voiture
     {
-        $this->User->removeElement($user);
+        return $this->voiture;
+    }
 
+    public function setVoiture(Voiture $voiture): self
+    {
+        $this->voiture = $voiture;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(User $user): static
+    {
+        if (!$this->participants->contains($user)) {
+            $this->participants->add($user);
+        }
+        return $this;
+    }
+
+    public function removeParticipant(User $user): static
+    {
+        $this->participants->removeElement($user);
         return $this;
     }
 }

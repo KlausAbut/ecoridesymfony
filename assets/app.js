@@ -7,7 +7,7 @@ import './bootstrap.js';
  */
 
 import 'bootstrap';
-import '@poppersjs/core';
+import '@popperjs/core';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/app.css';

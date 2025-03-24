@@ -140,7 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-
+        
         return array_unique($roles);
     }
 
@@ -263,7 +263,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->covoiturages->contains($covoiturage)) {
             $this->covoiturages->add($covoiturage);
-            $covoiturage->addUser($this);
+            $covoiturage->addParticipant($this);
         }
 
         return $this;
@@ -272,7 +272,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCovoiturage(Covoiturage $covoiturage): static
     {
         if ($this->covoiturages->removeElement($covoiturage)) {
-            $covoiturage->removeUser($this);
+            $covoiturage->removeParticipant($this);
         }
 
         return $this;

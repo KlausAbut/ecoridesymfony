@@ -3,16 +3,21 @@
 
 {% block body %}
    <article class="card">
-        <div class="card-body">
-        <h2>{{ covoiturage.dateDepart|date('Y-m-d') }}</h2>
-        <h2>{{ covoiturage.heureDepart|date('H:i') }}</h2>
-        <h2>{{ covoiturage.dateArrivee|date('Y-m-d') }}</h2>
-        <h2>{{ covoiturage.heureArrivee|date('H:i') }}</h2>
-        <h2>{{ covoiturage.lieuDepart }}</h2>
-        <h2>{{ covoiturage.lieuArrivee }}</h2>
-        <h2>{{ covoiturage.statut }}</h2>
-        <h2>{{ covoiturage.nbPlace }}</h2>
-        <h2>{{ covoiturage.prixPersonne }}</h2>
+        <div class="card-header">
+        {% if is_granted("ROLE_ADMIN") and covoiturage.statut == 'DRAFT' %}
+            <a href="{{ path('admin_covoiturage_validate', {'id':covoiturage.id}) }}">Valider</a>
+        {% endif %}
+            <div class="card-body">
+                <h2>{{ covoiturage.dateDepart|date('Y-m-d') }}</h2>
+                <h2>{{ covoiturage.heureDepart|date('H:i') }}</h2>
+                <h2>{{ covoiturage.dateArrivee|date('Y-m-d') }}</h2>
+                <h2>{{ covoiturage.heureArrivee|date('H:i') }}</h2>
+                <h2>{{ covoiturage.lieuDepart }}</h2>
+                <h2>{{ covoiturage.lieuArrivee }}</h2>
+                <h2>{{ covoiturage.statut }}</h2>
+                <h2>{{ covoiturage.nbPlace }}</h2>
+                <h2>{{ covoiturage.prixPersonne }}</h2>
+            </div>
        </div>
 
         <p>Covoiturage créé le {{ covoiturage.publishedAt|date('Y-m-d H:i:s') }} </p>

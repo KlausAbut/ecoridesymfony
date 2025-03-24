@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\VoitureRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('voiture', name: 'voiture_')]
 class VoitureController extends AbstractController
@@ -34,6 +35,7 @@ class VoitureController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, EntityManagerInterface $em, ?Voiture $voiture = null): Response
     {
         $isCreate = false;
@@ -68,6 +70,7 @@ class VoitureController extends AbstractController
     }
 
     #[Route('/delete/{id}', name:'delete')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(EntityManagerInterface $em, Voiture $voiture): RedirectResponse
     {
         $em->remove($voiture);

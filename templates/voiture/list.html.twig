@@ -21,7 +21,10 @@
                     <td>
                         <a href="{{ path('voiture_show', {'id': voiture.id}) }}">Show</a>
                         <a href="{{ path('voiture_edit', {'id': voiture.id}) }}">Editer</a>
+
+                        {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('voiture_delete', {'id': voiture.id}) }}">Supprimer</a>
+                        {% endif %}
                     </td>
                 </tr>
              {% else %}

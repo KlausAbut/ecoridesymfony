@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CovoiturageRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 #[Route('covoiturage', name: 'covoiturage_')]
 class CovoiturageController extends AbstractController
@@ -35,6 +37,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;
@@ -71,6 +74,7 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/delete/{id}', name:'delete')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(EntityManagerInterface $em, Covoiturage $covoiturage): RedirectResponse
     {
         $em->remove($covoiturage);

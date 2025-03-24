@@ -47,7 +47,14 @@
                     <td>
                         <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}">Show</a>
                         <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}">Editer</a>
+
+                        {% if is_granted("ROLE_ADMIN") and covoiturage.statut == 'DRAFT' %}
+                            <a href="#">Valider</a>
+                        {% endif %}
+
+                        {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('covoiturage_delete', {'id': covoiturage.id}) }}">Supprimer</a>
+                        {% endif %}
                     </td>
                 </tr>
              {% else %}

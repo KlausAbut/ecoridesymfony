@@ -5,9 +5,14 @@
 {% block body %}
 
     <article class="card">
-        <div class="card-body">
-            <h2>{{ voiture.modele }}</h2>
-            <h3>{{ voiture.Immatriculation}}</h3>
+        <div class="card-header">
+        {% if is_granted("ROLE_ADMIN") and voiture.statut == 'DRAFT' %}
+            <a href="#">Valider</a>
+        {% endif %}
+            <div class="card-body">
+                <h2>{{ voiture.modele }}</h2>
+                <h3>{{ voiture.Immatriculation}}</h3>
+            </div>    
         </div>
         <p>Voiture créé le {{ voiture.datePremiereImmatriculation|date('Y-m-d H:i:s') }} </p> 
     </article>

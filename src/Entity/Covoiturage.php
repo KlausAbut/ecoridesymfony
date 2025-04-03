@@ -58,7 +58,7 @@ class Covoiturage
     private ?Voiture $voiture = null;
 
     // Propriété pour les participants au covoiturage (autres utilisateurs)
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'participatedCovoiturages')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'covoiturages')]
     #[ORM\JoinTable(name: "covoiturage_participant")]
     private Collection $participants;
     

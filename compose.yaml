@@ -19,6 +19,7 @@ services:
       - ./var/db_data:/var/lib/mysql
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: ecoride_symfony
     networks:
       - ecoride_symfony
 
@@ -27,8 +28,29 @@ services:
     container_name: ecoride_symfony_phpmyadmin
     ports:
       - 8780:80
+    environment:
+      PMA_HOST: mysql
     networks:
       - ecoride_symfony  
 
+###> doctrine/mongodb-odm-bundle ###
+  mongodb:
+    # In production, you may want to use a managed database service
+    image: mongodb/mongodb-atlas-local:latest
+    environment:
+      - MONGODB_INITDB_DATABASE=${MONGODB_DB:-app}
+      # You should definitely set a root username and password in production
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_USERNAME:-}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-}
+    volumes:
+      - mongodb_data:/data/db:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/mongodb/data:/data/db:rw
+###< doctrine/mongodb-odm-bundle ###
+
 networks:
   ecoride_symfony:
+volumes:
+###> doctrine/mongodb-odm-bundle ###
+  mongodb_data:
+###< doctrine/mongodb-odm-bundle ###

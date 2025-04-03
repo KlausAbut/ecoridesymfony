@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Covoiturage;
 use App\Form\CovoiturageType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +12,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CovoiturageRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\ExpressionLanguage\Expression;
 
 #[Route('covoiturage', name: 'covoiturage_')]
 class CovoiturageController extends AbstractController
@@ -27,6 +25,7 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/show/{id}', name:'show')]
+    #[IsGranted('show','covoiturage')]
     public function show(Covoiturage $covoiturage = null): Response
     {
         return $this->render('covoiturage/showco.html.twig', [
@@ -37,7 +36,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('edit', 'covoiturage')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;

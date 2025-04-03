@@ -48,10 +48,6 @@ class CovoiturageType extends AbstractType
                 'multiple' => true,
                 'expanded' => true, // ou false si vous souhaitez un select multiple
             ])
-            ->add('voiture', EntityType::class, [
-                'class' => Voiture::class,
-                'choice_label' => 'modele', // ou une autre propriété à afficher
-            ])
             ->add('submit', SubmitType::class);
     }
 

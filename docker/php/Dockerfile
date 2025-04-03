@@ -1,5 +1,23 @@
 FROM php:8.2-apache
 
+# Mets à jour et installe les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    pkg-config \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# Copie ton fichier php.ini personnalisé (si nécessaire)
+# Le fichier php.ini doit être placé dans le même dossier que ton Dockerfile ou adapter le chemin.
+COPY php.ini /usr/local/etc/php/php.ini
+COPY docker-php-ext-mongodb.ini /usr/local/etc/php/conf.d/
+
+
+# Continue avec le reste de ton Dockerfile (copie du projet, configuration Apache, etc.)
+COPY . /var/www/html
+
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN apt-get update \
@@ -24,3 +42,4 @@ RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions amqp
 
 WORKDIR /var/www
+

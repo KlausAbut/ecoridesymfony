@@ -4,60 +4,72 @@ namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
-/**
- * @MongoDB\Document(collection="user_credit")
- */
+#[MongoDB\Document]
 class UserCredit
 {
-    /**
-     * @MongoDB\Id
-     */
-    private $id;
+    #[MongoDB\Id]
+    private ?string $id = null;
+
+    #[MongoDB\Field(type: 'string')]
+    private string $userId;
+
+    #[MongoDB\Field(type: 'float')]
+    private float $amount;
+
+  
+    
 
     /**
-     * L'identifiant de l'utilisateur dans ta base relationnelle.
-     * 
-     * @MongoDB\Field(type="string")
+     * Get the value of id
      */
-    private $userId;
-
-    /**
-     * Le crédit attribué à l'utilisateur.
-     * 
-     * @MongoDB\Field(type="int")
-     */
-    private $credit;
-
-    public function __construct(string $userId, int $credit = 20)
-    {
-        $this->userId = $userId;
-        $this->credit = $credit;
-    }
-
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getUserId(): ?string
+    /**
+     * Set the value of id
+     */
+    public function setId(?string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of userId
+     */
+    public function getUserId(): string
     {
         return $this->userId;
     }
 
+    /**
+     * Set the value of userId
+     */
     public function setUserId(string $userId): self
     {
         $this->userId = $userId;
+
         return $this;
     }
 
-    public function getCredit(): ?int
+    /**
+     * Get the value of amount
+     */
+    public function getAmount(): float
     {
-        return $this->credit;
+        return $this->amount;
     }
 
-    public function setCredit(int $credit): self
+    /**
+     * Set the value of amount
+     */
+    public function setAmount(float $amount): self
     {
-        $this->credit = $credit;
+        $this->amount = $amount;
+
         return $this;
     }
 }

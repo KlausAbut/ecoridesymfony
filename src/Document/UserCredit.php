@@ -2,27 +2,37 @@
 
 namespace App\Document;
 
+use App\Entity\User;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use App\Repository\UserCreditRepository;
 
-#[MongoDB\Document]
-class UserCredit
+#[MongoDB\Document(repositoryClass: UserCreditRepository::class)]
+class UserCredit 
 {
     #[MongoDB\Id]
-    private ?string $id = null;
+    private $id;
 
-    #[MongoDB\Field(type: 'string')]
-    private string $userId;
+    #[MongoDB\Field(type:'int')]
+    private int $userId;
 
-    #[MongoDB\Field(type: 'float')]
-    private float $amount;
+    #[MongoDB\Field(type: 'int')]
+    private $amount = 20;
 
-  
-    
+    #[MongoDB\Field(type: 'date')]
+    private $lastUpdated;
+
+    // Getters/Setters
+   
+    public function addCredit(int $value): void
+    {
+        $this->amount += $value;
+        $this->lastUpdated = new \DateTime();
+    }
 
     /**
      * Get the value of id
      */
-    public function getId(): ?string
+    public function getId()
     {
         return $this->id;
     }
@@ -30,7 +40,7 @@ class UserCredit
     /**
      * Set the value of id
      */
-    public function setId(?string $id): self
+    public function setId($id): self
     {
         $this->id = $id;
 
@@ -38,17 +48,17 @@ class UserCredit
     }
 
     /**
-     * Get the value of userId
+     * Get the value of user
      */
-    public function getUserId(): string
+    public function getUserId()
     {
         return $this->userId;
     }
 
     /**
-     * Set the value of userId
+     * Set the value of user
      */
-    public function setUserId(string $userId): self
+    public function setUserId(int $userId): self
     {
         $this->userId = $userId;
 
@@ -56,9 +66,27 @@ class UserCredit
     }
 
     /**
+     * Get the value of lastUpdated
+     */
+    public function getLastUpdated()
+    {
+        return $this->lastUpdated;
+    }
+
+    /**
+     * Set the value of lastUpdated
+     */
+    public function setLastUpdated($lastUpdated): self
+    {
+        $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+     /**
      * Get the value of amount
      */
-    public function getAmount(): float
+    public function getAmount()
     {
         return $this->amount;
     }
@@ -66,10 +94,32 @@ class UserCredit
     /**
      * Set the value of amount
      */
-    public function setAmount(float $amount): self
+    public function setAmount($amount): self
     {
         $this->amount = $amount;
 
         return $this;
     }
+
+    #[MongoDB\Field(type: 'collection')]
+    private array $transactions = [];
+
+    public function logTransaction(string $type, int $amount): void
+    {
+        $this->transactions[] = [
+            'type' => $type, // "purchase", "ride_payment", "refund"
+            'amount' => $amount,
+            'date' => new \DateTime()
+        ];
+    }
+
+    public static function createForUser(User $user): self
+    {
+        $credit = new self();
+        $credit->setUserId($user->getId());
+        $credit->setAmount(20); // Crédit initial
+        return $credit;
+    }
 }
+   
+

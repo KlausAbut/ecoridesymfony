@@ -40,4 +40,19 @@ class CovoiturageRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function rechercherTrajets(string $depart, string $arrivee, \DateTime $date): array
+    {
+    return $this->createQueryBuilder('c')
+        ->where('c.villeDepart = :depart')
+        ->andWhere('c.villeArrivee = :arrivee')
+        ->andWhere('DATE(c.dateDepart) = :date')
+        ->andWhere('c.placesDisponible > 0')
+        ->setParameter('depart', $depart)
+        ->setParameter('arrivee', $arrivee)
+        ->setParameter('date', $date->format('Y-m-d'))
+        ->getQuery()
+        ->getResult();
+    }
+
 }

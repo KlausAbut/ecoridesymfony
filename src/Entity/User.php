@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity;
+
+use App\Document\UserCredit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -8,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+
 
 
 
@@ -47,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $date_naissance = null;
 
-    #[ORM\Column(type: Types::BLOB)]
+    #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $photo = null;
 
     /**
@@ -55,6 +58,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'user')]
     private Collection $voitures;
+
+     /**
+     * @MongoDB\ReferenceOne(targetDocument=UserCredit::class, mappedBy="user")
+     */
+    private $credit;
+
+    public function getCredit(): ?UserCredit
+    {
+        return $this->credit;
+    }
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Participation::class)]
+    private Collection $participations;
+
+    public function getParticipations(): Collection
+    {
+    return $this->participations;
+    }
+
 
     /**
      * @var Collection<int, Covoiturage>
@@ -247,7 +269,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeVoiture(Voiture $voiture): static
     {
         if ($this->voitures->removeElement($voiture)) {
-            // set the owning side to null (unless already changed)
+           
             if ($voiture->getUser() === $this) {
                 $voiture->setUser(null);
             }
@@ -304,7 +326,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeAvi(Avis $avi): static
     {
         if ($this->avis->removeElement($avi)) {
-            // set the owning side to null (unless already changed)
+            
             if ($avi->getUser() === $this) {
                 $avi->setUser(null);
             }

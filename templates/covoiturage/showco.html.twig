@@ -1,26 +1,76 @@
 {% extends 'base.html.twig' %}
 
-
 {% block body %}
-   <article class="card">
-        <div class="card-header">
+<article class="card mt-4">
+    <div class="card-header">
         {% if is_granted("ROLE_ADMIN") and covoiturage.statut == 'DRAFT' %}
-            <a href="{{ path('admin_covoiturage_validate', {'id':covoiturage.id}) }}">Valider</a>
+            <a href="{{ path('admin_covoiturage_validate', {'id':covoiturage.id}) }}" class="btn btn-warning">Valider</a>
         {% endif %}
-            <div class="card-body">
-                <h2>{{ covoiturage.dateDepart|date('Y-m-d') }}</h2>
-                <h2>{{ covoiturage.heureDepart|date('H:i') }}</h2>
-                <h2>{{ covoiturage.dateArrivee|date('Y-m-d') }}</h2>
-                <h2>{{ covoiturage.heureArrivee|date('H:i') }}</h2>
-                <h2>{{ covoiturage.lieuDepart }}</h2>
-                <h2>{{ covoiturage.lieuArrivee }}</h2>
-                <h2>{{ covoiturage.statut }}</h2>
-                <h2>{{ covoiturage.nbPlace }}</h2>
-                <h2>{{ covoiturage.prixPersonne }}</h2>
-            </div>
-       </div>
+    </div>
 
-        <p>Covoiturage créé le {{ covoiturage.publishedAt|date('Y-m-d H:i:s') }} </p>
-    </article>
+    <div class="card-body">
+        <h2>Trajet du {{ covoiturage.dateDepart|date('Y-m-d') }} à {{ covoiturage.heureDepart|date('H:i') }}</h2>
+        <p><strong>Départ :</strong> {{ covoiturage.lieuDepart }}</p>
+        <p><strong>Arrivée :</strong> {{ covoiturage.lieuArrivee }}</p>
+        <p><strong>Arrivée prévue :</strong> {{ covoiturage.dateArrivee|date('Y-m-d') }} à {{ covoiturage.heureArrivee|date('H:i') }}</p>
+        <p><strong>Places disponibles :</strong> {{ covoiturage.nbPlace }}</p>
+        <p><strong>Prix par personne :</strong> {{ covoiturage.prixPersonne }} €</p>
+        <p><strong>Statut :</strong> {{ covoiturage.statut }}</p>
+        <p><strong>Publié le :</strong> {{ covoiturage.publishedAt|date('Y-m-d H:i:s') }}</p>
 
-{% endblock %} 
+        <hr>
+
+        <h3>🚗 Véhicule</h3>
+        <p><strong>Modèle :</strong> {{ covoiturage.voiture.modele }}</p>
+        <p><strong>Marque :</strong> {{ covoiturage.voiture.marque }}</p>
+        <p><strong>Énergie :</strong> {{ covoiturage.voiture.energie }}</p>
+        {% if covoiturage.voiture.energie == 'électrique' %}
+            <span class="badge bg-success">✅ Trajet écologique</span>
+        {% endif %}
+
+        <hr>
+
+        <h3>👤 Chauffeur</h3>
+        <p><strong>Pseudo :</strong> {{ covoiturage.createdBy.pseudo }}</p>
+        <p><strong>Note :</strong> {{ covoiturage.createdBy.note }}</p>
+        {% if covoiturage.createdBy.photo %}
+            <img src="{{ asset('uploads/photos/' ~ covoiturage.createdBy.photo) }}" width="150">
+        {% endif %}
+
+        <hr>
+
+        <h3>💬 Préférences du conducteur</h3>
+        <ul>
+            {% for pref in covoiturage.createdBy.preferences %}
+                <li>{{ pref }}</li>
+            {% else %}
+                <li>Aucune préférence renseignée.</li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+
+        <h3>⭐ Avis sur le conducteur</h3>
+        <ul>
+            {% for avis in covoiturage.createdBy.avis %}
+                <li><strong>{{ avis.note }}★</strong> – "{{ avis.commentaire }}"</li>
+            {% else %}
+                <li>Aucun avis pour ce chauffeur.</li>
+            {% endfor %}
+        </ul>
+
+            {% if is_granted('ROLE_USER') %}
+            {% if covoiturage.nbPlace > 0 and app.user.credit >= 1 %}
+                <form method="post" action="{{ path('covoiturage_participer', {'id': covoiturage.id}) }}">
+                    <button type="submit" class="btn btn-success">Participer</button>
+                </form>
+            {% else %}
+                <p class="text-danger">Trajet complet ou crédits insuffisants.</p>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-warning">Connectez-vous pour participer</a>
+        {% endif %}
+
+    </div>
+</article>
+{% endblock %}

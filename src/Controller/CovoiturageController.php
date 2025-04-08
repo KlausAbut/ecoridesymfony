@@ -34,6 +34,29 @@ class CovoiturageController extends AbstractController
 
     }
 
+    #[Route('/participer/{id}', name: 'participer', methods: ['POST'])]
+    public function participer(Covoiturage $covoiturage, EntityManagerInterface $em): RedirectResponse
+    {
+    $user = $this->getUser();
+
+    if (!$user || $covoiturage->getNbPlace() <= 0 || $user->getCredit() < 1) {
+        $this->addFlash('error', 'Conditions non remplies pour participer.');
+        return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
+    }
+
+    // Confirmer la participation (à améliorer avec confirmation JS plus tard)
+    $covoiturage->setNbPlace($covoiturage->getNbPlace() - 1);
+    $user->setCredit($user->getCredit() - 1);
+
+    // TODO : Créer une entité Participation si tu veux suivre les réservations
+
+    $em->flush();
+
+    $this->addFlash('success', 'Participation enregistrée avec succès.');
+    return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
+    }
+
+
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
     #[IsGranted('edit', 'covoiturage')]
@@ -81,4 +104,24 @@ class CovoiturageController extends AbstractController
         $this->addFlash('success', 'L\'covoiturage a été supprimé');
         return $this->redirectToRoute('covoiturage_list');
     }
+    
+    #[Route('/recherche', name: 'recherche')]
+    public function recherche(Request $request, CovoiturageRepository $repo): Response
+    {
+    $villeDepart = $request->query->get('depart');
+    $villeArrivee = $request->query->get('arrivee');
+    $date = $request->query->get('date');
+
+    $resultats = [];
+
+    if ($villeDepart && $villeArrivee && $date) {
+        $resultats = $repo->rechercherTrajets($villeDepart, $villeArrivee, new \DateTime($date));
+    }
+
+    return $this->render('covoiturage/recherche.html.twig', [
+        'resultats' => $resultats,
+    ]);
+    }
+
 }
+

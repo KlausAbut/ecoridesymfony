@@ -2,9 +2,9 @@
 
 namespace App\Services\Voter;
 
-use App\Article\Constant\CovoiturageStatut;
 use App\Entity\User;
 use App\Entity\Covoiturage;
+use App\Enum\CovoiturageStatut;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

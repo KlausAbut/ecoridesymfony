@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\CovoiturageStatut;
+
 
 #[ORM\Entity(repositoryClass: CovoiturageRepository::class)]
 class Covoiturage
@@ -35,14 +37,15 @@ class Covoiturage
     #[ORM\Column(length: 255)]
     private ?string $lieu_arrivee = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $statut = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $nb_place = null;
+    #[ORM\Column(type:'integer')]
+    private ?int $nb_place = null;
 
     #[ORM\Column]
     private ?float $prix_personne = null;
+
+    #[ORM\Column(length: 255, enumType: CovoiturageStatut::class)]
+    private ?CovoiturageStatut $statut = null;
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $publishedAt = null;
@@ -61,11 +64,22 @@ class Covoiturage
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'covoiturages')]
     #[ORM\JoinTable(name: "covoiturage_participant")]
     private Collection $participants;
+
+    #[ORM\OneToMany(mappedBy: 'covoiturage', targetEntity: Participation::class)]
+    private Collection $participations;
+
+    public function getParticipations(): Collection
+    {
+    return $this->participations;
+    }
+
     
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->participations = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -145,24 +159,12 @@ class Covoiturage
         return $this;
     }
 
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): static
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getNbPlace(): ?string
+    public function getNbPlace(): ?int
     {
         return $this->nb_place;
     }
 
-    public function setNbPlace(string $nb_place): static
+    public function setNbPlace(int $nb_place): static
     {
         $this->nb_place = $nb_place;
 
@@ -236,4 +238,16 @@ class Covoiturage
         $this->participants->removeElement($user);
         return $this;
     }
+
+    public function getStatut(): ?CovoiturageStatut
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(CovoiturageStatut $statut): static
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
 }

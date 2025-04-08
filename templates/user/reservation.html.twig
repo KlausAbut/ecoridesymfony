@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes trajets réservés{% endblock %}
+
+{% block body %}
+<h1>🚗 Mes trajets réservés</h1>
+
+{% if participations is empty %}
+    <p>Aucune réservation pour l’instant.</p>
+{% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Départ</th>
+                <th>Arrivée</th>
+                <th>Conducteur</th>
+                <th>Participation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in participations %}
+                <tr>
+                    <td>{{ p.covoiturage.dateDepart|date('d/m/Y') }}</td>
+                    <td>{{ p.covoiturage.lieuDepart }}</td>
+                    <td>{{ p.covoiturage.lieuArrivee }}</td>
+                    <td>{{ p.covoiturage.createdBy.username }}</td>
+                    <td>{{ p.dateParticipation|date('d/m/Y H:i') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
+

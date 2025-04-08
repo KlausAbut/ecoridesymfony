@@ -13,6 +13,7 @@ doctrine_mongodb:
             profiler: false
             mappings:
                 App:
+                    type: attribute
                     dir: '%kernel.project_dir%/src/Document'
                     prefix: 'App\Document'
 

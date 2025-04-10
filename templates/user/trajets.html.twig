@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes trajets proposés{% endblock %}
+
+{% block body %}
+<h1>🚘 Mes trajets en tant que conducteur</h1>
+
+{% if covoiturages is empty %}
+    <p>Aucun trajet proposé pour l’instant.</p>
+{% else %}
+    <table class="table">
+        <thead>
+        <th>Participants</th>
+            <tr>
+                <td>
+                {% if c.participants is empty %}
+                    Aucun
+                {% else %}
+                    <ul>
+                        {% for participant in c.participants %}
+                        <li>{{ participant.username }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                </td>
+
+                <th>Date</th>
+                <th>Départ</th>
+                <th>Arrivée</th>
+                <th>Places</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in covoiturages %}
+                <tr>
+                    <td>{{ c.dateDepart|date('d/m/Y') }}</td>
+                    <td>{{ c.lieuDepart }}</td>
+                    <td>{{ c.lieuArrivee }}</td>
+                    <td>{{ c.nbPlace }}</td>
+                    <td>{{ c.statut }}</td>
+                    <td>
+                        <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        <a href="{{ path('covoiturage_show', {'id': c.id}) }}" class="btn btn-secondary btn-sm">Voir</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

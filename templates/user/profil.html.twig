@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4"></h2>
+    {{ app.user.firstname }}
+
+    <div class="d-flex align-items-center mb-4">
+        {% if user.photo %}
+            <img src="data:image/jpeg;base64,{{ user.photo|base64 }}" width="100" height="100" class="rounded-circle me-4">
+        {% endif %}
+        <div>
+            <h4>{{ user.firstname }} {{ user.lastname }}</h4>
+            <p class="mb-0">Email : {{ user.email }}</p>
+            <p class="mb-0">Téléphone : {{ user.telephone }}</p>
+            <p class="mb-0">Adresse : {{ user.adresse }}</p>
+            <p class="mb-0">Crédits : {{ user.getCredit.amount ?? '0' }}</p>
+        </div>
+    </div>
+
+    {% if not user.isConducteur %}
+        <a href="{{ path('user_become_conducteur') }}" class="btn btn-outline-success">🚘 Devenir conducteur</a>
+    {% else %}
+        <p class="text-success">Vous êtes conducteur. Vous pouvez proposer des trajets et créer une voiture.</p>
+    {% endif %}
+</div>
+{% endblock %}

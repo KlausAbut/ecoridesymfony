@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil EcoRide{% endblock %}
+
+{% block body %}
+<div class="container py-4" id="top">
+
+    <h1 class="mb-4 text-center">Bienvenue sur <strong>EcoRide</strong></h1>
+
+    <p class="lead text-center">
+        Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
+    </p>
+
+    <div class="row my-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <img src="/images/img1.jpg" class="card-img-top" alt="Écologie">
+                <div class="card-body">
+                    <h5 class="card-title">Notre mission</h5>
+                    <p class="card-text">Faites des économies,Réduisez votre impact environnemental,Désengorgez la circulation,Faites de nouvelles rencontres !</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <img src="/images/img4.jpg" class="card-img-top" alt="Voiture">
+                <div class="card-body">
+                    <h5 class="card-title">Rejoignez la communauté</h5>
+                    <p class="card-text">Des centaines de trajets proposés chaque jour. Réservez ou proposez le vôtre !</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="recherche" class="mt-5">
+    <h2 class="text-center mb-4">🔍 Rechercher un covoiturage</h2>
+
+    <form method="get" action="{{ path('index') }}" class="row g-3 justify-content-center">
+        <div class="col-md-3">
+            <input type="text" name="depart" placeholder="Ville de départ" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="arrivee" placeholder="Ville d’arrivée" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success w-100">Rechercher</button>
+        </div>
+    </form>
+
+    {% if resultats is defined and app.request.query.get('depart') %}
+        <hr class="my-4">
+
+        {% if resultats is not empty %}
+            <h3 class="text-center mb-3">🚗 Trajets trouvés</h3>
+            <div class="row">
+                {% for trajet in resultats %}
+                    <div class="col-md-4">
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}
+                                </h5>
+                                <p class="card-text">
+                                    Le {{ trajet.dateDepart|date('d/m/Y') }}<br>
+                                    Conducteur : {{ trajet.createdBy.username }}<br>
+                                    Prix : {{ trajet.prixPersonne }} €<br>
+                                    Places : {{ trajet.nbPlace }}
+                                </p>
+                                <a href="{{ path('covoiturage_show', {'id': trajet.id}) }}" class="btn btn-outline-primary btn-sm">Détail</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center text-muted mt-4">Aucun trajet trouvé.</p>
+            {% endif %}
+        {% endif %}
+    </section>
+
+    <hr>
+
+    <section id="avis" class="my-5">
+        <h3 class="text-center mb-4">Avis des utilisateurs</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p class="mb-0">“Service pratique et économique. Merci EcoRide !”</p>
+                    <footer class="blockquote-footer">Sarah</footer>
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p class="mb-0">“J’ai rencontré des gens sympas et réduit mes trajets solo.”</p>
+                    <footer class="blockquote-footer">Mehdi</footer>
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p class="mb-0">“Très simple à utiliser, je recommande.”</p>
+                    <footer class="blockquote-footer">Lucie</footer>
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="mt-5">
+        <h3 class="text-center mb-4">Contactez-nous</h3>
+        <form class="col-md-8 mx-auto">
+            <div class="mb-3">
+                <label for="contactEmail" class="form-label">Votre e-mail</label>
+                <input type="email" class="form-control" id="contactEmail" placeholder="votre@email.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="contactMessage" class="form-label">Votre message</label>
+                <textarea class="form-control" id="contactMessage" rows="5" placeholder="Votre message ici..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Envoyer</button>
+        </form>
+
+        <p class="text-center mt-4">
+        📧 Ou écrivez-nous directement : <a href="mailto:contact@ecoride.fr">contact@ecoride.fr</a>
+        </p>
+    </section>
+
+</div>
+{% endblock %}

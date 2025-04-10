@@ -5,6 +5,11 @@
         <title>{% block title %}EcoRide{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+            <style>
+                html {
+                    scroll-behavior: smooth;
+                }
+            </style>
         {% endblock %}
 
         {% block javascripts %}
@@ -12,48 +17,80 @@
         {% endblock %}
     </head>
     <body>
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center mt-3">
+            {{ message }}
+        </div>
+        {% endfor %}
         <header class="mb-3">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex felx-column">
-                <a class="d-flex align-items-center mb-2 navbar-brand" href="#"><span style="color: green;">Eco</span>Ride</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('covoiturage_list') }}">Liste des covoiturages</a>
-                        </li>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" href="{{ path('index') }}">
+                        <span class="text-success">Eco</span>Ride
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
 
-                        {% if app.user %}
-                            <li class="nav-item">
-                            <a class="nav-link" href="{{ path('voiture_list') }}">Liste des voitures</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('covoiturage_create') }}">Créer un covoiturage</a>
-                            </li>
-                            <li class="nav-item">    
-                                <a class="nav-link" href="{{ path('voiture_create') }}">Créer un voiture</a>
-                            </li>
-                            <li class="nav-item"> 
-                            <a href="{{ path('user_reservations') }}">Mes trajets réservés</a>
-                            </li>
-                        {% endif %}
-
-                        <li class="nav-item">
+                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                             {% if not app.user %}
-                                <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-                                <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-                            {% else %}
-                                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#avis">Avis</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#contact">Contact</a></li>
                             {% endif %}
-                        </li>
-                    </ul>
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            {% if app.user %}
+                                <li class="nav-item dropdown d-flex align-items-center">
+                                    {% if app.user.photo %}
+                                        <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" alt="Photo" width="32" height="32" class="rounded-circle me-2">
+                                    {% endif %}
+
+                                    <a class="nav-link dropdown-toggle text-success" href="#" role="button" data-bs-toggle="dropdown">
+                                        {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? '0' }} crédits)
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="{{ path('user_profile') }}">Mon Profil</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('index') }}#avis">Avis</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('index') }}#contact">Contact</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets créés</a></li>
+                                        {% if app.user and app.user.isConducteur %}
+                                        <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Créer un trajet</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('voiture_create') }}">Ajouter une voiture</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes voitures</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        {% endif %}
+                                        <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </nav>
         </header>
         <div class="container">
-        {% block body %}{% endblock %}
+        {% block body %}  
+        {% endblock %}
         </div>
         <turbo-frame class="modal" id="main-modal" tabindex="-1" aria-hidden="true"></turbo-frame>
+        <footer class="bg-dark text-white text-center py-4 mt-5">
+            <div class="container">
+                <p class="mb-1">© {{ "now"|date("Y") }} EcoRide — Tous droits réservés.</p>
+                <p class="mb-0">
+                    <a href="{{ path('index') }}#contact" class="text-light">Contact</a> |
+                    <a href="/mentions-legales" class="text-light">Mentions légales</a>
+                </p>
+            </div>
+        </footer>
     </body>
 </html>

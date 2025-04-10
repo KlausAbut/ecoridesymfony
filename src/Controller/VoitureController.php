@@ -35,7 +35,7 @@ class VoitureController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('conducteur')]
     public function edit(Request $request, EntityManagerInterface $em, ?Voiture $voiture = null): Response
     {
         $isCreate = false;

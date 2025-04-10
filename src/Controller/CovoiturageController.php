@@ -59,7 +59,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('edit', 'covoiturage')]
+    #[IsGranted('conducteur')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;
@@ -70,7 +70,6 @@ class CovoiturageController extends AbstractController
             $covoiturage->setCreatedBy($this->getUser());
             
         }
-        /**$covoiturage = new Covoiturage();*/
 
         $form = $this->createForm(CovoiturageType::class, $covoiturage);
         $form->handleRequest($request);

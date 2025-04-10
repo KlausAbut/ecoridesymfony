@@ -11,6 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+
 
 class RegistrationFormType extends AbstractType
 {
@@ -18,6 +24,15 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username')
+            ->add('firstname', TextType::class, ['label' => 'Prénom'])
+            ->add('lastname', TextType::class, ['label' => 'Nom'])
+            ->add('email', EmailType::class, [
+                'label' => 'Adresse e-mail',
+                'required' => true,
+            ])
+            ->add('telephone', TextType::class, ['label' => 'Téléphone'])
+            ->add('adresse', TextType::class, ['label' => 'Adresse'])
+            ->add('date_naissance', TextType::class, ['label' => 'Date de naissance (AAAA-MM-JJ)'])            
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
@@ -26,6 +41,18 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo de profil (JPEG ou PNG)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Merci d’uploader une image valide.',
+                    ])
+                ]
+            ])            
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

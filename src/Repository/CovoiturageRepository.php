@@ -42,17 +42,21 @@ class CovoiturageRepository extends ServiceEntityRepository
     //    }
 
     public function rechercherTrajets(string $depart, string $arrivee, \DateTime $date): array
-    {
+{
+    $start = (clone $date)->setTime(0, 0, 0);
+    $end = (clone $date)->setTime(23, 59, 59);
+
     return $this->createQueryBuilder('c')
-        ->where('c.villeDepart = :depart')
-        ->andWhere('c.villeArrivee = :arrivee')
-        ->andWhere('DATE(c.dateDepart) = :date')
-        ->andWhere('c.placesDisponible > 0')
+        ->andWhere('c.lieu_depart = :depart')
+        ->andWhere('c.lieu_arrivee = :arrivee')
+        ->andWhere('c.date_depart BETWEEN :start AND :end')
         ->setParameter('depart', $depart)
         ->setParameter('arrivee', $arrivee)
-        ->setParameter('date', $date->format('Y-m-d'))
+        ->setParameter('start', $start)
+        ->setParameter('end', $end)
         ->getQuery()
         ->getResult();
-    }
+}
+
 
 }

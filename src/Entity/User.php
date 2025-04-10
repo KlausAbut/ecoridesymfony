@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $photo = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isConducteur = false;
+
     /**
      * @var Collection<int, Voiture>
      */
@@ -77,6 +80,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this->participations;
     }
 
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Covoiturage::class)]
+    private Collection $covoituragesCrees;
+
+    public function getCovoituragesCrees(): Collection
+    {
+    return $this->covoituragesCrees;
+    }
 
     /**
      * @var Collection<int, Covoiturage>
@@ -98,6 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->voitures = new ArrayCollection();
         $this->covoiturages = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->covoituragesCrees = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
 
@@ -246,6 +258,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->photo = $photo;
 
         return $this;
+    }
+    public function isConducteur(): bool
+    {
+    return $this->isConducteur;
+    }
+
+    public function setIsConducteur(bool $value): self
+    {
+    $this->isConducteur = $value;
+    return $this;
     }
 
     /**

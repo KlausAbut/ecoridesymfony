@@ -1,6 +1,13 @@
 body {
     background-color: rgb(139, 204, 134);
+    background: url("/images/ecoride.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 .hidden {
     display: none;
+}
+.container, .card, .navbar, footer {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    padding: 1rem;
 }

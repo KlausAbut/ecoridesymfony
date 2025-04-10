@@ -1,24 +1,26 @@
 {% extends 'base.html.twig' %}
-<h1>Recherche de covoiturages</h1>
 
-<form method="get" action="{{ path('covoiturage_recherche') }}">
-    <input type="text" name="depart" placeholder="Ville de départ">
-    <input type="text" name="arrivee" placeholder="Ville d’arrivée">
-    <input type="date" name="date">
-    <button type="submit">Rechercher</button>
-</form>
+{% block title %}<h1>Recherche de covoiturages</h1>{% endblock %}
+{% block body %}
+    <form method="get" action="{{ path('covoiturage_recherche') }}">
+        <input type="text" name="depart" placeholder="Ville de départ">
+        <input type="text" name="arrivee" placeholder="Ville d’arrivée">
+        <input type="date" name="date">
+        <button type="submit">Rechercher</button>
+    </form>
 
-{% if resultats is not empty %}
-    <h2>Résultats :</h2>
-    <ul>
-        {% for trajet in resultats %}
-            <li>
-                {{ trajet.createdBy.pseudo }} – {{ trajet.villeDepart }} → {{ trajet.villeArrivee }}<br>
-                {{ trajet.dateDepart|date('d/m/Y H:i') }} – {{ trajet.prix }} €<br>
-                <a href="{{ path('covoiturage_show', {'id': trajet.id}) }}">Détail</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Aucun covoiturage trouvé.</p>
-{% endif %}
+    {% if resultats is not empty %}
+        <h2>Résultats :</h2>
+        <ul>
+            {% for trajet in resultats %}
+                <li>
+                    {{ trajet.createdBy.pseudo }} – {{ trajet.villeDepart }} → {{ trajet.villeArrivee }}<br>
+                    {{ trajet.dateDepart|date('d/m/Y H:i') }} – {{ trajet.prix }} €<br>
+                    <a href="{{ path('covoiturage_show', {'id': trajet.id}) }}">Détail</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun covoiturage trouvé.</p>
+    {% endif %}
+{% endblock %}

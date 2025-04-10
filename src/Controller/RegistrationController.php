@@ -16,6 +16,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Document\UserCredit;
+use Doctrine\ODM\MongoDB\DocumentManager;
+
 
 class RegistrationController extends AbstractController
 {
@@ -31,27 +35,33 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
-
-            // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            /** @var UploadedFile|null $photoFile */
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $user->setPhoto(file_get_contents($photoFile->getPathname()));
+            }
+            // Enregistrement
+            $credit = UserCredit::createForUser($user);
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
+             // Envoi email de vérification
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('noreply@ecoride.com', 'EcoRide Mail Bot'))
                     ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Merci de confirmer votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            );      
 
-            // do anything else you need here, like send an email
+            //  Message flash
+            $this->addFlash('success', 'Bienvenue ' . $user->getFirstname() . ' ! Vous avez reçu 20 crédits.');
 
-            return $security->login($user, 'form_login', 'main');
+            // Redirection finale
+            return $this->redirectToRoute('covoiturage_list');
         }
 
         return $this->render('registration/register.html.twig', [

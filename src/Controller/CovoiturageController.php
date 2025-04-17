@@ -59,7 +59,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('conducteur')]
+    #[IsGranted('edit_covoiturage','conducteur')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;

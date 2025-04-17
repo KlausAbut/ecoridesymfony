@@ -71,7 +71,7 @@ class CovoiturageVoter extends Voter
             return true;
         }
 
-        return $covoiturage->getCreatedBy() === $user && CovoiturageStatut::DRAFT === $covoiturage->getStatut();
+        return $covoiturage->getCreatedBy() === $user;
     }
 
     private function isPublished(Covoiturage $covoiturage, User $user)

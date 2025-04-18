@@ -26,8 +26,15 @@ class DefaultController extends AbstractController
             );
         }
 
-        return $this->render('default/accueil.html.twig', [
+        return $this->render('default/acceuil.html.twig', [
             'resultats' => $resultats
+        ]);
+
+        $avisList = $avisRepo->findBy([], ['id' => 'DESC'], 10); // Derniers 10 avis
+
+        return $this->render('default/accueil.html.twig', [
+            'resultats' => $resultats,
+            'avisList' => $avisList
         ]);
     }
 

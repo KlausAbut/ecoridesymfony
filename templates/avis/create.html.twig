@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laisser un avis{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Laisser un avis</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.note) }}
+        {{ form_row(form.commentaire) }}
+
+        <button class="btn btn-success mt-3">Envoyer</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -11,10 +11,17 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('base64', [$this, 'base64Encode']),
+            new TwigFilter('repeat', [$this, 'repeatFilter']),
         ];
     }
+
     public function base64Encode($value): string
     {
         return base64_encode(stream_get_contents($value));
+    }
+
+    public function repeatFilter(string $str, int $times): string
+    {
+        return str_repeat($str, $times);
     }
 }

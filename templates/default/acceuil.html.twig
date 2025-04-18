@@ -3,6 +3,48 @@
 {% block title %}Accueil EcoRide{% endblock %}
 
 {% block body %}
+<div id="carouselEcoRide" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/images/eco4.svg" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Écologie">
+      <div class="carousel-caption d-none d-md-block text-dark bg-white bg-opacity-75 p-3 rounded">
+        <h5>Voyagez autrement</h5>
+        <p>EcoRide, pour un covoiturage plus responsable</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/eco5.svg" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Voiture">
+      <div class="carousel-caption d-none d-md-block text-dark bg-white bg-opacity-75 p-3 rounded">
+        <h5>Réduisez vos coûts</h5>
+        <p>Partagez vos trajets et économisez en toute sécurité.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="/images/eco6.svg" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Covoiturage">
+      <div class="carousel-caption d-none d-md-block text-dark bg-white bg-opacity-75 p-3 rounded">
+        <h5>Simple et rapide</h5>
+        <p>Réservez ou proposez un trajet en quelques clics.</p>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-4">
+    {% if app.user %}
+        <a href="{{ path('avis_create') }}" class="btn btn-outline-success">Laisser un avis</a>
+    {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary">Connectez-vous pour laisser un avis</a>
+    {% endif %}
+</div>
+
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselEcoRide" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselEcoRide" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
 <div class="container py-4" id="top">
 
     <h1 class="mb-4 text-center">Bienvenue sur <strong>EcoRide</strong></h1>
@@ -83,29 +125,33 @@
 
     <hr>
 
-    <section id="avis" class="my-5">
-        <h3 class="text-center mb-4">Avis des utilisateurs</h3>
-        <div class="row">
-            <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0">“Service pratique et économique. Merci EcoRide !”</p>
-                    <footer class="blockquote-footer">Sarah</footer>
-                </blockquote>
+    <section id="avis" class="container my-5">
+            <h2 class="text-center mb-4">💬 Avis des utilisateurs</h2>
+
+            <div id="avisCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner text-center">
+                    {% for avis in avisList %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <blockquote class="blockquote">
+                                <p class="fs-5">“{{ avis.commentaire }}”</p>
+                                <footer class="blockquote-footer mt-2">
+                                    {{ avis.user.firstname ?? 'Utilisateur' }}
+                                    ⭐️{{ '⭐️'|repeat(avis.note) }}
+                                </footer>
+                            </blockquote>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#avisCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#avisCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             </div>
-            <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0">“J’ai rencontré des gens sympas et réduit mes trajets solo.”</p>
-                    <footer class="blockquote-footer">Mehdi</footer>
-                </blockquote>
-            </div>
-            <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0">“Très simple à utiliser, je recommande.”</p>
-                    <footer class="blockquote-footer">Lucie</footer>
-                </blockquote>
-            </div>
-        </div>
     </section>
+
 
     <section id="contact" class="mt-5">
         <h3 class="text-center mb-4">Contactez-nous</h3>

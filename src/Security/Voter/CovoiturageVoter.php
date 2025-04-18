@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Voter;
+namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Entity\Covoiturage;

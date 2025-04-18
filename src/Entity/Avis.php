@@ -20,11 +20,12 @@ class Avis
     private ?string $note = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    private ?string $statut = 'EN_ATTENTE';
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $User = null;
+    
 
     public function getId(): ?int
     {

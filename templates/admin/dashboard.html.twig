@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Espace Admin</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <h2>Avis à modérer</h2>
+    <table class="table table-bordered table-striped">
+        <thead><tr><th>Utilisateur</th><th>Commentaire</th><th>Note</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for avis in avis %}
+            <tr>
+                <td>{{ avis.user.firstname }}</td>
+                <td>{{ avis.commentaire }}</td>
+                <td>{{ avis.note }}</td>
+                <td>{{ avis.statut }}</td>
+                <td>
+                    {% if avis.statut != 'VALIDÉ' %}
+                        <a href="{{ path('admin_avis_valider', {id: avis.id}) }}" class="btn btn-success btn-sm">Valider</a>
+                    {% endif %}
+                    <a href="{{ path('admin_avis_supprimer', {id: avis.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Covoiturages à valider</h2>
+    <table class="table table-bordered table-striped">
+        <thead><tr><th>Départ</th><th>Arrivée</th><th>Conducteur</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for c in covoiturages %}
+            <tr>
+                <td>{{ c.lieuDepart }}</td>
+                <td>{{ c.lieuArrivee }}</td>
+                <td>{{ c.createdBy.username }}</td>
+                <td>{{ c.statut }}</td>
+                <td>
+                    {% if c.statut != 'PUBLISHED' %}
+                        <a href="{{ path('admin_covoiturage_valider', {id: c.id}) }}" class="btn btn-success btn-sm">Valider</a>
+                    {% endif %}
+                    <a href="{{ path('admin_covoiturage_supprimer', {id: c.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

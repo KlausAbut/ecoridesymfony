@@ -44,11 +44,11 @@ class CovoiturageController extends AbstractController
         return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
     }
 
-    // Confirmer la participation (à améliorer avec confirmation JS plus tard)
+    
     $covoiturage->setNbPlace($covoiturage->getNbPlace() - 1);
     $user->setCredit($user->getCredit() - 1);
 
-    // TODO : Créer une entité Participation si tu veux suivre les réservations
+
 
     $em->flush();
 

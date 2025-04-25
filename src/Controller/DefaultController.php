@@ -10,15 +10,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Participation;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CovoiturageRepository;
+use App\Repository\AvisRepository;
 
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(Request $request, CovoiturageRepository $repo): Response
+    public function index(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepo): Response
     {
         $resultats = [];
 
-        if ($request->query->get('depart') && $request->query->get('arrivee') && $request->query->get('date')) {
+        if (
+            $request->query->get('depart') &&
+            $request->query->get('arrivee') &&
+            $request->query->get('date')
+        ) {
             $resultats = $repo->rechercherTrajets(
                 $request->query->get('depart'),
                 $request->query->get('arrivee'),
@@ -26,12 +31,10 @@ class DefaultController extends AbstractController
             );
         }
 
-        return $this->render('default/acceuil.html.twig', [
-            'resultats' => $resultats
-        ]);
+        // récupère les avis validés
+        $avisList = $avisRepo->findBy(['statut' => 'VALIDÉ'], ['id' => 'DESC'], 10);
 
-        $avisList = $avisRepo->findBy([], ['id' => 'DESC'], 10); // Derniers 10 avis
-
+        // rend la bonne vue avec les deux variables
         return $this->render('default/accueil.html.twig', [
             'resultats' => $resultats,
             'avisList' => $avisList

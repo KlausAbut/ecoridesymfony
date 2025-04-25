@@ -103,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
@@ -111,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->covoituragesCrees = new ArrayCollection();
         $this->participations = new ArrayCollection();
     }
-
+    
 
     public function __toString()
     {

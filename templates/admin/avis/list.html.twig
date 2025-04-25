@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Avis{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">🛠 Gestion des avis utilisateurs</h2>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for avis in avis %}
+            <tr>
+                <td>{{ avis.user.firstname ~ ' ' ~ avis.user.lastname }}</td>
+                <td>{{ avis.note }}</td>
+                <td>{{ avis.commentaire }}</td>
+                <td>
+                    {% if avis.statut == 'VALIDÉ' %}
+                        <span class="badge bg-success">Validé</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">En attente</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if avis.statut != 'VALIDÉ' %}
+                        <a href="{{ path('admin_avis_valider', {id: avis.id}) }}" class="btn btn-sm btn-success">Valider</a>
+                    {% endif %}
+                    <a href="{{ path('admin_avis_supprimer', {id: avis.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cet avis ?');">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Aucun avis trouvé.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

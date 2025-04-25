@@ -20,7 +20,7 @@
 
         <hr>
 
-        <h3>🚗 Véhicule</h3>
+        <h3>Véhicule</h3>
         <p><strong>Modèle :</strong> {{ covoiturage.voiture.modele }}</p>
         <p><strong>Marque :</strong> {{ covoiturage.voiture.marque }}</p>
         <p><strong>Énergie :</strong> {{ covoiturage.voiture.energie }}</p>
@@ -30,7 +30,7 @@
 
         <hr>
 
-        <h3>👤 Chauffeur</h3>
+        <h3>Chauffeur</h3>
         <p><strong>Pseudo :</strong> {{ covoiturage.createdBy.pseudo }}</p>
         <p><strong>Note :</strong> {{ covoiturage.createdBy.note }}</p>
         {% if covoiturage.createdBy.photo %}
@@ -39,7 +39,7 @@
 
         <hr>
 
-        <h3>💬 Préférences du conducteur</h3>
+        <h3>Préférences du conducteur</h3>
         <ul>
             {% for pref in covoiturage.createdBy.preferences %}
                 <li>{{ pref }}</li>
@@ -50,7 +50,7 @@
 
         <hr>
 
-        <h3>⭐ Avis sur le conducteur</h3>
+        <h3>Avis sur le conducteur</h3>
         <ul>
             {% for avis in covoiturage.createdBy.avis %}
                 <li><strong>{{ avis.note }}★</strong> – "{{ avis.commentaire }}"</li>

@@ -11,6 +11,8 @@ use App\Entity\Participation;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CovoiturageRepository;
 use App\Repository\AvisRepository;
+use App\Repository\VoitureRepository;
+
 
 class DefaultController extends AbstractController
 {
@@ -86,13 +88,20 @@ class DefaultController extends AbstractController
             'covoiturages' => $covoiturages
         ]);
     }
+
     #[Route('/profil', name: 'user_profile')]
-    public function profil(): Response
+    public function profil(VoitureRepository $voitureRepo, CovoiturageRepository $covoiturageRepo): Response
     {
+        $user = $this->getUser();
+
         return $this->render('user/profil.html.twig', [
-            'user' => $this->getUser()
+            'user' => $user,
+            'voitures' => $voitureRepo->findBy(['user' => $user]),
+            'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user])
         ]);
     }
+
+
     #[Route('/devenir-conducteur', name: 'user_become_conducteur')]
     public function devenirConducteur(EntityManagerInterface $em): Response
     {

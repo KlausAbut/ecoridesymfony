@@ -1,6 +1,5 @@
 body {
     background-color: rgb(139, 204, 134);
-    background: url("/images/ecoride.jpg") no-repeat center center fixed;
     background-size: cover;
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
@@ -62,3 +61,7 @@ p {
     border-radius: 8px;
     padding: 1rem;
 }
+
+footer {
+    margin-top: auto;
+  }

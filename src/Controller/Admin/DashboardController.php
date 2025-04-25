@@ -9,20 +9,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\VoitureRepository;
+use App\Entity\Voiture;
+
 
 #[IsGranted('ROLE_ADMIN')]
 #[Route('/admin', name: 'admin_')]
 class DashboardController extends AbstractController
 {
     #[Route('/', name: 'dashboard')]
-    public function index(AvisRepository $avisRepo, CovoiturageRepository $covoiturageRepo): Response
+    public function index(AvisRepository $avisRepo, CovoiturageRepository $covoiturageRepo, VoitureRepository $voitureRepo): Response
     {
-        $avis = $avisRepo->findBy([], ['id' => 'DESC']);
-        $covoiturages = $covoiturageRepo->findBy([], ['id' => 'DESC']);
+        $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
+        $covoiturages = $covoiturageRepo->findBy(['statut' => 'DRAFT'], ['id' => 'DESC']);
+        $voitures = $voitureRepo->findAll();
 
         return $this->render('admin/dashboard.html.twig', [
             'avis' => $avis,
             'covoiturages' => $covoiturages,
+            'voitures' => $voitures,
         ]);
     }
 
@@ -35,6 +40,7 @@ class DashboardController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Avis validé.');
         }
+
         return $this->redirectToRoute('admin_dashboard');
     }
 
@@ -47,6 +53,7 @@ class DashboardController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Avis supprimé.');
         }
+
         return $this->redirectToRoute('admin_dashboard');
     }
 
@@ -59,6 +66,7 @@ class DashboardController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Covoiturage validé.');
         }
+
         return $this->redirectToRoute('admin_dashboard');
     }
 
@@ -71,6 +79,19 @@ class DashboardController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Covoiturage supprimé.');
         }
+
         return $this->redirectToRoute('admin_dashboard');
     }
+
+    #[Route('/voiture/supprimer/{id}', name: 'voiture_supprimer')]
+    public function supprimerVoiture(Voiture $voiture, EntityManagerInterface $em): Response
+    {
+        $em->remove($voiture);
+        $em->flush();
+
+        $this->addFlash('success', 'Voiture supprimée.');
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
 }

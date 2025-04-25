@@ -1,55 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Administration{% endblock %}
+{% block title %}Admin - Tableau de bord{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">Espace Admin</h1>
+<section class="py-5">
+  <div class="container">
+    <h1 class="text-center text mb-5">Tableau de bord Admin</h1>
 
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
 
-    <h2>Avis à modérer</h2>
-    <table class="table table-bordered table-striped">
-        <thead><tr><th>Utilisateur</th><th>Commentaire</th><th>Note</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody>
-        {% for avis in avis %}
-            <tr>
-                <td>{{ avis.user.firstname }}</td>
-                <td>{{ avis.commentaire }}</td>
-                <td>{{ avis.note }}</td>
-                <td>{{ avis.statut }}</td>
-                <td>
-                    {% if avis.statut != 'VALIDÉ' %}
-                        <a href="{{ path('admin_avis_valider', {id: avis.id}) }}" class="btn btn-success btn-sm">Valider</a>
-                    {% endif %}
-                    <a href="{{ path('admin_avis_supprimer', {id: avis.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+      <!-- COVOITURAGES -->
+      <div class="col">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-success text-white text-center fw-bold">
+            Covoiturages à valider
+          </div>
+          <div class="card-body">
+            {% if covoiturages is not empty %}
+              {% for c in covoiturages %}
+                <div class="mb-3 border-bottom pb-2">
+                  <strong>{{ c.lieuDepart }} → {{ c.lieuArrivee }}</strong><br>
+                  📅 {{ c.dateDepart|date('d/m/Y') }}<br>
+                  👤 {{ c.createdBy.firstname }}
 
-    <h2 class="mt-5">Covoiturages à valider</h2>
-    <table class="table table-bordered table-striped">
-        <thead><tr><th>Départ</th><th>Arrivée</th><th>Conducteur</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody>
-        {% for c in covoiturages %}
-            <tr>
-                <td>{{ c.lieuDepart }}</td>
-                <td>{{ c.lieuArrivee }}</td>
-                <td>{{ c.createdBy.username }}</td>
-                <td>{{ c.statut }}</td>
-                <td>
-                    {% if c.statut != 'PUBLISHED' %}
-                        <a href="{{ path('admin_covoiturage_valider', {id: c.id}) }}" class="btn btn-success btn-sm">Valider</a>
-                    {% endif %}
-                    <a href="{{ path('admin_covoiturage_supprimer', {id: c.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                  <div class="mt-2 d-flex gap-2">
+                    <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-warning btn-sm">✏️ Modifier</a>
+                    <a href="{{ path('admin_covoiturage_valider', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
+                    <a href="{{ path('admin_covoiturage_supprimer', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">Aucun trajet en attente.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- AVIS -->
+      <div class="col">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white text-center fw-bold">
+            Avis à modérer
+          </div>
+          <div class="card-body">
+            {% if avis is not empty %}
+              {% for a in avis %}
+                <div class="mb-3 border-bottom pb-2">
+                  “{{ a.commentaire }}”<br>
+                  ⭐️ {{ a.note }}/5<br>
+                  👤 {{ a.user.firstname }}
+
+                  <div class="mt-2 d-flex gap-2">
+                    <a href="{{ path('admin_avis_valider', {'id': a.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
+                    <a href="{{ path('admin_avis_supprimer', {'id': a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">Aucun avis en attente.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- VOITURES -->
+      <div class="col">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-secondary text-white text-center fw-bold">
+            Voitures enregistrées
+          </div>
+          <div class="card-body">
+            {% if voitures is not empty %}
+              {% for v in voitures %}
+                <div class="mb-3 border-bottom pb-2">
+                  {{ v.modele }} – {{ v.immatriculation }}<br>
+                  👤 {{ v.user.firstname }}
+
+                  <div class="mt-2 d-flex gap-2">
+                    <a href="{{ path('voiture_edit', {'id': v.id}) }}" class="btn btn-outline-warning btn-sm">✏️ Modifier</a>
+                    <a href="{{ path('admin_voiture_supprimer', {'id': v.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">Aucune voiture enregistrée.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 {% endblock %}

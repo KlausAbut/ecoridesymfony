@@ -1,0 +1,49 @@
+<section id="recherche" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Rechercher covoiturage</h2>
+
+        <form method="get" action="{{ path('index') }}" class="row g-3 justify-content-center">
+            <div class="col-md-3">
+                <input type="text" name="depart" placeholder="Ville de départ" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="arrivee" placeholder="Ville d’arrivée" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="date" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success w-100">Rechercher</button>
+            </div>
+        </form>
+
+        {% if resultats is defined and app.request.query.get('depart') %}
+            <hr class="my-4">
+            {% if resultats is not empty %}
+                <h3 class="text-center mb-3">🚗 Trajets trouvés</h3>
+                <div class="row">
+                    {% for trajet in resultats %}
+                        <div class="col-md-4">
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}
+                                    </h5>
+                                    <p class="card-text">
+                                        Le {{ trajet.dateDepart|date('d/m/Y') }}<br>
+                                        Conducteur : {{ trajet.createdBy.username }}<br>
+                                        Prix : {{ trajet.prixPersonne }} €<br>
+                                        Places : {{ trajet.nbPlace }}
+                                    </p>
+                                    <a href="{{ path('covoiturage_show', {'id': trajet.id}) }}" class="btn btn-outline-primary btn-sm">Détail</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted mt-4">Aucun trajet trouvé.</p>
+                {% endif %}
+            {% endif %}
+    </div>
+</section>

@@ -1,0 +1,33 @@
+<section id="avis" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Avis des utilisateurs</h2>
+
+        <div id="avisCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner text-center">
+                {% for avis in avisList %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <blockquote class="blockquote">
+                            <p class="fs-5">“{{ avis.commentaire }}”</p>
+                            <footer class="blockquote-footer mt-2">
+                                {{ avis.user.firstname ?? 'Utilisateur' }}<br>
+                                {% set stars = avis.note is defined and avis.note matches '/^\\d+$/' ? avis.note|number_format(0) : 0 %}
+                                {{ '⭐️'|repeat(stars) }}
+                            </footer>
+                        </blockquote>
+                    </div>
+                {% else %}
+                    <div class="carousel-item active">
+                        <div class="alert alert-warning">Aucun avis validé pour le moment.</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#avisCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#avisCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+            </div>
+    </div>      
+</section>

@@ -1,107 +1,34 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}EcoRide{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        {% block stylesheets %}
-            <style>
-                html {
-                    scroll-behavior: smooth;
-                }
-            </style>
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}EcoRide{% endblock %}</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% for message in app.flashes('success') %}
-        <div class="alert alert-success text-center mt-3">
-            {{ message }}
-        </div>
-        {% endfor %}
-        <header class="mb-3">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-                <div class="container-fluid">
-                    <a class="navbar-brand fw-bold" href="{{ path('index') }}">
-                        <span class="text-success">Eco</span>Ride
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
 
-                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                            {% if not app.user %}
-                                <li class="nav-item"><a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#avis">Avis</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#contact">Contact</a></li>
-                            {% endif %}
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            {% if app.user %}
-                                <li class="nav-item dropdown d-flex align-items-center">
-                                    {% if app.user.photo %}
-                                        <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" alt="Photo" width="32" height="32" class="rounded-circle me-2">
-                                    {% endif %}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    {{ importmap('app') }}
 
-                                    <a class="nav-link dropdown-toggle text-success" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? '0' }} crédits)
-                                    </a>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center mt-3">{{ message }}</div>
+    {% endfor %}
 
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="{{ path('user_profile') }}">Mon Profil</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('index') }}#avis">Avis</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('index') }}#contact">Contact</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets créés</a></li>
-                                        {% if app.user and app.user.isConducteur %}
-                                        <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Créer un trajet</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('voiture_create') }}">Ajouter une voiture</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes voitures</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        {% endif %}
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a class="dropdown-item text-danger fw-bold" href="{{ path('admin_dashboard') }}">Espace Admin</a></li>
-                                        {% endif %}
-                                        <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    </ul>
-                                </li>
-                            {% else %}
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>
-        <div class="container">
-        {% block body %}  
-        {% endblock %}
-        </div>
-        <turbo-frame class="modal" id="main-modal" tabindex="-1" aria-hidden="true"></turbo-frame>
-        <footer class="bg-white text-black text-center py-4 mt-5">
-            <div class="container">
-                <p class="mb-1">© {{ "now"|date("Y") }} EcoRide — Tous droits réservés.</p>
-                <p class="mb-0">
-                    <a href="{{ path('index') }}#contact" class="text-light text-black">Contact</a> |
-                    <a href="/mentions-legales" class="text-light text-black">Mentions légales</a>
-                </p>
-            </div>
-        </footer>
-            <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.dropdown-toggle').forEach(function (el) {
-            new bootstrap.Dropdown(el);
-        });
-        });
-    </script>
-    </body>
+    {% include 'partials/navbar.html.twig' %}
+
+    <main class="container">
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    {% block javascripts %}{% endblock %}
+</body>
 </html>
+

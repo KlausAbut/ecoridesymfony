@@ -1,0 +1,56 @@
+<header class="mb-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{{ path('index') }}">
+                <span class="text-success">Eco</span>Ride
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+                <ul class="navbar-nav mx-auto">
+                    {% if not app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#avis">Avis</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('index') }}#contact">Contact</a></li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    {% if app.user %}
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            {% if app.user.photo %}
+                                <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" width="32" height="32" class="rounded-circle me-2">
+                            {% endif %}
+                            <a class="nav-link dropdown-toggle text-success" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? 0 }} crédits)
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{{ path('user_profile') }}">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
+                                <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a></li>
+                                {% if app.user.isConducteur %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ path('voiture_create') }}">Ajouter une voiture</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes voitures</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Proposer un trajet</a></li>
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="{{ path('admin_dashboard') }}">Espace Admin</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

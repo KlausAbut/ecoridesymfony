@@ -1,8 +1,8 @@
-<section id="recherche" class="py-5">
+<section id="recherche" class="py-5 shadow-lg rounded">
     <div class="container">
-        <h2 class="text-center mb-4">Rechercher covoiturage</h2>
+        <h2 class="text-center mb-4 text">Rechercher covoiturage</h2>
 
-        <form method="get" action="{{ path('index') }}" class="row g-3 justify-content-center">
+        <form method="get" action="{{ path('covoiturage_recherche') }}" class="row g-3 justify-content-center">
             <div class="col-md-3">
                 <input type="text" name="depart" placeholder="Ville de départ" class="form-control" required>
             </div>

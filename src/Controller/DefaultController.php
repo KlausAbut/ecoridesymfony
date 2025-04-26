@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Participation;
+use App\Enum\CovoiturageStatut;
 use App\Document\UserCredit;
 use App\Repository\AvisRepository;
 use App\Repository\CovoiturageRepository;
@@ -80,18 +81,32 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/profil', name: 'user_profile')]
-    public function profil(VoitureRepository $voitureRepo, CovoiturageRepository $covoiturageRepo, DocumentManager $dm): Response
-    {
+    public function profil(
+        VoitureRepository $voitureRepo,
+        CovoiturageRepository $covoiturageRepo,
+        DocumentManager $dm
+        ): Response {
         $user = $this->getUser();
+        $allCovoiturages = $covoiturageRepo->createQueryBuilder('c')
+            ->andWhere('c.statut = :statut')
+            ->andWhere('c.createdBy != :user')
+            ->setParameter('statut', CovoiturageStatut::PUBLISHED)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+
+        // Cherche le crédit Mongo lié à cet utilisateur
         $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,
             'voitures' => $voitureRepo->findBy(['user' => $user]),
             'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
+            'all_covoiturages' => $allCovoiturages,
             'credit' => $credit,
-        ]);
-    }
+    ]);
+}
 
     #[Route('/devenir-conducteur', name: 'user_become_conducteur')]
     public function devenirConducteur(EntityManagerInterface $em): Response

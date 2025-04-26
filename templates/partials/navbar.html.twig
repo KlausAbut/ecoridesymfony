@@ -20,41 +20,29 @@
 
                 <ul class="navbar-nav ms-auto">
                     {% if app.user %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center"
-                               href="#"
-                               id="navbarDropdown"
-                               role="button"
-                               data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                {% if app.user.photo %}
-                                    <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}"
-                                         alt="Photo de profil"
-                                         width="32"
-                                         height="32"
-                                         class="rounded-circle me-2">
-                                {% endif %}
-                                {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? 0 }} crédits)
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            {% if app.user.photo %}
+                                <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" alt="Photo" width="32" height="32" class="rounded-circle me-2">
+                            {% endif %}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Bienvenue {{ app.user.firstname }} 👋
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ path('user_profile') }}">Profil</a></li>
+                                <li><span class="dropdown-item-text">💳 {{ app.user.getCredit.amount ?? 0 }} crédits</span></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
-                                <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a></li>
-
+                                <li><a class="dropdown-item" href="{{ path('user_profile') }}">Mon Profil</a></li>
+                                <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes Réservations</a></li>
+                                <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes Trajets</a></li>
                                 {% if app.user.isConducteur %}
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ path('voiture_create') }}">Ajouter une voiture</a></li>
-                                    <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes voitures</a></li>
-                                    <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Proposer un trajet</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes Voitures</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Créer un Trajet</a></li>
                                 {% endif %}
-
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{{ path('admin_dashboard') }}">Espace Admin</a></li>
                                 {% endif %}
-
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
                             </ul>

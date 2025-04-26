@@ -43,6 +43,26 @@
                 </form>
               {% endif %}
             </div>
+            {% if not user.isConducteur %}
+              <hr class="my-5">
+
+              <h2 class="text-success">🚗 Trajets disponibles</h2>
+
+              {% for trajet in all_covoiturages %}
+                <div class="card mb-2 p-3">
+                  <strong>{{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}</strong> — {{ trajet.dateDepart|date('d/m/Y') }}
+                  <div class="mt-2">
+                    <form method="post" action="{{ path('covoiturage_participer', {'id': trajet.id}) }}">
+                      <button type="submit" class="btn btn-sm btn-success">
+                        🛫 Participer (1 crédit)
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% else %}
+                <p class="text-muted">Aucun trajet disponible actuellement.</p>
+              {% endfor %}
+              {% endif %}
           </div>
         </div>
 

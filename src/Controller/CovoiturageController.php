@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CovoiturageRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use App\Document\UserCredit;
+
 
 #[Route('covoiturage', name: 'covoiturage_')]
 class CovoiturageController extends AbstractController
@@ -36,26 +39,39 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/participer/{id}', name: 'participer', methods: ['POST'])]
-    public function participer(Covoiturage $covoiturage, EntityManagerInterface $em): RedirectResponse
+    public function participer(Covoiturage $covoiturage, EntityManagerInterface $em, DocumentManager $dm): RedirectResponse
     {
     $user = $this->getUser();
 
-    if (!$user || $covoiturage->getNbPlace() <= 0 || $user->getCredit() < 1) {
-        $this->addFlash('error', 'Conditions non remplies pour participer.');
-        return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
+    if (!$user) {
+        throw $this->createAccessDeniedException();
     }
 
-    
+    $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
+
+    if (!$credit || $credit->getAmount() < 1) {
+        $this->addFlash('danger', 'Vous n\'avez pas assez de crédits pour participer.');
+        return $this->redirectToRoute('user_profile');
+    }
+
+    if ($covoiturage->getNbPlace() <= 0) {
+        $this->addFlash('danger', 'Plus de place disponible pour ce trajet.');
+        return $this->redirectToRoute('user_profile');
+    }
+
+    // Tout est bon ➔ participation
     $covoiturage->setNbPlace($covoiturage->getNbPlace() - 1);
-    $user->setCredit($user->getCredit() - 1);
+    $credit->setAmount($credit->getAmount() - 1);
 
-
+    $covoiturage->addParticipant($user);
 
     $em->flush();
+    $dm->flush();
 
-    $this->addFlash('success', 'Participation enregistrée avec succès.');
-    return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
-    }
+    $this->addFlash('success', 'Vous êtes inscrit à ce trajet ! 1 crédit utilisé.');
+    return $this->redirectToRoute('user_profile');
+}
+
 
 
     #[Route('/edit/{id}', name:'edit')]

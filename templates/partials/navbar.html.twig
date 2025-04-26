@@ -4,7 +4,8 @@
             <a class="navbar-brand fw-bold" href="{{ path('index') }}">
                 <span class="text-success">Eco</span>Ride
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -19,28 +20,41 @@
 
                 <ul class="navbar-nav ms-auto">
                     {% if app.user %}
-                        <li class="nav-item dropdown d-flex align-items-center">
-                            {% if app.user.photo %}
-                                <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" width="32" height="32" class="rounded-circle me-2">
-                            {% endif %}
-                            <a class="nav-link dropdown-toggle text-success" href="#" role="button" data-bs-toggle="dropdown">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center"
+                               href="#"
+                               id="navbarDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                {% if app.user.photo %}
+                                    <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}"
+                                         alt="Photo de profil"
+                                         width="32"
+                                         height="32"
+                                         class="rounded-circle me-2">
+                                {% endif %}
                                 {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? 0 }} crédits)
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{{ path('user_profile') }}">Profil</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
                                 <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a></li>
+
                                 {% if app.user.isConducteur %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ path('voiture_create') }}">Ajouter une voiture</a></li>
                                     <li><a class="dropdown-item" href="{{ path('voiture_list') }}">Mes voitures</a></li>
                                     <li><a class="dropdown-item" href="{{ path('covoiturage_create') }}">Proposer un trajet</a></li>
                                 {% endif %}
+
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{{ path('admin_dashboard') }}">Espace Admin</a></li>
                                 {% endif %}
+
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
                             </ul>

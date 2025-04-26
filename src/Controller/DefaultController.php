@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Participation;
+use App\Document\UserCredit;
+use App\Repository\AvisRepository;
+use App\Repository\CovoiturageRepository;
+use App\Repository\VoitureRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Participation;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\CovoiturageRepository;
-use App\Repository\AvisRepository;
-use App\Repository\VoitureRepository;
-
 
 class DefaultController extends AbstractController
 {
@@ -21,11 +21,7 @@ class DefaultController extends AbstractController
     {
         $resultats = [];
 
-        if (
-            $request->query->get('depart') &&
-            $request->query->get('arrivee') &&
-            $request->query->get('date')
-        ) {
+        if ($request->query->get('depart') && $request->query->get('arrivee') && $request->query->get('date')) {
             $resultats = $repo->rechercherTrajets(
                 $request->query->get('depart'),
                 $request->query->get('arrivee'),
@@ -33,13 +29,11 @@ class DefaultController extends AbstractController
             );
         }
 
-        // récupère les avis validés
         $avisList = $avisRepo->findBy(['statut' => 'VALIDÉ'], ['id' => 'DESC'], 10);
 
-        // rend la bonne vue avec les deux variables
         return $this->render('default/accueil.html.twig', [
             'resultats' => $resultats,
-            'avisList' => $avisList
+            'avisList' => $avisList,
         ]);
     }
 
@@ -50,31 +44,27 @@ class DefaultController extends AbstractController
         $participations = $user->getParticipations();
 
         return $this->render('user/reservations.html.twig', [
-                'participations' => $participations
+            'participations' => $participations,
         ]);
     }
 
     #[Route('/annuler-reservation/{id}', name: 'annuler_reservation', methods: ['POST'])]
-    public function annulerReservation(Participation $participation, EntityManagerInterface $em): RedirectResponse
+    public function annulerReservation(Participation $participation, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
 
-        // Vérifie que la réservation appartient bien à l'utilisateur connecté
         if ($participation->getUser() !== $user) {
-                throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException();
         }
 
-        // Récupération du trajet lié
         $covoiturage = $participation->getCovoiturage();
-
-        // Rendre la place
         $covoiturage->setNbPlace($covoiturage->getNbPlace() + 1);
 
-        // Supprimer la participation
         $em->remove($participation);
         $em->flush();
 
         $this->addFlash('success', 'Votre réservation a été annulée.');
+
         return $this->redirectToRoute('user_reservations');
     }
 
@@ -82,25 +72,26 @@ class DefaultController extends AbstractController
     public function mesTrajets(): Response
     {
         $user = $this->getUser();
-        $covoiturages = $user->getCovoituragesCrees(); // méthode à ajouter dans User
+        $covoiturages = $user->getCovoituragesCrees();
 
         return $this->render('user/trajets.html.twig', [
-            'covoiturages' => $covoiturages
+            'covoiturages' => $covoiturages,
         ]);
     }
 
     #[Route('/profil', name: 'user_profile')]
-    public function profil(VoitureRepository $voitureRepo, CovoiturageRepository $covoiturageRepo): Response
+    public function profil(VoitureRepository $voitureRepo, CovoiturageRepository $covoiturageRepo, DocumentManager $dm): Response
     {
         $user = $this->getUser();
+        $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,
             'voitures' => $voitureRepo->findBy(['user' => $user]),
-            'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user])
+            'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
+            'credit' => $credit,
         ]);
     }
-
 
     #[Route('/devenir-conducteur', name: 'user_become_conducteur')]
     public function devenirConducteur(EntityManagerInterface $em): Response
@@ -118,5 +109,4 @@ class DefaultController extends AbstractController
 
         return $this->redirectToRoute('user_profile');
     }
-
 }

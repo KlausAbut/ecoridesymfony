@@ -1,4 +1,5 @@
 import './bootstrap.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -7,9 +8,15 @@ import './bootstrap.js';
  */
 
 import 'bootstrap';
-import '@popperjs/core';
 
-//import 'bootstrap/dist/css/bootstrap.min.css';
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdownTriggers = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+    dropdownTriggers.forEach(trigger => {
+        new bootstrap.Dropdown(trigger);
+    });
+    console.log('✅ Dropdown Bootstrap activé');
+});
+
 import './styles/app.css';
 
 

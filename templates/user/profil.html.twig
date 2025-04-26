@@ -18,7 +18,7 @@
                 <img src="/images/default-avatar.png" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
               {% endif %}
               <p class="mt-2 fw-semibold">{{ user.firstname }} {{ user.lastname }}</p>
-              <span class="badge bg-success">{{ user.getCredit.amount ?? 0 }} crédits</span>
+              <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>
             </div>
 
             <div class="col-md-8">

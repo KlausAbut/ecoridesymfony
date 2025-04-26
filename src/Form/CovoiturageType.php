@@ -13,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Enum\CovoiturageStatut;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class CovoiturageType extends AbstractType
 {
@@ -48,6 +51,14 @@ class CovoiturageType extends AbstractType
                 'multiple' => true,
                 'expanded' => true, // ou false si vous souhaitez un select multiple
             ])
+            ->add('statut', ChoiceType::class, [
+                'choices' => [
+                    'Brouillon' => CovoiturageStatut::DRAFT,
+                    'Publié' => CovoiturageStatut::PUBLISHED,
+                    'Annulé' => CovoiturageStatut::CANCELLED,
+                ],
+                'label' => 'Statut',
+            ])            
             ->add('submit', SubmitType::class);
     }
 

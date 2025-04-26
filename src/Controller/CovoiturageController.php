@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Covoiturage;
 use App\Form\CovoiturageType;
+use App\Enum\CovoiturageStatut;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +60,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('edit_covoiturage','conducteur')]
+    #[IsGranted('conducteur')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;
@@ -78,7 +79,7 @@ class CovoiturageController extends AbstractController
             /** @var Covoiturage $covoiturage */
             $covoiturage = $form->getData();
             
-            $covoiturage->setStatut('DRAFT');
+            $covoiturage->setStatut(CovoiturageStatut::DRAFT);
             
             $em->persist($covoiturage);
             $em->flush();

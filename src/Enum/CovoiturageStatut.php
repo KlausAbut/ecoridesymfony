@@ -6,5 +6,5 @@ enum CovoiturageStatut: string
 {
     case DRAFT = 'DRAFT';
     case PUBLISHED = 'PUBLISHED';
-    case ANNULE = 'ANNULE';
+    case CANCELLED = 'CANCELLED';
 }

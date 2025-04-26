@@ -5,20 +5,19 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use App\Document\UserCredit;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use App\Document\UserCredit;
-use Doctrine\ODM\MongoDB\DocumentManager;
+use App\Security\LoginFormAuthenticator;
 
 
 class RegistrationController extends AbstractController
@@ -28,8 +27,13 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, DocumentManager $dm): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        DocumentManager $dm
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -43,25 +47,23 @@ class RegistrationController extends AbstractController
             if ($photoFile) {
                 $user->setPhoto(file_get_contents($photoFile->getPathname()));
             }
-            // Enregistrement
+
+            // Enregistrement en SQL
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Création des crédits Mongo
             $credit = UserCredit::createForUser($user);
             $dm->persist($credit);
             $dm->flush();
 
-             // Envoi email de vérification
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('noreply@ecoride.com', 'EcoRide Mail Bot'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Merci de confirmer votre email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );      
+            // Connexion automatique
+            $security->login($user, LoginFormAuthenticator::class, 'main');
 
-            //  Message flash
+            // Message flash
             $this->addFlash('success', 'Bienvenue ' . $user->getFirstname() . ' ! Vous avez reçu 20 crédits.');
 
-            // Redirection finale
-            return $this->redirectToRoute('covoiturage_list');
+            return $this->redirectToRoute('user_profile');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -85,7 +87,6 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
@@ -94,9 +95,8 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre adresse e-mail a été confirmée.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('user_profile');
     }
 }

@@ -1,5 +1,4 @@
 import './bootstrap.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -8,17 +7,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  */
 
 import 'bootstrap';
-
-document.addEventListener('DOMContentLoaded', () => {
-    const dropdownTriggers = document.querySelectorAll('[data-bs-toggle="dropdown"]');
-    dropdownTriggers.forEach(trigger => {
-        new bootstrap.Dropdown(trigger);
-    });
-    console.log('✅ Dropdown Bootstrap activé');
-});
-
 import './styles/app.css';
 
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdownButton = document.getElementById('dropdownButton');
+    const dropdownContent = document.getElementById('dropdownContent');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+  
+    dropdownButton.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isOpen = dropdownContent.style.display === 'block';
+      dropdownContent.style.display = isOpen ? 'none' : 'block';
+      dropdownArrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+  
+    document.addEventListener('click', function () {
+      dropdownContent.style.display = 'none';
+      dropdownArrow.style.transform = 'rotate(0deg)';
+    });
+  });
+  
 
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

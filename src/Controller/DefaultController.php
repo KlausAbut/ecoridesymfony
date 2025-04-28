@@ -103,8 +103,8 @@ class DefaultController extends AbstractController
             'user' => $user,
             'voitures' => $voitureRepo->findBy(['user' => $user]),
             'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
-            'all_covoiturages' => $allCovoiturages,
             'credit' => $credit,
+            'all_covoiturages' => $allCovoiturages,
     ]);
 }
 

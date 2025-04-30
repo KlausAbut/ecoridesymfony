@@ -18,25 +18,43 @@ use Symfony\Component\Routing\Attribute\Route;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepo): Response
-    {
-        $resultats = [];
+public function index(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepo, DocumentManager $dm): Response
+{
+    $resultats = [];
 
-        if ($request->query->get('depart') && $request->query->get('arrivee') && $request->query->get('date')) {
-            $resultats = $repo->rechercherTrajets(
-                $request->query->get('depart'),
-                $request->query->get('arrivee'),
-                new \DateTime($request->query->get('date'))
-            );
-        }
-
-        $avisList = $avisRepo->findBy(['statut' => 'VALIDÉ'], ['id' => 'DESC'], 10);
-
-        return $this->render('default/accueil.html.twig', [
-            'resultats' => $resultats,
-            'avisList' => $avisList,
-        ]);
+    if ($request->query->get('depart') && $request->query->get('arrivee') && $request->query->get('date')) {
+        $resultats = $repo->rechercherTrajets(
+            $request->query->get('depart'),
+            $request->query->get('arrivee'),
+            new \DateTime($request->query->get('date'))
+        );
     }
+
+    $avisList = $avisRepo->findBy(['statut' => 'VALIDÉ'], ['id' => 'DESC'], 10);
+
+    $credit = null;
+    $user = $this->getUser();
+
+    if ($user) {
+        $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
+
+        if (!$credit) {
+            $credit = new UserCredit();
+            $credit->setUserId($user->getId()); 
+            $credit->setAmount(20);
+            $dm->persist($credit);
+            $dm->flush();
+        }
+    }
+
+    return $this->render('default/accueil.html.twig', [
+        'resultats' => $resultats,
+        'avisList' => $avisList,
+        'credit' => $credit,
+    ]);
+}
+
+
 
     #[Route('/mes-reservations', name: 'user_reservations')]
     public function mesReservations(): Response
@@ -85,19 +103,19 @@ class DefaultController extends AbstractController
         VoitureRepository $voitureRepo,
         CovoiturageRepository $covoiturageRepo,
         DocumentManager $dm
-        ): Response {
+    ): Response {
         $user = $this->getUser();
+
         $allCovoiturages = $covoiturageRepo->createQueryBuilder('c')
-            ->andWhere('c.statut = :statut')
+            ->where('c.statut = :statut')
             ->andWhere('c.createdBy != :user')
             ->setParameter('statut', CovoiturageStatut::PUBLISHED)
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
 
-
-        // Cherche le crédit Mongo lié à cet utilisateur
         $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
+
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,
@@ -105,8 +123,8 @@ class DefaultController extends AbstractController
             'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
             'credit' => $credit,
             'all_covoiturages' => $allCovoiturages,
-    ]);
-}
+        ]);
+    }
 
     #[Route('/devenir-conducteur', name: 'user_become_conducteur')]
     public function devenirConducteur(EntityManagerInterface $em): Response

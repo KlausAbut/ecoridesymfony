@@ -1,31 +1,20 @@
 import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
+// PAS besoin d'importer bootstrap.js ici (inutile ici car on gère le dropdown nous-mêmes)
 
-import 'bootstrap';
 import './styles/app.css';
 
 document.addEventListener('DOMContentLoaded', function () {
     const dropdownButton = document.getElementById('dropdownButton');
     const dropdownContent = document.getElementById('dropdownContent');
-    const dropdownArrow = document.getElementById('dropdownArrow');
-  
+
     dropdownButton.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const isOpen = dropdownContent.style.display === 'block';
-      dropdownContent.style.display = isOpen ? 'none' : 'block';
-      dropdownArrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        e.stopPropagation();
+        dropdownContent.classList.toggle('show');
     });
-  
+
     document.addEventListener('click', function () {
-      dropdownContent.style.display = 'none';
-      dropdownArrow.style.transform = 'rotate(0deg)';
+        dropdownContent.classList.remove('show');
     });
-  });
-  
 
-
+    console.log('✅ Dropdown JS custom activé');
+});

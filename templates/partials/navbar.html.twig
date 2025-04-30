@@ -21,13 +21,13 @@
         <ul class="navbar-nav ms-auto">
           {% if app.user %}
             <div class="dropdown ms-auto">
-              <button class="btn btn-light dropdown-toggle d-flex align-items-center" id="userDropdownBtn" aria-expanded="false">
+              <button id="dropdownButton" class="btn btn-light dropdown-toggle d-flex align-items-center" aria-expanded="false">
                 {% if app.user.photo %}
                   <img src="data:image/jpeg;base64,{{ app.user.photo|base64 }}" alt="Avatar" width="32" height="32" class="rounded-circle me-2">
                 {% endif %}
                 {{ app.user.firstname }} ({{ app.user.getCredit.amount ?? 0 }} crédits)
               </button>
-              <div id="userDropdownMenu" class="dropdown-menu dropdown-menu-end">
+              <div id="dropdownContent" class="dropdown-content">
                 <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
                 <hr class="dropdown-divider">
                 <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
@@ -55,4 +55,3 @@
     </div>
   </nav>
 </header>
-

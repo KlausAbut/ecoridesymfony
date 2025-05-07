@@ -38,7 +38,7 @@ class CovoiturageController extends AbstractController
 
     }
 
-    #[Route('/participer/{id}', name: 'participer', methods: ['POST'])]
+    #[Route('/participer/{id}', name: 'covoiturage_participer', methods: ['POST'])]
     public function participer(Covoiturage $covoiturage, EntityManagerInterface $em, DocumentManager $dm): RedirectResponse
     {
     $user = $this->getUser();
@@ -59,12 +59,16 @@ class CovoiturageController extends AbstractController
         return $this->redirectToRoute('user_profile');
     }
 
-    // Tout est bon ➔ participation
+    
     $covoiturage->setNbPlace($covoiturage->getNbPlace() - 1);
     $credit->setAmount($credit->getAmount() - 1);
 
-    $covoiturage->addParticipant($user);
+    $participation = new Participation();
+    $participation->setUser($user);
+    $participation->setCovoiturage($covoiturage);
+    $participation->setDateParticipation(new \DateTime());
 
+    $em->persist($participation);
     $em->flush();
     $dm->flush();
 
@@ -76,7 +80,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('conducteur')]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
     {
         $isCreate = false;

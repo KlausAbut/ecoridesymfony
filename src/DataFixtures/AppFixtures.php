@@ -17,54 +17,78 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $lieux = [
+            ['Paris', 'Lyon'],
+            ['Marseille', 'Nice'],
+            ['Bordeaux', 'Toulouse'],
+            ['Lille', 'Strasbourg'],
+            ['Nantes', 'Rennes']
+        ];
+        
         for ($i = 1; $i <= 5; $i++) {
             $user = new User();
-            $user->setUsername("user$i");
-            $user->setFirstname("Prenom$i");
-            $user->setLastname("Nom$i");
-            $user->setEmail("user$i@example.com");
-            $user->setAdresse("Paris");
-            $user->setTelephone("060000000$i");
-            $user->setDateNaissance('1990-01-01');
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
-            $user->setRoles(['ROLE_USER']);
-            $user->setPhoto(null);
+            $user->setUsername("user$i")
+                 ->setFirstname("Prenom$i")
+                 ->setLastname("Nom$i")
+                 ->setEmail("user$i@example.com")
+                 ->setAdresse("Paris")
+                 ->setTelephone("060000000$i")
+                 ->setDateNaissance('1990-01-01')
+                 ->setRoles(['ROLE_USER'])
+                 ->setPhoto(null)
+                 ->setPassword($this->passwordHasher->hashPassword($user, 'password'));
             $manager->persist($user);
-
+        
             $voiture = new Voiture();
-            $voiture->setUser($user);
-            $voiture->setModele("Modèle$i");
-            $voiture->setImmatriculation("AB-123-$i");
-            $voiture->setEnergie($i % 2 === 0 ? 'électrique' : 'diesel');
-            $voiture->setCouleur("Gris");
-            $voiture->setDatePremiereImmatriculation('2020-01-01');
+            $voiture->setUser($user)
+                    ->setModele("Modèle$i")
+                    ->setImmatriculation("AB-123-$i")
+                    ->setEnergie($i % 2 === 0 ? 'électrique' : 'diesel')
+                    ->setCouleur("Gris")
+                    ->setDatePremiereImmatriculation('2020-01-01');
             $manager->persist($voiture);
-
+        
+            [$depart, $arrivee] = $lieux[$i - 1];
+            $randomDate = new \DateTime("+{$i} days");
+            $randomHour = (new \DateTime())->setTime(mt_rand(6, 10), 0);
+        
             $covoiturage = new Covoiturage();
-            $covoiturage->setCreatedBy($user);
-            $covoiturage->setVoiture($voiture);
-            $covoiturage->setLieuDepart("Paris");
-            $covoiturage->setLieuArrivee("Lyon");
-            $covoiturage->setDateDepart(new \DateTime('+1 day'));
-            $covoiturage->setHeureDepart(new \DateTime('08:00'));
-            $covoiturage->setDateArrivee(new \DateTime('+1 day'));
-            $covoiturage->setHeureArrivee(new \DateTime('12:00'));
-            $covoiturage->setNbPlace(3);
-            $covoiturage->setPrixPersonne(25);
-            $covoiturage->setStatut(CovoiturageStatut::DRAFT);
-            $covoiturage->setPublishedAt(new \DateTime());
+            $covoiturage->setCreatedBy($user)
+                        ->setVoiture($voiture)
+                        ->setLieuDepart($depart)
+                        ->setLieuArrivee($arrivee)
+                        ->setDateDepart($randomDate)
+                        ->setHeureDepart($randomHour)
+                        ->setDateArrivee(clone $randomDate)
+                        ->setHeureArrivee((clone $randomHour)->modify('+3 hours'))
+                        ->setNbPlace(3)
+                        ->setPrixPersonne(mt_rand(15, 45))
+                        ->setStatut(CovoiturageStatut::PUBLISHED)
+                        ->setPublishedAt(new \DateTime());
             $manager->persist($covoiturage);
-
-            // Participations factices
-            if ($i > 1) {
-                $participant = new Participation();
-                $participant->setUser($user);
-                $participant->setCovoiturage($covoiturage);
-                $participant->setDateParticipation(new \DateTime());
-                $manager->persist($participant);
-            }
         }
 
+        for ($j = 1; $j <= 3; $j++) {
+            $participant = new User();
+            $participant->setUsername("participant{$i}_{$j}")
+                        ->setFirstname("PartPrenom{$i}_{$j}")
+                        ->setLastname("PartNom{$i}_{$j}")
+                        ->setEmail("participant{$i}_{$j}@example.com")
+                        ->setAdresse("Ville")
+                        ->setTelephone("07000000{$i}{$j}")
+                        ->setDateNaissance('1995-01-01')
+                        ->setRoles(['ROLE_USER'])
+                        ->setPhoto(null)
+                        ->setPassword($this->passwordHasher->hashPassword($participant, 'password'));
+            $manager->persist($participant);
+        
+            $participation = new Participation();
+            $participation->setUser($participant)
+                          ->setCovoiturage($covoiturage)
+                          ->setDateParticipation(new \DateTime());
+            $manager->persist($participation);
+        }
+        
         $manager->flush();
     }
 }

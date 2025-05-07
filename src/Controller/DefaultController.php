@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DefaultController extends AbstractController
 {
@@ -104,24 +105,34 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
         CovoiturageRepository $covoiturageRepo,
         DocumentManager $dm
     ): Response {
-        $user = $this->getUser();
+    $user = $this->getUser();
+    if (!$user) {
+        return $this->redirectToRoute('app_login');
+    }
+
+        $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
+        if (!$credit) {
+            $credit = new UserCredit();
+            $credit->setUserId($user->getId());
+            $credit->setAmount(20);
+            $dm->persist($credit);
+            $dm->flush();
+        }
 
         $allCovoiturages = $covoiturageRepo->createQueryBuilder('c')
             ->where('c.statut = :statut')
-            ->andWhere('c.createdBy != :user')
+            ->andWhere('c.createdBy != :user OR c.createdBy IS NULL')
             ->setParameter('statut', CovoiturageStatut::PUBLISHED)
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
 
-        $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
-
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,
+            'credit' => $credit,
             'voitures' => $voitureRepo->findBy(['user' => $user]),
             'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
-            'credit' => $credit,
             'all_covoiturages' => $allCovoiturages,
         ]);
     }

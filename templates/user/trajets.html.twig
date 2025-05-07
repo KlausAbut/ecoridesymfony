@@ -10,20 +10,8 @@
 {% else %}
     <table class="table">
         <thead>
-        <th>Participants</th>
             <tr>
-                <td>
-                {% if c.participants is empty %}
-                    Aucun
-                {% else %}
-                    <ul>
-                        {% for participant in c.participants %}
-                        <li>{{ participant.username }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                </td>
-
+                <th>Participants</th>
                 <th>Date</th>
                 <th>Départ</th>
                 <th>Arrivée</th>
@@ -35,11 +23,22 @@
         <tbody>
             {% for c in covoiturages %}
                 <tr>
+                    <td>
+                        {% if c.participants is empty %}
+                            Aucun
+                        {% else %}
+                            <ul>
+                                {% for participant in c.participants %}
+                                    <li>{{ participant.username }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
                     <td>{{ c.dateDepart|date('d/m/Y') }}</td>
                     <td>{{ c.lieuDepart }}</td>
                     <td>{{ c.lieuArrivee }}</td>
                     <td>{{ c.nbPlace }}</td>
-                    <td>{{ c.statut }}</td>
+                    <td>{{ c.statut.value }}</td>
                     <td>
                         <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
                         <a href="{{ path('covoiturage_show', {'id': c.id}) }}" class="btn btn-secondary btn-sm">Voir</a>

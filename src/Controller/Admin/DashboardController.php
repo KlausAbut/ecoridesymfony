@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\VoitureRepository;
 use App\Entity\Voiture;
+use App\Enum\CovoiturageStatut;
 
 
 #[IsGranted('ROLE_ADMIN')]
@@ -21,7 +22,7 @@ class DashboardController extends AbstractController
     public function index(AvisRepository $avisRepo, CovoiturageRepository $covoiturageRepo, VoitureRepository $voitureRepo): Response
     {
         $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
-        $covoiturages = $covoiturageRepo->findBy(['statut' => 'DRAFT'], ['id' => 'DESC']);
+        $covoiturages = $covoiturageRepo->findAll();
         $voitures = $voitureRepo->findAll();
 
         return $this->render('admin/dashboard.html.twig', [
@@ -62,7 +63,7 @@ class DashboardController extends AbstractController
     {
         $covoiturage = $repo->find($id);
         if ($covoiturage) {
-            $covoiturage->setStatut('PUBLISHED');
+            $covoiturage->setStatut(CovoiturageStatut::PUBLISHED);
             $em->flush();
             $this->addFlash('success', 'Covoiturage validé.');
         }
@@ -75,10 +76,13 @@ class DashboardController extends AbstractController
     {
         $covoiturage = $repo->find($id);
         if ($covoiturage) {
+            foreach ($covoiturage->getParticipations() as $participation) {
+                $em->remove($participation);
+            }
             $em->remove($covoiturage);
             $em->flush();
-            $this->addFlash('success', 'Covoiturage supprimé.');
-        }
+            $this->addFlash('success', 'Covoiturage et participations supprimés.');
+    }
 
         return $this->redirectToRoute('admin_dashboard');
     }

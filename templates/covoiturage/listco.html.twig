@@ -4,64 +4,23 @@
 
     <h1>List des covoiturage</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Créé par</th>
-                <th>Voiture utilisée</th>
-                <th>Date départ</th>
-                <th>Heure départ</th>
-                <th>Lieu départ</th>
-                <th>Date arrivée</th>
-                <th>Heure arrivée</th>
-                <th>Lieu arrivée</th>
-                <th>Actions</th>
-            </tr>
-        </thead>    
-    
-         <tbody>
-            {% for covoiturage in covoiturages %}
-                <tr>
-                    <td>
-                        {% if covoiturage.createdBy is not null %}
-                        <strong>{{ covoiturage.createdBy.username }}</strong>
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if covoiturage.voiture is not null %}
-                        <strong>{{ covoiturage.voiture.modele }}</strong><br>
-                        Immatriculation : {{ covoiturage.voiture.immatriculation }}<br>
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </td>
-                    <td>{{ covoiturage.dateDepart|date('Y-m-d') }}</td>
-                    <td>{{ covoiturage.heureDepart|date('H:i') }}</td>
-                    <td>{{ covoiturage.lieuDepart }}</td>
-                    <td>{{ covoiturage.dateArrivee|date('Y-m-d') }}</td>
-                    <td>{{ covoiturage.heureArrivee|date('H:i') }}</td>
-                    <td>{{ covoiturage.lieuArrivee }}</td>
-                    
-                    <td>
-                        <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}">Show</a>
-                        <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}">Editer</a>
+   <h1 class="mb-4">🚗 Liste des covoiturages</h1>
 
-                        {% if is_granted("ROLE_ADMIN") and covoiturage.statut == 'DRAFT' %}
-                            <a href="#">Valider</a>
-                        {% endif %}
+        {% for covoiturage in covoiturages %}
+        <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}" class="text-decoration-none text-dark">
+            <div class="card mb-3 p-3 shadow-sm hover-shadow-sm">
+            <h5 class="mb-1">{{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</h5>
+            <p class="mb-0">
+                <small>
+                🗓️ {{ covoiturage.dateDepart|date('d/m/Y') }} à {{ covoiturage.heureDepart|date('H:i') }}<br>
+                🚘 Voiture : {{ covoiturage.voiture.modele ?? 'Non spécifiée' }}<br>
+                👤 Conducteur : {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}
+                </small>
+            </p>
+            </div>
+        </a>
+        {% else %}
+        <p class="text-muted">Aucun covoiturage disponible.</p>
+        {% endfor %}
 
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('covoiturage_delete', {'id': covoiturage.id}) }}">Supprimer</a>
-                        {% endif %}
-                    </td>
-                </tr>
-             {% else %}
-                <tr>
-                    <td colspan="3">Aucun covoiturage trouvé</td>
-                </tr> 
-            {% endfor %} 
-        </tbody>
-    </table>
 {% endblock %} 

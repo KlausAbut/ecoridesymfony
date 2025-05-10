@@ -119,14 +119,15 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
             $dm->flush();
         }
 
-        $allCovoiturages = $covoiturageRepo->createQueryBuilder('c')
-            ->where('c.statut = :statut')
-            ->andWhere('c.createdBy != :user OR c.createdBy IS NULL')
-            ->setParameter('statut', CovoiturageStatut::PUBLISHED)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-
+    $qb = $covoiturageRepo->createQueryBuilder('c')
+        ->leftJoin('c.participants', 'p')
+        ->where('c.statut = :statut')
+        ->andWhere('c.createdBy != :user')
+        ->andWhere(':user NOT MEMBER OF c.participants')
+        ->setParameter('statut', CovoiturageStatut::PUBLISHED)
+        ->setParameter('user', $user);
+    
+    $allCovoiturages = $qb->getQuery()->getResult();
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Covoiturage;
+use App\Entity\Participation;
 use App\Form\CovoiturageType;
 use App\Enum\CovoiturageStatut;
+use App\Repository\VoitureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +19,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\UserCredit;
 
 
-#[Route('covoiturage', name: 'covoiturage_')]
+#[Route('/covoiturage', name: 'covoiturage_')]
 class CovoiturageController extends AbstractController
 {
     #[Route('/', name:'list')]
@@ -39,7 +41,7 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/participer/{id}', name: 'covoiturage_participer', methods: ['POST'])]
-    public function participer(Covoiturage $covoiturage, EntityManagerInterface $em, DocumentManager $dm): RedirectResponse
+    public function participer(Request $request, Covoiturage $covoiturage, EntityManagerInterface $em, DocumentManager $dm): RedirectResponse
     {
     $user = $this->getUser();
 
@@ -47,7 +49,11 @@ class CovoiturageController extends AbstractController
         throw $this->createAccessDeniedException();
     }
 
-    $credit = $dm->getRepository(UserCredit::class)->findOneBy(['user' => $user]);
+    if (!$this->isCsrfTokenValid('participer' . $covoiturage->getId(), $request->request->get('_token'))) {
+        throw $this->createAccessDeniedException('Jeton CSRF invalide');
+    }
+
+    $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
 
     if (!$credit || $credit->getAmount() < 1) {
         $this->addFlash('danger', 'Vous n\'avez pas assez de crédits pour participer.');
@@ -59,7 +65,6 @@ class CovoiturageController extends AbstractController
         return $this->redirectToRoute('user_profile');
     }
 
-    
     $covoiturage->setNbPlace($covoiturage->getNbPlace() - 1);
     $credit->setAmount($credit->getAmount() - 1);
 
@@ -74,37 +79,46 @@ class CovoiturageController extends AbstractController
 
     $this->addFlash('success', 'Vous êtes inscrit à ce trajet ! 1 crédit utilisé.');
     return $this->redirectToRoute('user_profile');
-}
+    }
 
 
 
-    #[Route('/edit/{id}', name:'edit')]
-    #[Route('/create', name:'create')]
+
+    #[Route('/edit/{id}', name: 'edit')]
+    #[Route('/create', name: 'create')]
     #[IsGranted('ROLE_USER')]
-    public function edit(Request $request, EntityManagerInterface $em, ?Covoiturage $covoiturage = null): Response
-    {
+    public function edit(
+        Request $request,
+        EntityManagerInterface $em,
+        VoitureRepository $voitureRepo,
+        ?Covoiturage $covoiturage = null
+    ): Response {
         $isCreate = false;
-        if(!$covoiturage){
+        $user = $this->getUser();
+
+        if (!$covoiturage) {
             $isCreate = true;
             $covoiturage = new Covoiturage();
+            $covoiturage->setCreatedBy($user);
 
-            $covoiturage->setCreatedBy($this->getUser());
-            
+            // Associer la première voiture du user par défaut
+            $voiture = $voitureRepo->findOneBy(['user' => $user]);
+            if ($voiture) {
+                $covoiturage->setVoiture($voiture);
+            }
         }
 
-        $form = $this->createForm(CovoiturageType::class, $covoiturage);
-        $form->handleRequest($request);
+        $form = $this->createForm(CovoiturageType::class, $covoiturage, [
+            'user' => $user
+        ]);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Covoiturage $covoiturage */
-            $covoiturage = $form->getData();
-            
             $covoiturage->setStatut(CovoiturageStatut::DRAFT);
-            
             $em->persist($covoiturage);
             $em->flush();
 
-            $this->addFlash('success', $isCreate ? 'L\'covoiturage a été créé' : 'L\'covoiturage a été modifié');
+            $this->addFlash('success', $isCreate ? 'Le covoiturage a été créé.' : 'Le covoiturage a été modifié.');
 
             return $this->redirectToRoute('covoiturage_list');
         }
@@ -114,6 +128,7 @@ class CovoiturageController extends AbstractController
             'is_create' => $isCreate,
         ]);
     }
+
 
     #[Route('/delete/{id}', name:'delete')]
     #[IsGranted('ROLE_ADMIN')]

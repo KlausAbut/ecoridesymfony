@@ -1,19 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form with [
-    'form/template.html.twig'
-] %}
+{% form_theme form with ['form/template.html.twig'] %}
+
+{% block title %}{{ is_create ? 'Créer un covoiturage' : 'Modifier le covoiturage' }}{% endblock %}
 
 {% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-success">{{ is_create ? 'Ajouter un covoiturage' : 'Modifier le covoiturage' }}</h2>
 
-    <h2>{{ is_create ? 'Ajouter une covoiturage' : 'Modifier cet covoiturage' }}</h2>
+    <div class="card shadow-sm p-4">
+        {{ form_start(form) }}
 
-    {{ form_start(form) }}
+        {{ form_row(form.date_depart) }}
+        {{ form_row(form.heure_depart) }}
+        {{ form_row(form.date_arrivee) }}
+        {{ form_row(form.heure_arrivee) }}
+        {{ form_row(form.lieu_depart) }}
+        {{ form_row(form.lieu_arrivee) }}
+        {{ form_row(form.nb_place) }}
+        {{ form_row(form.prix_personne) }}
 
-    {{ form_row(form.date_depart) }}
-    {{ form_row(form.heure_depart) }}
-    {{ form_row(form.date_arrivee) }}
-    
-    {{ form_end(form) }}
+        {# Champs masqués automatiquement (voiture, statut, createdBy, etc.) #}
+        {{ form_rest(form) }}
 
-{% endblock %} 
+        <button type="submit" class="btn btn-success mt-3">
+            {{ is_create ? 'Créer' : 'Mettre à jour' }}
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

@@ -70,10 +70,8 @@ class Covoiturage
 
     public function getParticipations(): Collection
     {
-    return $this->participations;
+        return $this->participations;
     }
-
-    
 
     public function __construct()
     {

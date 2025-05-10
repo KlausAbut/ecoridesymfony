@@ -66,6 +66,24 @@ class AppFixtures extends Fixture
                         ->setStatut(CovoiturageStatut::PUBLISHED)
                         ->setPublishedAt(new \DateTime());
             $manager->persist($covoiturage);
+
+            $existingAdmin = $manager->getRepository(User::class)->findOneBy(['email' => 'admin@admin.com']);
+                if (!$existingAdmin) {
+                    $admin = new User();
+                    $admin->setUsername('admin');
+                    $admin->setFirstname('Admin');
+                    $admin->setLastname('Admin');
+                    $admin->setEmail('admin@admin.com');
+                    $admin->setAdresse('Paris');
+                    $admin->setTelephone('0600000000');
+                    $admin->setDateNaissance('1990-01-01');
+                    $admin->setRoles(['ROLE_ADMIN']);
+                    $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin123'));
+                    $admin->setPhoto(null);
+                    $manager->persist($admin);
+}
+
+
         }
 
         for ($j = 1; $j <= 3; $j++) {

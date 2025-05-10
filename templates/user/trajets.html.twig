@@ -41,7 +41,8 @@
                     <td>{{ c.statut.value }}</td>
                     <td>
                         <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                        <a href="{{ path('covoiturage_show', {'id': c.id}) }}" class="btn btn-secondary btn-sm">Voir</a>
+                        <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">Supprimer</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -83,7 +83,6 @@
 
           <hr class="my-5">
           <h2 class="text-success">Mes covoiturages</h2>
-          {{ dump(all_covoiturages) }}
           {% for covoiturage in covoiturages %}
             <div class="card mb-2 p-3">
               <strong>{{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</strong> — {{ covoiturage.dateDepart|date('d/m/Y') }}

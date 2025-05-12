@@ -34,6 +34,5 @@ return [
     'bootstrap/dist/css/bootstrap.min.css' => [
         'version' => '5.3.5',
         'type' => 'css',
-        'entrypoint' => true,
     ],
 ];

@@ -17,6 +17,7 @@ use App\Repository\CovoiturageRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\UserCredit;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 #[Route('/covoiturage', name: 'covoiturage_')]
@@ -157,6 +158,35 @@ class CovoiturageController extends AbstractController
         'resultats' => $resultats,
     ]);
     }
+
+    #[Route('/ajax/recherche', name: 'covoiturage_ajax_recherche', methods: ['GET'])]
+    public function ajaxRecherche(Request $request, CovoiturageRepository $repo): JsonResponse
+    {
+    $depart = $request->query->get('depart');
+    $arrivee = $request->query->get('arrivee');
+    $date = $request->query->get('date');
+
+    if (!$depart || !$arrivee || !$date) {
+        return new JsonResponse(['error' => 'Données manquantes'], 400);
+    }
+
+    $resultats = $repo->rechercherTrajets($depart, $arrivee, new \DateTime($date));
+
+    $data = [];
+    foreach ($resultats as $trajet) {
+        $data[] = [
+            'id' => $trajet->getId(),
+            'lieuDepart' => $trajet->getLieuDepart(),
+            'lieuArrivee' => $trajet->getLieuArrivee(),
+            'date' => $trajet->getDateDepart()->format('d/m/Y'),
+            'heure' => $trajet->getHeureDepart()->format('H:i'),
+            'conducteur' => $trajet->getCreatedBy()->getFirstname(),
+        ];
+    }
+
+    return new JsonResponse($data);
+    }
+
 
 }
 

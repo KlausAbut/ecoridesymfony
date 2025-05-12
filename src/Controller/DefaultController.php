@@ -101,41 +101,42 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
 
     #[Route('/profil', name: 'user_profile')]
     public function profil(
-        VoitureRepository $voitureRepo,
-        CovoiturageRepository $covoiturageRepo,
-        DocumentManager $dm
+    VoitureRepository $voitureRepo,
+    CovoiturageRepository $covoiturageRepo,
+    DocumentManager $dm
     ): Response {
     $user = $this->getUser();
     if (!$user) {
         return $this->redirectToRoute('app_login');
     }
 
-        $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
-        if (!$credit) {
-            $credit = new UserCredit();
-            $credit->setUserId($user->getId());
-            $credit->setAmount(20);
-            $dm->persist($credit);
-            $dm->flush();
-        }
+    // Crédit
+    $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
+    if (!$credit) {
+        $credit = new UserCredit();
+        $credit->setUserId($user->getId());
+        $credit->setAmount(20);
+        $dm->persist($credit);
+        $dm->flush();
+    }
 
-    $qb = $covoiturageRepo->createQueryBuilder('c')
-        ->leftJoin('c.participants', 'p')
+    
+    $allCovoiturages = $covoiturageRepo->createQueryBuilder('c')
         ->where('c.statut = :statut')
         ->andWhere('c.createdBy != :user')
         ->andWhere(':user NOT MEMBER OF c.participants')
         ->setParameter('statut', CovoiturageStatut::PUBLISHED)
-        ->setParameter('user', $user);
-    
-    $allCovoiturages = $qb->getQuery()->getResult();
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getResult();
 
-        return $this->render('user/profil.html.twig', [
-            'user' => $user,
-            'credit' => $credit,
-            'voitures' => $voitureRepo->findBy(['user' => $user]),
-            'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
-            'all_covoiturages' => $allCovoiturages,
-        ]);
+    return $this->render('user/profil.html.twig', [
+        'user' => $user,
+        'credit' => $credit,
+        'voitures' => $voitureRepo->findBy(['user' => $user]),
+        'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
+        'all_covoiturages' => $allCovoiturages,
+    ]);
     }
 
     #[Route('/devenir-conducteur', name: 'user_become_conducteur')]

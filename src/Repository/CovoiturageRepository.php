@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Covoiturage;
+use App\Enum\CovoiturageStatut;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -42,21 +43,26 @@ class CovoiturageRepository extends ServiceEntityRepository
     //    }
 
     public function rechercherTrajets(string $depart, string $arrivee, \DateTime $date): array
-{
-    $start = (clone $date)->setTime(0, 0, 0);
-    $end = (clone $date)->setTime(23, 59, 59);
-
-    return $this->createQueryBuilder('c')
-        ->andWhere('c.lieu_depart = :depart')
-        ->andWhere('c.lieu_arrivee = :arrivee')
-        ->andWhere('c.date_depart BETWEEN :start AND :end')
-        ->setParameter('depart', $depart)
-        ->setParameter('arrivee', $arrivee)
+    {
+        $start = (clone $date)->setTime(0, 0, 0);
+        $end = (clone $date)->modify('+1 day')->setTime(0, 0, 0);
+    
+        return $this->createQueryBuilder('c')
+        ->andWhere('LOWER(c.lieu_depart) = :depart')
+        ->andWhere('LOWER(c.lieu_arrivee) = :arrivee')
+        ->andWhere('c.date_depart >= :start')
+        ->andWhere('c.date_depart < :end')
+        ->andWhere('c.statut = :statut')
+        ->setParameter('depart', strtolower($depart))
+        ->setParameter('arrivee', strtolower($arrivee))
         ->setParameter('start', $start)
         ->setParameter('end', $end)
+        ->setParameter('statut', CovoiturageStatut::PUBLISHED)
+        ->orderBy('c.date_depart', 'ASC')
         ->getQuery()
         ->getResult();
-}
+    }
+    
 
 
 }

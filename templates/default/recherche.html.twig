@@ -1,45 +1,20 @@
 <section id="recherche" class="py-5 shadow-lg rounded">
     <div class="container">
         <h2 class="text-center mb-4 text">Rechercher covoiturage</h2>
-        <form id="formRecherche" class="mb-4 justify-content-center">
+
+        <form id="formRecherche" class="mb-4 text-center">
             <input type="text" id="depart" name="depart" placeholder="Départ" required>
             <input type="text" id="arrivee" name="arrivee" placeholder="Arrivée" required>
             <input type="date" id="date" name="date" required>
             <button type="submit" class="btn btn-success">Rechercher</button>
         </form>
-        <div id="loadingSpinner" class="text-center my-3 d-none">
-        <div class="spinner-border text-success" role="status">
-            <span class="visually-hidden">Chargement...</span>
-        </div>
+
+        <div id="loadingSpinner" class="text-center d-none">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
 
-        {% if resultats is defined and app.request.query.get('depart') %}
-            <hr class="my-4">
-            {% if resultats is not empty %}
-                <h3 class="text-center mb-3">🚗 Trajets trouvés</h3>
-                <div class="row">
-                    {% for trajet in resultats %}
-                        <div class="col-md-4">
-                            <div class="card mb-3 shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        {{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}
-                                    </h5>
-                                    <p class="card-text">
-                                        Le {{ trajet.dateDepart|date('d/m/Y') }}<br>
-                                        Conducteur : {{ trajet.createdBy.username }}<br>
-                                        Prix : {{ trajet.prixPersonne }} €<br>
-                                        Places : {{ trajet.nbPlace }}
-                                    </p>
-                                    <a href="{{ path('covoiturage_show', {'id': trajet.id}) }}" class="btn btn-outline-primary btn-sm">Détail</a>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="text-center text-muted mt-4">Aucun trajet trouvé.</p>
-                {% endif %}
-            {% endif %}
+        <div id="resultatsTrajets" class="mt-4"></div>
     </div>
 </section>

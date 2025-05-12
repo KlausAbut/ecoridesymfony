@@ -144,27 +144,27 @@ class CovoiturageController extends AbstractController
     #[Route('/recherche', name: 'recherche')]
     public function recherche(Request $request, CovoiturageRepository $repo): Response
     {
-    $villeDepart = $request->query->get('depart');
-    $villeArrivee = $request->query->get('arrivee');
-    $date = $request->query->get('date');
+        $villeDepart = $request->query->get('depart');
+        $villeArrivee = $request->query->get('arrivee');
+        $date = $request->query->get('date');
 
-    $resultats = [];
+        $resultats = [];
 
     if ($villeDepart && $villeArrivee && $date) {
         $resultats = $repo->rechercherTrajets($villeDepart, $villeArrivee, new \DateTime($date));
     }
 
-    return $this->render('covoiturage/recherche.html.twig', [
-        'resultats' => $resultats,
+        return $this->render('covoiturage/recherche.html.twig', [
+            'resultats' => $resultats,
     ]);
     }
 
     #[Route('/ajax/recherche', name: 'covoiturage_ajax_recherche', methods: ['GET'])]
     public function ajaxRecherche(Request $request, CovoiturageRepository $repo): JsonResponse
     {
-    $depart = $request->query->get('depart');
-    $arrivee = $request->query->get('arrivee');
-    $date = $request->query->get('date');
+        $depart = $request->query->get('depart');
+        $arrivee = $request->query->get('arrivee');
+        $date = $request->query->get('date');
 
     if (!$depart || !$arrivee || !$date) {
         return new JsonResponse(['error' => 'Données manquantes'], 400);
@@ -183,6 +183,7 @@ class CovoiturageController extends AbstractController
             'conducteur' => $trajet->getCreatedBy()->getFirstname(),
         ];
     }
+
 
     return new JsonResponse($data);
     }

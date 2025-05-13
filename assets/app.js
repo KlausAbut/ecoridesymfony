@@ -30,8 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const arrivee = document.querySelector('#arrivee').value;
         const date = document.querySelector('#date').value;
 
+        let url = `${window.routes.recherche}?depart=${depart}&arrivee=${arrivee}`;
+        if (date) {
+            url += `&date=${date}`;
+        }
+
         try {
-            const response = await fetch(`/ajax/recherche?depart=${depart}&arrivee=${arrivee}&date=${date}`);
+            console.log('🔎 URL appelée :', url);
+
+            const response = await fetch(url);
             const trajets = await response.json();
 
             spinner.classList.add('d-none');
@@ -55,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             spinner.classList.add('d-none');
             container.innerHTML = `<p class="text-danger">Erreur lors de la recherche</p>`;
         }
+
     });
 
     // Carousel automatique

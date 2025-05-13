@@ -1,3 +1,9 @@
+<script>
+    window.routes = {
+        recherche: "{{ path('covoiturage_ajax_recherche') }}"
+    };
+</script>
+
 <section id="recherche" class="py-5 shadow-lg rounded">
     <div class="container">
         <h2 class="text-center mb-4 text">Rechercher covoiturage</h2>
@@ -5,7 +11,7 @@
         <form id="formRecherche" class="mb-4 text-center">
             <input type="text" id="depart" name="depart" placeholder="Départ" required>
             <input type="text" id="arrivee" name="arrivee" placeholder="Arrivée" required>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date">
             <button type="submit" class="btn btn-success">Rechercher</button>
         </form>
 

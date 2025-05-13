@@ -42,27 +42,26 @@ class CovoiturageRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function rechercherTrajets(string $depart, string $arrivee, \DateTime $date): array
+    public function rechercherTrajets(string $depart, string $arrivee, ?\DateTime $date): array
     {
-        $start = (clone $date)->setTime(0, 0, 0);
-        $end = (clone $date)->modify('+1 day')->setTime(0, 0, 0);
-    
-        return $this->createQueryBuilder('c')
+    $qb = $this->createQueryBuilder('c')
         ->andWhere('LOWER(c.lieu_depart) = :depart')
         ->andWhere('LOWER(c.lieu_arrivee) = :arrivee')
-        ->andWhere('c.date_depart >= :start')
-        ->andWhere('c.date_depart < :end')
         ->andWhere('c.statut = :statut')
         ->setParameter('depart', strtolower($depart))
         ->setParameter('arrivee', strtolower($arrivee))
-        ->setParameter('start', $start)
-        ->setParameter('end', $end)
         ->setParameter('statut', CovoiturageStatut::PUBLISHED)
-        ->orderBy('c.date_depart', 'ASC')
-        ->getQuery()
-        ->getResult();
+        ->orderBy('c.date_depart', 'ASC');
+
+    if ($date) {
+        $start = (clone $date)->setTime(0, 0, 0);
+        $end = (clone $date)->modify('+1 day')->setTime(0, 0, 0);
+        $qb->andWhere('c.date_depart >= :start')
+           ->andWhere('c.date_depart < :end')
+           ->setParameter('start', $start)
+           ->setParameter('end', $end);
     }
-    
 
-
+    return $qb->getQuery()->getResult();
+    }
 }

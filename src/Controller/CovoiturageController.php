@@ -159,35 +159,41 @@ class CovoiturageController extends AbstractController
     ]);
     }
 
-    #[Route('/ajax/recherche', name: 'covoiturage_ajax_recherche', methods: ['GET'])]
+    #[Route('/ajax/recherche', name: 'ajax_recherche', methods: ['GET'])]
     public function ajaxRecherche(Request $request, CovoiturageRepository $repo): JsonResponse
     {
         $depart = $request->query->get('depart');
         $arrivee = $request->query->get('arrivee');
         $date = $request->query->get('date');
 
-    if (!$depart || !$arrivee || !$date) {
-        return new JsonResponse(['error' => 'Données manquantes'], 400);
+        if (!$depart || !$arrivee) {
+            return new JsonResponse(['error' => 'Départ et arrivée sont requis.'], 400);
+        }
+
+        $dateObj = null;
+        if (!empty($date)) {
+            $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
+            if (!$dateObj) {
+                return new JsonResponse(['error' => 'Format de date invalide.'], 400);
+            }
+        }
+
+        $resultats = $repo->rechercherTrajets($depart, $arrivee, $dateObj);
+
+        $data = [];
+        foreach ($resultats as $trajet) {
+            $data[] = [
+                'id' => $trajet->getId(),
+                'lieuDepart' => $trajet->getLieuDepart(),
+                'lieuArrivee' => $trajet->getLieuArrivee(),
+                'date' => $trajet->getDateDepart()->format('d/m/Y'),
+                'heure' => $trajet->getHeureDepart()->format('H:i'),
+                'conducteur' => $trajet->getCreatedBy()->getFirstname(),
+            ];
+        }
+
+        return new JsonResponse($data);
     }
-
-    $resultats = $repo->rechercherTrajets($depart, $arrivee, new \DateTime($date));
-
-    $data = [];
-    foreach ($resultats as $trajet) {
-        $data[] = [
-            'id' => $trajet->getId(),
-            'lieuDepart' => $trajet->getLieuDepart(),
-            'lieuArrivee' => $trajet->getLieuArrivee(),
-            'date' => $trajet->getDateDepart()->format('d/m/Y'),
-            'heure' => $trajet->getHeureDepart()->format('H:i'),
-            'conducteur' => $trajet->getCreatedBy()->getFirstname(),
-        ];
-    }
-
-
-    return new JsonResponse($data);
-    }
-
 
 }
 

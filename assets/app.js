@@ -36,8 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            console.log('🔎 URL appelée :', url);
-
             const response = await fetch(url);
             const trajets = await response.json();
 
@@ -52,20 +50,21 @@ document.addEventListener('DOMContentLoaded', function () {
             container.innerHTML += `<h3 class="text-success">🚗 Trajets trouvés</h3>`;
             trajets.forEach(t => {
                 container.innerHTML += `
-                    <div class="card mb-2 p-3">
-                        <strong>${t.lieuDepart} → ${t.lieuArrivee}</strong><br>
-                        🗓️ ${t.date} à ${t.heure}<br>
-                        👤 Conducteur : ${t.conducteur}
-                    </div>`;
+                    <a href="/covoiturage/show/${t.id}" class="text-decoration-none text-dark">
+                        <div class="card mb-2 p-3 hover-shadow">
+                            <strong>${t.lieuDepart} → ${t.lieuArrivee}</strong><br>
+                            🗓️ ${t.date} à ${t.heure}<br>
+                            👤 Conducteur : ${t.conducteur}
+                        </div>
+                    </a>`;
             });
         } catch (err) {
             spinner.classList.add('d-none');
             container.innerHTML = `<p class="text-danger">Erreur lors de la recherche</p>`;
         }
-
     });
 
-    // Carousel automatique
+    // Carousel avis
     const carousel = document.querySelector('#avisCarousel');
     if (carousel) {
         const items = carousel.querySelectorAll('.carousel-item');
@@ -83,6 +82,15 @@ document.addEventListener('DOMContentLoaded', function () {
             showSlide(current);
         }, 3000);
     }
-
+    const navbar = document.querySelector('nav.navbar');
+        if (navbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+            navbar.classList.add('navbar-sticky-effect');
+            } else {
+            navbar.classList.remove('navbar-sticky-effect');
+            }
+        });
+        }
     console.log('✅ JS actif');
 });

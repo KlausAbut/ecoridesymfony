@@ -16,6 +16,12 @@
     {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    <style>
+        section {
+            position: relative;
+            z-index: 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -25,7 +31,7 @@
 
     {% include 'partials/navbar.html.twig' %}
 
-    <main class="container">
+    <main class="container  mt-5 pt-5">
         {% block body %}{% endblock %}
     </main>
 

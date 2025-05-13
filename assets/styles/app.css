@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 main.container {
     flex: 1;
 }
@@ -17,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 70px;
 }
 h1, .h1 {
     font-size: 2.5rem;
@@ -129,5 +134,18 @@ footer {
   #formRecherche input,
   #formRecherche button {
     padding: 0.5rem;
+  }
+
+.hover-shadow:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-sticky-effect {
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   }
   

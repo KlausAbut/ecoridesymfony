@@ -82,15 +82,17 @@ document.addEventListener('DOMContentLoaded', function () {
             showSlide(current);
         }, 3000);
     }
-    const navbar = document.querySelector('nav.navbar');
-        if (navbar) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-            navbar.classList.add('navbar-sticky-effect');
-            } else {
-            navbar.classList.remove('navbar-sticky-effect');
-            }
+
+   // Burger menu toggle
+        const burger = document.getElementById('burger');
+        const menu = document.getElementById('menu');
+        if (burger && menu) {
+        burger.addEventListener('click', () => {
+            menu.classList.toggle('show');
         });
         }
+
+
+
     console.log('✅ JS actif');
 });

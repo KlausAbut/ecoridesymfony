@@ -1,51 +1,24 @@
-<header class="mb-3">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top" style="z-index: 50;">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="{{ path('index') }}">
-        <span class="text-success">Eco</span>Ride
-      </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
-        <ul class="navbar-nav mx-auto">
-          {% if not app.user or is_granted('ROLE_ADMIN') %}
-            <li class="nav-item"><a class="nav-link" href="{{ path('index') }}">Accueil</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
-          {% endif %}
-        </ul>
-
-        <ul class="navbar-nav ms-auto">
-          {% if app.user %}
-            <div class="dropdown ms-auto">
-              <button id="dropdownButton" class="btn btn-light dropdown-toggle d-flex align-items-center" aria-expanded="false">
-                {% if app.user.photo %}
-                  <img src="data:image/jpeg;base64,{{ app.user.photo|convert_base64 }}" alt="Avatar" width="32" height="32" class="rounded-circle me-2">
-                {% endif %}
-                {{ app.user.firstname }}
-              </button>
-              <div id="dropdownContent" class="dropdown-content">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a class="dropdown-item text-danger fw-bold" href="{{ path('admin_dashboard') }}">🛠️ Espace Admin</a>
-                    <hr class="dropdown-divider">
-                {% else %}
-                    <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
-                    <hr class="dropdown-divider">
-                    <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
-                    <a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a>
-                {% endif %}
-                <hr class="dropdown-divider">
-                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
-              </div>
-            </div>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
-          {% endif %}
-        </ul>
-      </div>
+<header>
+  <nav class="navbar" style="position: sticky; top: 0; z-index: 50;">
+    <div class="nav-left">
+      <a href="{{ path('index') }}" class="logo"><span class="green">Eco</span>Ride</a>
     </div>
+  <div class="nav-mobile" id="menu">
+    <div class="nav-center">
+      <a href="{{ path('index') }}">Accueil</a>
+      <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      {% if app.user %}
+        <a href="{{ path('user_profile') }}">Profil</a>
+        <a href="{{ path('app_logout') }}" class="danger">Déconnexion</a>
+      {% else %}
+        <a href="{{ path('app_login') }}">Connexion</a>
+        <a href="{{ path('app_register') }}">Inscription</a>
+      {% endif %}
+    </div>
+  </div>
+    <button id="burger" class="burger">☰</button>
   </nav>
 </header>

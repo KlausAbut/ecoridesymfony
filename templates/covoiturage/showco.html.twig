@@ -4,35 +4,68 @@
 
 {% block body %}
 <div class="container my-5">
-    <h1 class="text-success mb-4">🚘 Trajet : {{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</h1>
+  <h1 class="text-success mb-4">🚘 Trajet : {{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</h1>
 
-    <div class="card p-4 mb-4">
-        <h3>Détails du trajet</h3>
-        <p><strong>Date de départ :</strong> {{ covoiturage.dateDepart|date('d/m/Y') }}</p>
-        <p><strong>Heure de départ :</strong> {{ covoiturage.heureDepart|date('H:i') }}</p>
-        <p><strong>Date d’arrivée :</strong> {{ covoiturage.dateArrivee|date('d/m/Y') }}</p>
-        <p><strong>Heure d’arrivée :</strong> {{ covoiturage.heureArrivee|date('H:i') }}</p>
-        <p><strong>Nombre de places restantes :</strong> {{ covoiturage.nbPlace }}</p>
+  <div class="card p-4 mb-4">
+    <h3>Détails du trajet</h3>
+    <p><strong>Date de départ :</strong> {{ covoiturage.dateDepart|date('d/m/Y') }}</p>
+    <p><strong>Heure de départ :</strong> {{ covoiturage.heureDepart|date('H:i') }}</p>
+    <p><strong>Date d’arrivée :</strong> {{ covoiturage.dateArrivee|date('d/m/Y') }}</p>
+    <p><strong>Heure d’arrivée :</strong> {{ covoiturage.heureArrivee|date('H:i') }}</p>
+    <p><strong>Places restantes :</strong> {{ covoiturage.nbPlace }}</p>
+  </div>
+
+  <div class="card p-4 mb-4">
+    <h3>Véhicule</h3>
+    <p><strong>Modèle :</strong> {{ covoiturage.voiture.modele }}</p>
+    <p><strong>Immatriculation :</strong> {{ covoiturage.voiture.immatriculation }}</p>
+    <p><strong>Énergie :</strong> {{ covoiturage.voiture.energie }}</p>
+    {% if covoiturage.voiture.energie == 'électrique' %}
+      <div class="progress mt-2" style="height: 25px;">
+          <div class="progress-bar bg-success text-white fw-bold" role="progressbar" style="width: 100%;">
+              ✔ Trajet écologique
+          </div>
+      </div>
+    {% endif %}
+   </div>
+
+  <div class="card p-4 mb-4">
+    <h3>Chauffeur</h3>
+    <p><strong>Nom :</strong> {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}</p>
+    <p><strong>Email :</strong> {{ covoiturage.createdBy.email }}</p>
+    {% if covoiturage.createdBy.photo %}
+      <img src="data:image/jpeg;base64,{{ covoiturage.createdBy.photo|convert_base64 }}" class="rounded mt-2" width="150">
+    {% endif %}
+  </div>
+
+  <div class="card p-4 mt-4">
+    <h3 class="text-success">Avis sur le conducteur</h3>
+    {% if avis_conducteur is not empty %}
+        {% for avis in avis_conducteur %}
+            <p>⭐ {{ avis.note }}/5</p>
+            <p>{{ avis.commentaire }}</p>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">Aucun avis pour ce conducteur.</p>
+    {% endif %}
+  </div>
+
+  {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user in covoiturage.participants %}
+    <div class="text-center mt-4">
+      <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#avisForm">📝 Laisser un avis</button>
     </div>
 
-    <div class="card p-4 mb-4">
-        <h3>Véhicule</h3>
-        <p><strong>Modèle :</strong> {{ covoiturage.voiture.modele }}</p>
-        <p><strong>Immatriculation :</strong> {{ covoiturage.voiture.immatriculation }}</p>
-        <p><strong>Énergie :</strong> {{ covoiturage.voiture.energie }}</p>
-        {% if covoiturage.voiture.energie == 'électrique' %}
-            <span class="badge bg-success">✅ Trajet écologique</span>
-        {% endif %}
+    <div id="avisForm" class="collapse mt-3">
+      <div class="card p-4">
+        <h4 class="mb-3">Votre avis sur ce trajet</h4>
+        {{ form_start(formAvis) }}
+          {{ form_row(formAvis.note) }}
+          {{ form_row(formAvis.commentaire) }}
+          <button class="btn btn-primary mt-2">Envoyer</button>
+        {{ form_end(formAvis) }}
+      </div>
     </div>
-
-    <div class="card p-4">
-        <h3>Chauffeur</h3>
-        <p><strong>Nom :</strong> {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}</p>
-        <p><strong>Email :</strong> {{ covoiturage.createdBy.email }}</p>
-        {% if covoiturage.createdBy.photo %}
-            <img src="data:image/jpeg;base64,{{ covoiturage.createdBy.photo|convert_base64 }}" class="rounded mt-2" width="150">
-        {% endif %}
-    </div>
+  {% endif %}
 </div>
 {% endblock %}
-

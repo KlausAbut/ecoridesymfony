@@ -33,7 +33,7 @@ class AvisFixtures extends Fixture implements DependentFixtureInterface
             $avis->setUser($users[$i % count($users)]);
             $avis->setCommentaire($contenu);
             $avis->setNote($note);
-            $avis->setStatut('VALIDÉ');
+            $avis->setStatut('EN_ATTENTE');
             $manager->persist($avis);
             $i++;
         }

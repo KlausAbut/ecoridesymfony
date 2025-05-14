@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\VoitureRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\Security;
 
 #[Route('voiture', name: 'voiture_')]
 class VoitureController extends AbstractController
@@ -35,7 +36,7 @@ class VoitureController extends AbstractController
 
     #[Route('/edit/{id}', name:'edit')]
     #[Route('/create', name:'create')]
-    #[IsGranted('conducteur')]
+    #[Security("is_granted('ROLE_ADMIN') or user.isConducteur()")]
     public function edit(Request $request, EntityManagerInterface $em, ?Voiture $voiture = null): Response
     {
         $isCreate = false;

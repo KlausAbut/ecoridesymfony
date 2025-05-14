@@ -1,6 +1,6 @@
 # EcoRide
 
-**EcoRide** est une application Symfony de covoiturage écoresponsable, développée dans le cadre du TP DWWM.
+**EcoRide** est une application Symfony de covoiturage écoresponsable.
 
 ---
 
@@ -22,7 +22,7 @@
 
 ```bash
 git clone https://github.com/KlausAbut/ecoridesymfony.git
-tcd ecoridesymfony
+cd ecoridesymfony
 ```
 
 ### 2. Lancer Docker
@@ -89,4 +89,30 @@ npm run build
 
 ## 🚧 Auteur
 
-> Ce projet a été réalisé par [@KlausAbut](https://github.com/KlausAbut).
+> Ce projet a été réalisé par [@KlausAbut](https://github.com/KlausAbut) et [@Saritahh](https://github.com/Saritahh).
+
+---
+
+## 📋 Check-list déploiement Heroku (manuel)
+
+### ✅ Prérequis
+
+* Créer un compte Heroku
+* Installer la CLI Heroku
+* Ajouter un fichier `Procfile`, `composer.json`, `package.json`, `postcss.config.js` bien configurés
+
+### 🚀 Déploiement rapide
+
+```bash
+heroku create ecoride-demo --buildpack heroku/php
+heroku addons:create heroku-postgresql:hobby-dev
+
+git push heroku main
+heroku run php bin/console doctrine:migrations:migrate
+```
+
+### ⚠️ Attention
+
+* Pensez à configurer les variables d'environnement (`APP_ENV`, `APP_SECRET`, `DATABASE_URL`, `MAILER_DSN`, etc.)
+* Les assets doivent être compilés avant déploiement (`npm run build` + `php bin/console asset-map:compile` si utile)
+

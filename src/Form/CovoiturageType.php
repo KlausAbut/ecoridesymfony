@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Voiture;
 use App\Entity\Covoiturage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Enum\CovoiturageStatut;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class CovoiturageType extends AbstractType
@@ -43,7 +45,13 @@ class CovoiturageType extends AbstractType
                 ],
                 'label' => 'Statut',
             ])
-            ->add('voiture', HiddenType::class)
+            ->add('voiture', EntityType::class, [
+                'class' => Voiture::class,
+                'choice_label' => function (Voiture $voiture) {
+                    return $voiture->getModele() . ' – ' . $voiture->getImmatriculation();
+                },
+                'label' => 'Voiture utilisée',
+            ])
             ->add('participants', HiddenType::class, [
                 'mapped' => false,
                 'required' => false,

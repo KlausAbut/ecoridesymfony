@@ -16,6 +16,10 @@ class AvisType extends AbstractType
         $builder
             ->add('note', IntegerType::class, [
                 'label' => 'Note (1 à 5)',
+                'attr' => [
+                    'min' => 1,
+                    'max' => 5,
+                ]
             ])
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Votre avis'

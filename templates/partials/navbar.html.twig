@@ -1,24 +1,58 @@
 <header>
-  <nav class="navbar" style="position: sticky; top: 0; z-index: 50;">
+  <nav class="navbar fixed-top">
     <div class="nav-left">
-      <a href="{{ path('index') }}" class="logo"><span class="green">Eco</span>Ride</a>
+      <a href="{{ path('index') }}" class="logo">
+        <span class="green">Eco</span>Ride
+      </a>
     </div>
-  <div class="nav-mobile" id="menu">
+
     <div class="nav-center">
       <a href="{{ path('index') }}">Accueil</a>
       <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
       <a href="#contact">Contact</a>
     </div>
-    <div class="nav-right">
+
+    <!-- visibles uniquement sur desktop -->
+   <div class="nav-right">
+  {% if app.user %}
+    <div class="dropdown ms-auto">
+      <button id="dropdownButton" class="btn btn-light dropdown-toggle d-flex align-items-center" aria-expanded="false">
+        {{ app.user.firstname }}
+      </button>
+      <div id="dropdownContent" class="dropdown-content">
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+          <a class="dropdown-item text-danger fw-bold" href="{{ path('admin_dashboard') }}">🛠️ Espace Admin</a>
+          <hr class="dropdown-divider">
+        {% else %}
+          <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
+          <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
+          <a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a>
+          <hr class="dropdown-divider">
+        {% endif %}
+        <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+      </div>
+    </div>
+  {% else %}
+    <a href="{{ path('app_login') }}">Connexion</a>
+    <a href="{{ path('app_register') }}">Inscription</a>
+  {% endif %}
+</div>
+
+    <!-- Menu mobile -->
+    <div class="nav-mobile" id="menu">
+      <a href="{{ path('index') }}">Accueil</a>
+      <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
+      <a href="#contact">Contact</a>
       {% if app.user %}
         <a href="{{ path('user_profile') }}">Profil</a>
-        <a href="{{ path('app_logout') }}" class="danger">Déconnexion</a>
+        <a href="{{ path('app_logout') }}" class="text-danger">Déconnexion</a>
       {% else %}
         <a href="{{ path('app_login') }}">Connexion</a>
         <a href="{{ path('app_register') }}">Inscription</a>
       {% endif %}
     </div>
-  </div>
+
+    <!-- Bouton burger -->
     <button id="burger" class="burger">☰</button>
   </nav>
 </header>

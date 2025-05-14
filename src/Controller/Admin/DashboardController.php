@@ -22,7 +22,9 @@ class DashboardController extends AbstractController
     public function index(AvisRepository $avisRepo, CovoiturageRepository $covoiturageRepo, VoitureRepository $voitureRepo): Response
     {
         $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
-        $covoiturages = $covoiturageRepo->findAll();
+        $covoiturages = $covoiturageRepo->findBy([
+            'statut' => CovoiturageStatut::DRAFT,
+        ]);    
         $voitures = $voitureRepo->findAll();
 
         return $this->render('admin/dashboard.html.twig', [
@@ -90,11 +92,14 @@ class DashboardController extends AbstractController
     #[Route('/voiture/supprimer/{id}', name: 'voiture_supprimer')]
     public function supprimerVoiture(Voiture $voiture, EntityManagerInterface $em): Response
     {
+        if (count($voiture->getCovoiturages()) > 0) {
+            $this->addFlash('danger', 'Impossible de supprimer cette voiture : elle est utilisée dans un covoiturage.');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
         $em->remove($voiture);
         $em->flush();
-
         $this->addFlash('success', 'Voiture supprimée.');
-
         return $this->redirectToRoute('admin_dashboard');
     }
 

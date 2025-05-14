@@ -2,217 +2,233 @@
 @tailwind components;
 @tailwind utilities;
 
-main.container {
-    flex: 1;
-}
+/* Général */
 html, body {
-    height: 100%;
-    margin: 0;
+  height: 100%;
+  margin: 0;
+  background-color: rgb(139, 204, 134);
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #212529;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-body {
-    background-color: rgb(139, 204, 134);
-    background-size: cover;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 300;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #212529;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-top: 70px;
+main.container {
+  flex: 1;
+  margin-top: 70px;
 }
+
 h1, .h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #155724; 
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #155724;
 }
 
 h2, .h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    color: #218838;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #218838;
 }
 
 h3, .h3 {
-    font-size: 1.6rem;
-    font-weight: 500;
-    margin-bottom: 0.6rem;
-    color: #28a745;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+  color: #28a745;
 }
 
 p {
-    font-weight: 300;
-    font-size: 1rem;
-    margin-bottom: 1rem;
+  font-weight: 300;
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
-
+/* Bouton EcoRide */
 .btn-ecoride {
-    background-color: #28a745;
-    color: #fff;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
 }
 
 .btn-ecoride:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
-
+/* Layouts */
 .container, .card, .navbar, footer {
-    background-color: rgba(255, 255, 255, 0.88);
-    border-radius: 8px;
-    padding: 1rem;
-}
-.hidden {
-    display: none;
-}
-.container, .card, .navbar, footer {
-    background-color: rgba(255, 255, 255, 0.85);
-    border-radius: 8px;
-    padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  padding: 1rem;
 }
 
 footer {
-    margin-top: auto;
+  margin-top: auto;
 }
 
+/* Dropdown utilisateur */
 .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: white;
-    min-width: 180px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-  }
-  
-  .dropdown-content.show {
-    display: block;
-    opacity: 1;
-  }
-  
-  .dropdown-content a {
-    padding: 12px 16px;
-    display: block;
-    color: #212529;
-    text-decoration: none;
-  }
-  
-  .dropdown-content a:hover {
-    background-color: #f8f9fa;
-  }
-
-.hover-shadow-sm:hover{
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease-in-out;
+  position: relative;
+  display: inline-block;
 }
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.dropdown-content.show {
+  display: block;
+  opacity: 1;
+}
+
+.dropdown-content a {
+  padding: 12px 16px;
+  display: block;
+  color: #212529;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #f8f9fa;
+}
+
+/* Recherche */
 #formRecherche {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  #formRecherche input,
-  #formRecherche button {
-    padding: 0.5rem;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#formRecherche input,
+#formRecherche button {
+  padding: 0.5rem;
+}
+
+/* Hover effet carte */
+.hover-shadow-sm:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
 
 .hover-shadow:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.15);
-    transform: translateY(-2px);
-    transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
 }
 
+/* Navbar responsive */
 .navbar {
-    background: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    border-bottom: 1px solid #ccc;
-    z-index: 50;
-  }
-  
-  .navbar .logo {
-    font-weight: bold;
-    font-size: 1.3rem;
-    color: #000;
-    text-decoration: none;
-  }
-  
-  .green {
-    color: #28a745;
-  }
-  
-  .nav-right a {
-    margin-left: 1rem;
-    text-decoration: none;
-    color: #333;
-  }
-  
-  .nav-center {
-    display: flex;
-    gap: 1.5rem;
-  }
-  
-  .nav-center a {
-    text-decoration: none;
-    color: #333;
-  }
-  
-  .nav-center a:hover {
-    text-decoration: underline;
-    margin-left: 1rem;
-  }
-  
-  @media (max-width: 768px) {
-    .nav-center {
-      display: none;
-    }
-  }
-  
-  .nav-mobile {
+  background: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  z-index: 50;
+}
+
+.navbar .logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #000;
+  text-decoration: none;
+}
+
+.green {
+  color: #28a745;
+}
+
+.nav-center {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-center a {
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-center a:hover {
+  text-decoration: underline;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* Menu mobile */
+.nav-mobile {
+  display: none;
+}
+
+.nav-mobile.show {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: absolute;
+  top: 60px;
+  right: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  z-index: 999;
+}
+
+.burger {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-right {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-right a {
+  text-decoration: none;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .nav-right {
     display: none;
   }
-  
-  .nav-mobile.show {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    position: absolute;
-    top: 60px;
-    right: 1rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .nav-center {
+    display: none;
   }
-  
-  @media (max-width: 768px) {
-    .nav-center, .nav-right {
-      display: none;
-    }
-  
-    .burger {
-      display: block;
-    }
+
+  .burger {
+    display: block;
   }
+}
+

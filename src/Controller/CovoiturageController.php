@@ -6,13 +6,14 @@ use App\Entity\Covoiturage;
 use App\Entity\Participation;
 use App\Form\CovoiturageType;
 use App\Enum\CovoiturageStatut;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AvisRepository;
 use App\Repository\VoitureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CovoiturageRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -31,14 +32,22 @@ class CovoiturageController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name:'show')]
-    #[IsGranted('show','covoiturage')]
-    public function show(Covoiturage $covoiturage = null): Response
-    {
-        return $this->render('covoiturage/showco.html.twig', [
-            'covoiturage' => $covoiturage
-        ]);
+    #[Route('/show/{id}', name: 'show')]
+    #[IsGranted('show', 'covoiturage')]
+    public function show(
+    Covoiturage $covoiturage,
+    AvisRepository $avisRepository
+    ): Response {
+    $conducteur = $covoiturage->getCreatedBy();
+    $avisConducteur = $avisRepository->findBy([
+        'user' => $conducteur,
+        'statut' => 'VALIDÉ'
+    ]);
 
+    return $this->render('covoiturage/showco.html.twig', [
+        'covoiturage' => $covoiturage,
+        'avis_conducteur' => $avisConducteur,
+    ]);
     }
 
     #[Route('/participer/{id}', name: 'covoiturage_participer', methods: ['POST'])]
@@ -87,7 +96,7 @@ class CovoiturageController extends AbstractController
 
     #[Route('/edit/{id}', name: 'edit')]
     #[Route('/create', name: 'create')]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function edit(
         Request $request,
         EntityManagerInterface $em,

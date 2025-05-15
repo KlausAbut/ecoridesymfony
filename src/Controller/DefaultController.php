@@ -180,4 +180,11 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
         return $this->render('default/cgu.html.twig');
     }
 
+
+    #[Route('/a-propos', name: 'about')]
+    public function about(): Response
+    {
+        return $this->render('default/about.html.twig');
+    }
+
 }

@@ -173,4 +173,11 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
 
         return $this->redirectToRoute('user_profile');
     }
+
+    #[Route('/cgu', name: 'app_cgu')]
+    public function cgu(): Response
+    {
+        return $this->render('default/cgu.html.twig');
+    }
+
 }

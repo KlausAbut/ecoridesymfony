@@ -174,10 +174,14 @@ class CovoiturageController extends AbstractController
         $depart = $request->query->get('depart');
         $arrivee = $request->query->get('arrivee');
         $date = $request->query->get('date');
+        $prixMax = $request->query->get('prix');
+        $noteMin = $request->query->get('note');
+        $energie = $request->query->get('energie');
 
         if (!$depart || !$arrivee) {
             return new JsonResponse(['error' => 'Départ et arrivée sont requis.'], 400);
         }
+        
 
         $dateObj = null;
         if (!empty($date)) {
@@ -187,7 +191,7 @@ class CovoiturageController extends AbstractController
             }
         }
 
-        $resultats = $repo->rechercherTrajets($depart, $arrivee, $dateObj);
+        $resultats = $repo->rechercherTrajets($depart, $arrivee, $dateObj, $prixMax, $noteMin, $energie);
 
         $data = [];
         foreach ($resultats as $trajet) {
@@ -198,6 +202,7 @@ class CovoiturageController extends AbstractController
                 'date' => $trajet->getDateDepart()->format('d/m/Y'),
                 'heure' => $trajet->getHeureDepart()->format('H:i'),
                 'conducteur' => $trajet->getCreatedBy()->getFirstname(),
+                'ecologique' => $trajet->getVoiture()->getEnergie() === 'électique',
             ];
         }
 

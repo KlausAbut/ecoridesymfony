@@ -22,8 +22,8 @@
               <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>
             </div>
 
-            <div class="col-md-8">
-              <ul class="list-group list-group-flush">
+            <div class="col-md-8 text-center">
+              <ul class="list-group list-group-flush text-start">
                 <li class="list-group-item"><strong>Nom d’utilisateur :</strong> {{ app.user.username }}</li>
                 <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
                 <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
@@ -37,6 +37,17 @@
                   {% endif %}
                 </li>
               </ul>
+
+              <!-- Bloc Statistiques -->
+              <div class="mt-4 text-start">
+                <h5 class="text-success"><i class="bi bi-bar-chart-line"></i> Statistiques</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">🚗 Trajets proposés : {{ nombreTrajets }}</li>
+                  <li class="list-group-item">📅 Trajets réservés : {{ nombreReservations }}</li>
+                  <li class="list-group-item">⭐ Note moyenne : {{ noteMoyenne is not null ? noteMoyenne|number_format(1) ~ '/5' : 'Aucune' }}</li>
+                  <li class="list-group-item">📝 Nombre d’avis reçus : {{ nbAvis }}</li>
+                </ul>
+              </div>
 
               {% if not app.user.isConducteur %}
                 <form method="post" action="{{ path('user_become_conducteur') }}" class="mt-3">

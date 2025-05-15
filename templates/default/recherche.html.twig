@@ -12,7 +12,18 @@
             <input type="text" id="depart" name="depart" placeholder="Départ" required>
             <input type="text" id="arrivee" name="arrivee" placeholder="Arrivée" required>
             <input type="date" id="date" name="date">
+            <input type="number" id="prix" name="prix" placeholder="Prix max (€)">
+            <input type="number" id="note" name="note" placeholder="Note min (1-5)" step="0.1" min="1" max="5">
             <button type="submit" class="btn btn-success">Rechercher</button>
+            <div class="form-group">
+            <select name="energie" id="energie">
+                <option value="">Énergie</option>
+                <option value="électrique">Électrique</option>
+                <option value="diesel">Diesel</option>
+                <option value="essence">Essence</option>
+                <option value="hybride">Hybride</option>
+            </select>
+            </div>
         </form>
 
         <div id="loadingSpinner" class="text-center d-none">
@@ -20,6 +31,7 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
+        
 
         <div id="resultatsTrajets" class="mt-4"></div>
     </div>

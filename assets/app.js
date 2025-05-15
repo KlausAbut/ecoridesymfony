@@ -20,43 +20,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
     form?.addEventListener('submit', async function (e) {
         e.preventDefault();
-
+    
         if (!spinner || !container) return;
-
+    
         spinner.classList.remove('d-none');
         container.innerHTML = '';
+    
+        const depart = document.querySelector('#depart')?.value;
+        const arrivee = document.querySelector('#arrivee')?.value;
+        const date = document.querySelector('#date')?.value;
+        const prix = document.querySelector('#prix')?.value;
+        const note = document.querySelector('#note')?.value;
+        const energie = document.querySelector('#energie')?.value;
 
-        const depart = document.querySelector('#depart').value;
-        const arrivee = document.querySelector('#arrivee').value;
-        const date = document.querySelector('#date').value;
-
+    
         let url = `${window.routes.recherche}?depart=${depart}&arrivee=${arrivee}`;
-        if (date) {
-            url += `&date=${date}`;
-        }
-
+        if (date) url += `&date=${date}`;
+        if (prix) url += `&prix=${prix}`;
+        if (note) url += `&note=${note}`;
+        if (energie) url += `&energie=${energie}`;
+    
         try {
             const response = await fetch(url);
             const trajets = await response.json();
-
+    
             spinner.classList.add('d-none');
             container.innerHTML = '';
-
+    
             if (trajets.length === 0 || trajets.error) {
                 container.innerHTML = `<p class="text-danger">Aucun trajet trouvé</p>`;
                 return;
             }
-
-            container.innerHTML += `<h3 class="text-success">🚗 Trajets trouvés</h3>`;
+    
             trajets.forEach(t => {
-                container.innerHTML += `
+                let card = `
                     <a href="/covoiturage/show/${t.id}" class="text-decoration-none text-dark">
                         <div class="card mb-2 p-3 hover-shadow">
                             <strong>${t.lieuDepart} → ${t.lieuArrivee}</strong><br>
                             🗓️ ${t.date} à ${t.heure}<br>
-                            👤 Conducteur : ${t.conducteur}
-                        </div>
-                    </a>`;
+                            👤 Conducteur : ${t.conducteur}<br>
+                `;
+            
+                if (t.ecologique) {
+                    card += `<span class="badge bg-success">🚗 Écologique</span><br>`;
+                }
+            
+                card += `</div></a>`;
+            
+                container.innerHTML += card;
             });
         } catch (err) {
             spinner.classList.add('d-none');

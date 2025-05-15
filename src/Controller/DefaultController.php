@@ -7,6 +7,7 @@ use App\Enum\CovoiturageStatut;
 use App\Document\UserCredit;
 use App\Repository\AvisRepository;
 use App\Repository\CovoiturageRepository;
+use App\Repository\ParticipationRepository;
 use App\Repository\VoitureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -103,11 +104,24 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
     public function profil(
     VoitureRepository $voitureRepo,
     CovoiturageRepository $covoiturageRepo,
+    ParticipationRepository $participationRepo,
+    AvisRepository $avisRepo,
     DocumentManager $dm
     ): Response {
     $user = $this->getUser();
     if (!$user) {
         return $this->redirectToRoute('app_login');
+    }
+
+    $user = $this->getUser();
+
+    $nombreTrajets = $covoiturageRepo->count(['createdBy' => $user]);
+    $nombreReservations = $participationRepo->count(['user' => $user]);
+
+    $avis = $avisRepo->findBy(['user' => $user, 'statut' => 'VALIDÉ']);
+    $noteMoyenne = null;
+    if (count($avis) > 0) {
+        $noteMoyenne = array_sum(array_map(fn($a) => $a->getNote(), $avis)) / count($avis);
     }
 
     // Crédit
@@ -136,6 +150,10 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
         'voitures' => $voitureRepo->findBy(['user' => $user]),
         'covoiturages' => $covoiturageRepo->findBy(['createdBy' => $user]),
         'all_covoiturages' => $allCovoiturages,
+        'nombreTrajets' => $nombreTrajets,
+        'nombreReservations' => $nombreReservations,
+        'nbAvis' => count($avis),
+        'noteMoyenne' => $noteMoyenne,
     ]);
     }
 

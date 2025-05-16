@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les avis{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="text-center mb-4 text-success">🗣️ Avis des utilisateurs</h1>
+
+    {% set moyenne = avis|length > 0 
+        ? (avis|map(a => a.note)|reduce((a, b) => a + b) / avis|length)|number_format(1) 
+        : null %}
+
+    {% if moyenne %}
+        <div class="alert alert-success text-center">
+            Note moyenne : <strong>{{ moyenne }}/5</strong>
+        </div>
+    {% else %}
+        <p class="text-muted text-center">Aucun avis pour le moment.</p>
+    {% endif %}
+
+    <div class="row">
+        {% for a in avis %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm p-3 h-100">
+                    <p>⭐️ {{ a.note }}/5</p>
+                    <p>"{{ a.commentaire }}"</p>
+                    <p class="text-muted">– {{ a.user.firstname }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

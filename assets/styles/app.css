@@ -4,7 +4,9 @@
 
 /* Général */
 html, body {
+  font-family: 'Poppins', sans-serif;
   height: 100%;
+  padding: 0;
   margin: 0;
   background-color: rgb(139, 204, 134);
   background-size: cover;
@@ -19,8 +21,8 @@ html, body {
 }
 
 main.container {
-  flex: 1;
-  margin-top: 70px;
+  min-height: calc(100vh - 150px);
+  z-index: auto !important;
 }
 
 h1, .h1 {
@@ -49,6 +51,12 @@ p {
   font-size: 1rem;
   margin-bottom: 1rem;
 }
+
+section {
+  position: relative;
+  z-index: auto;
+}
+
 
 /* Bouton EcoRide */
 .btn-ecoride {
@@ -112,12 +120,10 @@ footer {
 
 /* Recherche */
 #formRecherche {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
+  position: relative;
+  z-index: auto;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 #formRecherche input,
@@ -188,13 +194,13 @@ footer {
 .nav-mobile.show {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   position: absolute;
   top: 60px;
   right: 1rem;
   background: white;
   padding: 1rem;
   border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   z-index: 999;
 }
 
@@ -206,29 +212,11 @@ footer {
   cursor: pointer;
 }
 
-.nav-right {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-right a {
-  text-decoration: none;
-  color: #333;
-}
-
 @media (max-width: 768px) {
-  .nav-right {
+  .nav-center, .nav-right {
     display: none;
   }
-}
-
-@media (max-width: 768px) {
-  .nav-center {
-    display: none;
-  }
-
   .burger {
     display: block;
   }
 }
-

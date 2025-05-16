@@ -36,4 +36,15 @@ public function createAvis(Request $request, EntityManagerInterface $em): Respon
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/avis', name: 'avis_list')]
+    public function list(EntityManagerInterface $em): Response
+    {
+        $avis = $em->getRepository(Avis::class)->findBy(['statut' => 'VALIDÉ']);
+    
+        return $this->render('avis/list.html.twig', [
+            'avis' => $avis
+        ]);
+    }
+    
 }

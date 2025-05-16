@@ -1,40 +1,55 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Accueil EcoRide{% endblock %}
 
 {% block body %}
+
+  {# --- Carousel d'accueil --- #}
   {% include 'default/carousel.html.twig' %}
 
-  <section class="bg-green-50 py-5 text-center border-bottom border-success-subtle">
-    <div class="container">
-      <h1 class="display-5 fw-bold text-success">Bienvenue sur <span class="text-emerald-600">EcoRide</span></h1>
-      <p class="lead">Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.</p>
-
-  <section class="py-5 bg-white">
-    <div class="container d-flex flex-column flex-md-row justify-content-center gap-4">
-      <div class="card p-3 shadow-sm w-100 w-md-50">
-        <img src="/images/eco9.jpg" class="card-img-top" alt="Écologie">
-        <div class="card-body">
-          <h5 class="card-title">Notre mission</h5>
-          <p class="card-text">Faites des économies… nouvelles rencontres !</p>
+  {# --- Section mission --- #}
+  <section class="py-5 bg-white border-bottom">
+    <div class="container text-center">
+      <h2 class="mb-4 text-success">Bienvenue sur EcoRide</h2>
+      <p class="lead mb-5">
+        Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
+      </p>
+      <div class="row justify-content-center">
+        <div class="col-md-5 mb-4">
+          <div class="card p-3 shadow-sm">
+            <img src="/images/eco9.jpg" class="card-img-top" alt="Mission">
+            <div class="card-body">
+              <h5 class="card-title">Notre mission</h5>
+              <p class="card-text">Faites des économies… nouvelles rencontres !</p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="card p-3 shadow-sm w-100 w-md-50">
-        <img src="/images/eco10.jpg" class="card-img-top" alt="Voiture">
-        <div class="card-body">
-          <h5 class="card-title">Rejoignez la communauté</h5>
-          <p class="card-text">Des centaines de trajets… le vôtre !</p>
+        <div class="col-md-5 mb-4">
+          <div class="card p-3 shadow-sm">
+            <img src="/images/eco10.jpg" class="card-img-top" alt="Communauté">
+            <div class="card-body">
+              <h5 class="card-title">Rejoignez la communauté</h5>
+              <p class="card-text">Des centaines de trajets proposés… le vôtre !</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <hr>
-  {% include 'default/recherche.html.twig' %}
+  {# --- Recherche de covoiturages --- #}
+  <section id="recherche" class="py-5 bg-light border-bottom">
+    {% include 'default/recherche.html.twig' %}
+  </section>
 
-  <hr>
-  {% include 'default/avis.html.twig' %}
+  {# --- Avis utilisateurs --- #}
+  <section id="avis" class="py-5 bg-white border-bottom">
+    {% include 'default/avis.html.twig' %}
+  </section>
 
-  <hr>
-  {% include 'default/contact.html.twig' %}
+  {# --- Contact --- #}
+  <section id="contact" class="py-5 bg-light">
+    {% include 'default/contact.html.twig' %}
+  </section>
+
 {% endblock %}

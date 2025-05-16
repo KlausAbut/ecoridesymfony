@@ -113,8 +113,6 @@ class DefaultController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-    $user = $this->getUser();
-
     $nombreTrajets = $covoiturageRepo->count(['createdBy' => $user]);
     $nombreReservations = $participationRepo->count(['user' => $user]);
 

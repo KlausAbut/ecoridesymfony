@@ -44,7 +44,7 @@
     <div class="nav-mobile" id="menu">
       <a href="{{ path('index') }}">Accueil</a>
       <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
-      <a href="#contact">Contact</a>
+      <a href="{{ path('contact') }}">Contact</a>
       {% if app.user %}
         <a href="{{ path('user_profile') }}">Profil</a>
         <a href="{{ path('app_logout') }}" class="text-danger">Déconnexion</a>

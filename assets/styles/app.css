@@ -23,6 +23,7 @@ html, body {
 main.container {
   min-height: calc(100vh - 150px);
   z-index: auto !important;
+  flex: 1;
 }
 
 h1, .h1 {

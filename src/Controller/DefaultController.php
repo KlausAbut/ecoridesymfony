@@ -20,8 +20,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'index')]
-public function index(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepo, DocumentManager $dm): Response
-{
+    public function index(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepo, DocumentManager $dm): Response
+    {
     $resultats = [];
 
     if ($request->query->get('depart') && $request->query->get('arrivee') && $request->query->get('date')) {
@@ -54,7 +54,7 @@ public function index(Request $request, CovoiturageRepository $repo, AvisReposit
         'avisList' => $avisList,
         'credit' => $credit,
     ]);
-}
+    }
 
 
 

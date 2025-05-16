@@ -8,24 +8,22 @@
     <div class="container">
         <h2 class="text-center mb-4 text">Rechercher covoiturage</h2>
 
-        <form id="formRecherche" class="d-flex flex-wrap gap-3 align-items-center justify-content-center my-4">
-        <input type="text" class="form-control" id="depart" placeholder="Départ">
-        <input type="text" class="form-control" id="arrivee" placeholder="Arrivée">
-        <input type="date" class="form-control" id="date">
-        <input type="number" class="form-control" id="prix" placeholder="Prix max (€)">
-        <input type="number" class="form-control" id="note" placeholder="Note min">
-        <select id="energie" class="form-select">
-            <option value="">Énergie</option>
-            <option value="essence">Essence</option>
-            <option value="diesel">Diesel</option>
-            <option value="électrique">Électrique</option>
-        </select>
-        <button class="btn btn-success">Rechercher</button>
+        <form id="formRecherche" class="d-flex flex-wrap gap-2 align-items-end justify-content-center p-3 rounded bg-white shadow-sm">
+            <input type="text" id="depart" name="depart" class="form-control" placeholder="Départ">
+            <input type="text" id="arrivee" name="arrivee" class="form-control" placeholder="Arrivée">
+            <input type="date" id="date" name="date" class="form-control">
+            <input type="number" id="prix" name="prix" class="form-control" placeholder="Prix max (€)">
+            <input type="number" id="note" name="note" class="form-control" placeholder="Note min">
+            <select id="energie" name="energie" class="form-select">
+                <option value="">Énergie</option>
+                <option value="électrique">Électrique</option>
+                <option value="essence">Essence</option>
+                <option value="diesel">Diesel</option>
+            </select>
+        <button type="submit" class="btn btn-success">Rechercher</button>
         </form>
 
-        <div id="loadingSpinner" class="d-none text-center my-3">🔄 Chargement...</div>
-        <div id="resultatsTrajets" class="my-3"></div>
-
-        <div id="resultatsTrajets" class="mt-4"></div>
+        <div id="loadingSpinner" class="text-center my-3 d-none">Chargement...</div>
+        <div id="resultatsTrajets"></div>
     </div>
 </section>

@@ -1,47 +1,40 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Accueil EcoRide{% endblock %}
 
 {% block body %}
-{% include 'default/carousel.html.twig' %}
+  {% include 'default/carousel.html.twig' %}
 
-<hr>
+  <section class="bg-green-50 py-5 text-center border-bottom border-success-subtle">
+    <div class="container">
+      <h1 class="display-5 fw-bold text-success">Bienvenue sur <span class="text-emerald-600">EcoRide</span></h1>
+      <p class="lead">Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.</p>
 
-<section class="mb-5 rounded shadow-lg">
-    <div class="container py-4" id="top">
-    <h1 class="mb-5 text-center">Bienvenue sur <strong>EcoRide</strong></h1>
-        <p class="lead text-center">
-            Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
-        </p>
-    <div class="d-flex flex-column flex-md-row justify-content-center gap-4 my-5">
-    <div class="card p-4 shadow-sm w-100 w-md-50">
+  <section class="py-5 bg-white">
+    <div class="container d-flex flex-column flex-md-row justify-content-center gap-4">
+      <div class="card p-3 shadow-sm w-100 w-md-50">
         <img src="/images/eco9.jpg" class="card-img-top" alt="Écologie">
         <div class="card-body">
-        <h5 class="card-title">Notre mission</h5>
-        <p class="card-text">Faites des économies... nouvelles rencontres !</p>
+          <h5 class="card-title">Notre mission</h5>
+          <p class="card-text">Faites des économies… nouvelles rencontres !</p>
         </div>
-    </div>
+      </div>
 
-    <div class="card p-4 shadow-sm w-100 w-md-50">
+      <div class="card p-3 shadow-sm w-100 w-md-50">
         <img src="/images/eco10.jpg" class="card-img-top" alt="Voiture">
         <div class="card-body">
-        <h5 class="card-title">Rejoignez la communauté</h5>
-        <p class="card-text">Des centaines de trajets... le vôtre !</p>
+          <h5 class="card-title">Rejoignez la communauté</h5>
+          <p class="card-text">Des centaines de trajets… le vôtre !</p>
         </div>
+      </div>
     </div>
-    </div>
-</section>
+  </section>
 
-<hr>
+  <hr>
+  {% include 'default/recherche.html.twig' %}
 
-{% include 'default/recherche.html.twig' %}
+  <hr>
+  {% include 'default/avis.html.twig' %}
 
-<hr>
-
-{% include 'default/avis.html.twig' %}
-
-<hr>
-
-{% include 'default/contact.html.twig' %}
-
+  <hr>
+  {% include 'default/contact.html.twig' %}
 {% endblock %}

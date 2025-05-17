@@ -18,6 +18,10 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        if (!$user->isActive()) {
+            throw new CustomUserMessageAuthenticationException("Votre compte est suspendu.");
+        }
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,

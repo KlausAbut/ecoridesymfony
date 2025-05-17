@@ -25,8 +25,15 @@ class Avis
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
-    
 
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Covoiturage $covoiturage = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $valide = false;
+
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +84,28 @@ class Avis
     {
         $this->user = $user;
 
+        return $this;
+    }
+
+    public function getCovoiturage(): ?Covoiturage
+    {
+        return $this->covoiturage;
+    }
+
+    public function setCovoiturage(?Covoiturage $covoiturage): static
+    {
+        $this->covoiturage = $covoiturage;
+        return $this;
+    }
+
+    public function isValide(): bool
+    {
+        return $this->valide;
+    }
+
+    public function setValide(bool $valide): self
+    {
+        $this->valide = $valide;
         return $this;
     }
 

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modération des avis{% endblock %}
+
+{% block body %}
+<section class="section-box">
+  <h2 class="text-center text-primary mb-4">🛡️ Modération des avis signalés</h2>
+
+  {% if avis is empty %}
+    <p class="text-center text-muted">Aucun avis à modérer pour le moment.</p>
+  {% else %}
+    <div class="row justify-content-center">
+      {% for a in avis %}
+        <div class="col-md-6 mb-4">
+          <div class="card p-3 shadow-sm">
+            <p><strong>Note :</strong> ⭐ {{ a.note }}/5</p>
+            <p><em>“{{ a.commentaire }}”</em></p>
+            <p class="text-muted">Utilisateur : {{ a.user.firstname }}</p>
+
+            <div class="d-flex gap-2">
+              <a href="{{ path('employe_avis_valider', {'id': a.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
+              <a href="{{ path('employe_avis_supprimer', {'id': a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

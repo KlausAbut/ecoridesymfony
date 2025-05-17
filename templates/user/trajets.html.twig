@@ -3,6 +3,14 @@
 {% block title %}Mes trajets proposés{% endblock %}
 
 {% block body %}
+{% set avisIds = [] %}
+{% set avisIds = [] %}
+{% for a in userAvis %}
+  {% if a.covoiturage is not null %}
+    {% set avisIds = avisIds|merge([a.covoiturage.id]) %}
+  {% endif %}
+{% endfor %}
+
 <section class="section-box">
   <h2 class="text-center text-success mb-4">🚘 Mes trajets en tant que conducteur</h2>
 
@@ -20,6 +28,7 @@
             <th>Places restantes</th>
             <th>Statut</th>
             <th>Actions</th>
+            <th>Avis reçus</th> {# ➕ NOUVELLE COLONNE #}
           </tr>
         </thead>
         <tbody>
@@ -41,14 +50,51 @@
               <td>{{ c.lieuArrivee }}</td>
               <td>{{ c.nbPlace }}</td>
               <td>
-                <span class="badge bg-{{ c.statut.value == 'PUBLIÉ' ? 'success' : 'secondary' }}">
+                <span class="badge 
+                  {% if c.statut.value == 'DRAFT' %}bg-warning
+                  {% elseif c.statut.value == 'PUBLISHED' %}bg-success
+                  {% elseif c.statut.value == 'CANCELLED' %}bg-danger
+                  {% elseif c.statut.value == 'TERMINE' %}bg-secondary
+                  {% else %}bg-light
+                  {% endif %}">
                   {{ c.statut.value|capitalize }}
                 </span>
               </td>
-              <td>
+              <td class="d-flex flex-column gap-1">
+                {% if c.statut.value == 'DRAFT' %}
+                  <a href="{{ path('covoiturage_covoiturage_demarrer', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">🚦 Démarrer</a>
+                {% elseif c.statut.value == 'PUBLISHED' %}
+                  <a href="{{ path('covoiturage_covoiturage_arriver', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅ Arrivée</a>
+                {% endif %}
+
                 <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">✏️</a>
                 <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm"
-                   onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">🗑️</a>
+                  onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">🗑️</a>
+
+                {% if c.statut.value == 'TERMINE' %}
+                  {% if c.id not in avisIds %}
+                    <a href="{{ path('avis_create', { 'id': c.id }) }}" class="btn btn-sm btn-outline-success">
+                      📝 Donner un avis
+                    </a>
+                  {% else %}
+                    <span class="badge bg-success">✔️ Avis donné</span>
+                  {% endif %}
+                {% endif %}
+              </td>
+
+              <td>
+                {% set avisValides = c.getAvis|filter(v => v.statut == 'VALIDÉ') %}
+                {% if avisValides is empty %}
+                  <span class="text-muted small">Aucun</span>
+                {% else %}
+                  {% set total = 0 %}
+                  {% for avis in avisValides %}
+                    {% set total = total + avis.note %}
+                  {% endfor %}
+                  {% set moyenne = (total / avisValides|length)|number_format(1) %}
+                  ⭐ {{ moyenne }}/5<br>
+                  <small class="text-muted">({{ avisValides|length }} avis)</small>
+                {% endif %}
               </td>
             </tr>
           {% endfor %}

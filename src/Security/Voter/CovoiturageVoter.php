@@ -13,12 +13,13 @@ class CovoiturageVoter extends Voter
 {
     const SHOW = 'show';
     const EDIT = 'edit';
+    const VALIDATE = 'validate';
 
     public function __construct(private readonly Security $security) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, [self::SHOW, self::EDIT])) {
+        if (!in_array($attribute, [self::SHOW, self::EDIT, self::VALIDATE])) {
             return false;
         }
         if(!$subject instanceof Covoiturage) {
@@ -45,6 +46,7 @@ class CovoiturageVoter extends Voter
         return match($attribute) {
             self::SHOW => $this->canShow($covoiturage, $user),
             self::EDIT => $this->canEdit($covoiturage, $user),
+            self::VALIDATE => $this->canValidate($covoiturage, $user),
             default => throw new \LogicException('This code should not be reached!')
         };
 
@@ -67,7 +69,7 @@ class CovoiturageVoter extends Voter
             return false;
         }
 
-        if (!$covoiturage) {
+        if (!$covoiturage || !$user) {
             return true;
         }
 
@@ -78,4 +80,14 @@ class CovoiturageVoter extends Voter
     {
        return CovoiturageStatut::PUBLISHED === $covoiturage->getStatut();
     }
+
+    private function canValidate(Covoiturage $covoiturage, ?User $user): bool
+    {
+        if (!$user || !$covoiturage->getParticipants()->contains($user)) {
+            return false;
+        }
+
+        return $covoiturage->getStatut() === CovoiturageStatut::TERMINE;
+    }
+
 }

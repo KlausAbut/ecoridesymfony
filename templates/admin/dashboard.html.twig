@@ -123,6 +123,42 @@
       </div>
     </div>
 
+    <form method="post" action="{{ path('admin_suspend_user', {id: user.id}) }}">
+      <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ user.id) }}">
+      {% if user.isActive %}
+        <button class="btn btn-sm btn-danger">⛔ Suspendre</button>
+      {% else %}
+        <button class="btn btn-sm btn-secondary" disabled>Déjà suspendu</button>
+      {% endif %}
+    </form>
+
   </div>
 </section>
+
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('creditChart');
+    if (ctx) {
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ chartLabels|json_encode|raw }},
+            datasets: [{
+            label: 'Crédits par jour',
+            data: {{ chartData|json_encode|raw }},
+            backgroundColor: 'rgba(40, 167, 69, 0.6)',
+            borderColor: 'rgba(40, 167, 69, 1)',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+            y: { beginAtZero: true }
+            }
+        }
+        });
+    }
+    </script>
+
 {% endblock %}

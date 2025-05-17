@@ -90,13 +90,16 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/mes-trajets', name: 'user_trajets')]
-    public function mesTrajets(): Response
+    public function mesTrajets(AvisRepository $avisRepo, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
         $covoiturages = $user->getCovoituragesCrees();
 
+        $userAvis = $avisRepo->findBy(['user' => $user]);
+
         return $this->render('user/trajets.html.twig', [
             'covoiturages' => $covoiturages,
+            'userAvis' => $userAvis,
         ]);
     }
 

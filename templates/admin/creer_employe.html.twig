@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer un employé{% endblock %}
+
+{% block body %}
+<section class="section-box">
+  <h2 class="text-success mb-4">➕ Ajouter un employé</h2>
+
+  {{ form_start(form) }}
+    {{ form_row(form.firstname) }}
+    {{ form_row(form.lastname) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.password) }}
+    <button class="btn btn-success mt-3">Créer</button>
+  {{ form_end(form) }}
+</section>
+{% endblock %}

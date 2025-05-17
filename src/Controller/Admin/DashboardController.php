@@ -136,4 +136,42 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
+    #[Route('/admin/creer-employe', name: 'admin_creer_employe')]
+    public function creerEmploye(Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): Response
+    {
+        $user = new User();
+
+        $form = $this->createForm(EmployeType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
+            $user->setPassword($hasher->hashPassword($user, $password));
+            $user->setRoles(['ROLE_EMPLOYE']);
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Employé créé avec succès.');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        return $this->render('admin/creer_employe.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/admin/suspendre-utilisateur/{id}', name: 'admin_suspend_user', methods: ['POST'])]
+    public function suspendUser(User $user, EntityManagerInterface $em, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('suspend' . $user->getId(), $request->request->get('_token'))) {
+            $user->setIsActive(false);
+            $em->flush();
+
+            $this->addFlash('success', 'Utilisateur suspendu.');
+        }
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
 }

@@ -68,6 +68,9 @@ class Covoiturage
     #[ORM\OneToMany(mappedBy: 'covoiturage', targetEntity: Participation::class)]
     private Collection $participations;
 
+    #[ORM\OneToMany(mappedBy: 'covoiturage', targetEntity: Avis::class)]
+    private Collection $avis;
+
     public function getParticipations(): Collection
     {
         return $this->participations;
@@ -77,6 +80,7 @@ class Covoiturage
     {
         $this->participants = new ArrayCollection();
         $this->participations = new ArrayCollection();
+        $this->avis = new ArrayCollection();
 
     }
 
@@ -246,6 +250,14 @@ class Covoiturage
     {
         $this->statut = $statut;
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
     }
 
 }

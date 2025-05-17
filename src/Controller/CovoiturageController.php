@@ -209,5 +209,39 @@ class CovoiturageController extends AbstractController
         return new JsonResponse($data);
     }
 
+    #[Route('/covoiturage/demarrer/{id}', name: 'covoiturage_demarrer')]
+    public function demarrer(Covoiturage $covoiturage, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($this->getUser() !== $covoiturage->getCreatedBy()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $covoiturage->setStatut(CovoiturageStatut::PUBLISHED);
+        $em->flush();
+
+        $this->addFlash('success', 'Le trajet a bien démarré.');
+        return $this->redirectToRoute('user_trajets');
+    }
+
+
+
+    #[Route('/covoiturage/arriver/{id}', name: 'covoiturage_arriver')]
+    public function arriver(Covoiturage $covoiturage, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($this->getUser() !== $covoiturage->getCreatedBy()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $covoiturage->setStatut(CovoiturageStatut::TERMINE);
+        $em->flush();
+
+        $this->addFlash('success', 'Le trajet est marqué comme terminé.');
+        return $this->redirectToRoute('user_trajets');
+    }
+
 }
 

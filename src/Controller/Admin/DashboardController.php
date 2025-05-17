@@ -14,6 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\VoitureRepository;
 use App\Entity\Voiture;
 use App\Enum\CovoiturageStatut;
+use App\Repository\UserRepository;
 
 
 #[IsGranted('ROLE_ADMIN')]
@@ -25,11 +26,13 @@ class DashboardController extends AbstractController
     AvisRepository $avisRepo,
     CovoiturageRepository $covoiturageRepo,
     VoitureRepository $voitureRepo,
+    UserRepository $userRepo,
     DocumentManager $dm
     ): Response {
     $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
     $covoiturages = $covoiturageRepo->findBy(['statut' => CovoiturageStatut::DRAFT]);
     $voitures = $voitureRepo->findAll();
+    $users = $userRepo->findAllNonAdmin();
 
     $historiques = $covoiturageRepo->createQueryBuilder('c')
     ->where('c.date_depart < :now')
@@ -64,6 +67,7 @@ class DashboardController extends AbstractController
         'creditsToday' => $creditsToday,
         'chartLabels' => $chartLabels,
         'chartData' => $chartData,
+        'users' => $users,
     ]);
     }
 

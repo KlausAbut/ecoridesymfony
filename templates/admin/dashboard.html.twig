@@ -123,15 +123,38 @@
       </div>
     </div>
 
-    <form method="post" action="{{ path('admin_suspend_user', {id: user.id}) }}">
-      <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ user.id) }}">
-      {% if user.isActive %}
-        <button class="btn btn-sm btn-danger">⛔ Suspendre</button>
-      {% else %}
-        <button class="btn btn-sm btn-secondary" disabled>Déjà suspendu</button>
-      {% endif %}
-    </form>
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white fw-bold text-center">
+          👥 Gestion des utilisateurs
+        </div>
+        <div class="card-body">
+          {% for user in users %}
+            <div class="border-bottom pb-2 mb-3">
+              <strong>{{ user.firstname }} {{ user.lastname }}</strong> — {{ user.email }}<br>
+              Rôle(s) : {{ user.roles|join(', ') }}<br>
+              Statut : 
+              {% if user.isActive %}
+                <span class="badge bg-success">Actif</span>
+              {% else %}
+                <span class="badge bg-secondary">Suspendu</span>
+              {% endif %}
 
+              <form method="post" action="{{ path('admin_admin_suspend_user', {'id': user.id}) }}" class="mt-2 d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ user.id) }}">
+                {% if user.isActive %}
+                  <button class="btn btn-sm btn-danger">⛔ Suspendre</button>
+                {% else %}
+                  <button class="btn btn-sm btn-secondary" disabled>Déjà suspendu</button>
+                {% endif %}
+              </form>
+            </div>
+          {% else %}
+            <p class="text-muted">Aucun utilisateur trouvé.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

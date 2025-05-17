@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Document\UserCredit;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Repository\AvisRepository;
 use App\Repository\CovoiturageRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,19 +21,50 @@ use App\Enum\CovoiturageStatut;
 class DashboardController extends AbstractController
 {
     #[Route('/', name: 'dashboard')]
-    public function index(AvisRepository $avisRepo, CovoiturageRepository $covoiturageRepo, VoitureRepository $voitureRepo): Response
-    {
-        $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
-        $covoiturages = $covoiturageRepo->findBy([
-            'statut' => CovoiturageStatut::DRAFT,
-        ]);    
-        $voitures = $voitureRepo->findAll();
+    public function index(
+    AvisRepository $avisRepo,
+    CovoiturageRepository $covoiturageRepo,
+    VoitureRepository $voitureRepo,
+    DocumentManager $dm
+    ): Response {
+    $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
+    $covoiturages = $covoiturageRepo->findBy(['statut' => CovoiturageStatut::DRAFT]);
+    $voitures = $voitureRepo->findAll();
 
-        return $this->render('admin/dashboard.html.twig', [
-            'avis' => $avis,
-            'covoiturages' => $covoiturages,
-            'voitures' => $voitures,
-        ]);
+    $historiques = $covoiturageRepo->createQueryBuilder('c')
+    ->where('c.date_depart < :now')
+    ->andWhere('c.statut = :statut')
+    ->setParameter('now', new \DateTime())
+    ->setParameter('statut', CovoiturageStatut::PUBLISHED)
+    ->orderBy('c.date_depart', 'DESC')
+    ->getQuery()
+    ->getResult();
+
+    // Statistiques MongoDB
+    $creditRepo = $dm->getRepository(UserCredit::class);
+    $allCredits = $creditRepo->findAll();
+    $totalCredits = array_sum(array_map(fn($c) => $c->getAmount(), $allCredits));
+
+    $creditsByDay = [];
+    foreach ($allCredits as $credit) {
+        $day = (new \DateTime())->format('Y-m-d');
+        $creditsByDay[$day] = ($creditsByDay[$day] ?? 0) + $credit->getAmount();
+    }
+
+    $chartLabels = array_keys($creditsByDay);
+    $chartData = array_values($creditsByDay);
+    $creditsToday = $creditsByDay[(new \DateTime())->format('Y-m-d')] ?? 0;
+
+    return $this->render('admin/dashboard.html.twig', [
+        'avis' => $avis,
+        'covoiturages' => $covoiturages,
+        'voitures' => $voitures,
+        'historiques' => $historiques,
+        'totalCredits' => $totalCredits,
+        'creditsToday' => $creditsToday,
+        'chartLabels' => $chartLabels,
+        'chartData' => $chartData,
+    ]);
     }
 
     #[Route('/avis/valider/{id}', name: 'avis_valider')]

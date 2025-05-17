@@ -4,81 +4,78 @@
 
 {% block body %}
 {% if app.user %}
-<section class="mt-5">
-  <div class="container">
-    <h1 class="text-center text-success mb-4">Mon Profil</h1>
+<section class="section-box">
+  <h2 class="text-center text-success mb-4">👤 Mon Profil</h2>
 
-    <div class="row justify-content-center">
-      <div class="col-md-10">
-        <div class="card shadow-sm p-4 bg-white">
-          <div class="row g-4 align-items-center">
-            <div class="col-md-4 text-center">
-              {% if user.photo %}
-                <img src="data:image/jpeg;base64,{{ user.photo|convert_base64 }}" alt="Photo de profil" class="rounded-circle img-fluid" style="max-width: 150px;">
-              {% else %}
-                <img src="/images/avatar.jpg" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
-              {% endif %}
-              <p class="mt-2 fw-semibold">{{ app.user.firstname }} {{ app.user.lastname }}</p>
-              <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>
-            </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-sm p-4 bg-white mb-4">
+        <div class="row g-4 align-items-center">
+          <div class="col-md-4 text-center">
+            {% if user.photo %}
+              <img src="data:image/jpeg;base64,{{ user.photo|convert_base64 }}" alt="Photo de profil" class="rounded-circle img-fluid" style="max-width: 150px;">
+            {% else %}
+              <img src="/images/avatar.jpg" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
+            {% endif %}
+            <p class="mt-2 fw-semibold">{{ app.user.firstname }} {{ app.user.lastname }}</p>
+            <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>
+          </div>
 
-            <div class="col-md-8 text-center">
-              <ul class="list-group list-group-flush text-start">
-                <li class="list-group-item"><strong>Nom d’utilisateur :</strong> {{ app.user.username }}</li>
-                <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
-                <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
-                <li class="list-group-item"><strong>Adresse :</strong> {{ app.user.adresse }}</li>
-                <li class="list-group-item"><strong>Date de naissance :</strong> {{ app.user.dateNaissance }}</li>
-                <li class="list-group-item"><strong>Statut :</strong>
-                  {% if app.user.isConducteur %}
-                    <span class="text-success">Conducteur</span>
-                  {% else %}
-                    <span class="text-secondary">Utilisateur</span>
-                  {% endif %}
-                </li>
-              </ul>
+          <div class="col-md-8">
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item"><strong>Nom d’utilisateur :</strong> {{ app.user.username }}</li>
+              <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
+              <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
+              <li class="list-group-item"><strong>Adresse :</strong> {{ app.user.adresse }}</li>
+              <li class="list-group-item"><strong>Date de naissance :</strong> {{ app.user.dateNaissance|date('d/m/Y') }}</li>
+              <li class="list-group-item"><strong>Statut :</strong>
+                {% if app.user.isConducteur %}
+                  <span class="text-success">Conducteur</span>
+                {% else %}
+                  <span class="text-secondary">Utilisateur</span>
+                {% endif %}
+              </li>
+            </ul>
 
-              <!-- Bloc Statistiques -->
-              <div class="text-center mt-3">
-                <h5 class="text-success"><i class="bi bi-bar-chart-line"></i> Statistiques</h5>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">🚗 Trajets proposés : {{ nombreTrajets }}</li>
-                  <li class="list-group-item">📅 Trajets réservés : {{ nombreReservations }}</li>
-                  <li class="list-group-item">⭐ Note moyenne : {{ noteMoyenne is not null ? noteMoyenne|number_format(1) ~ '/5' : 'Aucune' }}</li>
-                  <li class="list-group-item">📝 Nombre d’avis reçus : {{ nbAvis }}</li>
-                </ul>
-              </div>
+            <h5 class="text-success mt-4"><i class="bi bi-bar-chart-line"></i> Statistiques</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">🚗 Trajets proposés : {{ nombreTrajets }}</li>
+              <li class="list-group-item">📅 Trajets réservés : {{ nombreReservations }}</li>
+              <li class="list-group-item">⭐ Note moyenne : {{ noteMoyenne is not null ? noteMoyenne|number_format(1) ~ '/5' : 'Aucune' }}</li>
+              <li class="list-group-item">📝 Nombre d’avis reçus : {{ nbAvis }}</li>
+            </ul>
 
-              {% if not app.user.isConducteur %}
-                <form method="post" action="{{ path('user_become_conducteur') }}" class="mt-3">
-                  <button class="btn btn-ecoride w-100">Devenir conducteur</button>
-                </form>
-              {% endif %}
-            </div>
+            {% if not app.user.isConducteur %}
+              <form method="post" action="{{ path('user_become_conducteur') }}" class="mt-3">
+                <button class="btn btn-success w-100">🚘 Devenir conducteur</button>
+              </form>
+            {% endif %}
           </div>
         </div>
+      </div>
 
-        {% if not app.user.isConducteur and 'ROLE_ADMIN' not in app.user.roles %}
-          <hr class="my-5">
-          <h2 class="text-success">Trajets disponibles</h2>
+      {# --- Trajets à rejoindre --- #}
+      {% if not app.user.isConducteur and 'ROLE_ADMIN' not in app.user.roles %}
+        <div class="section-box bg-white">
+          <h3 class="text-success">🌍 Trajets disponibles</h3>
           {% for trajet in all_covoiturages %}
             <div class="card mb-2 p-3">
               <strong>{{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}</strong> — {{ trajet.dateDepart|date('d/m/Y') }}
-              <div class="mt-2">
-                <form method="post" action="{{ path('covoiturage_covoiturage_participer', {'id': trajet.id}) }}">
-                  <input type="hidden" name="_token" value="{{ csrf_token('participer' ~ trajet.id) }}">
-                  <button type="submit" class="btn btn-sm btn-success"> Participer (1 crédit)</button>
-                </form>
-              </div>
+              <form method="post" action="{{ path('covoiturage_covoiturage_participer', {'id': trajet.id}) }}" class="mt-2">
+                <input type="hidden" name="_token" value="{{ csrf_token('participer' ~ trajet.id) }}">
+                <button type="submit" class="btn btn-sm btn-success">Participer (1 crédit)</button>
+              </form>
             </div>
           {% else %}
             <p class="text-muted">Aucun trajet disponible actuellement.</p>
           {% endfor %}
-        {% endif %}
+        </div>
+      {% endif %}
 
-        {% if app.user.isConducteur %}
-        <div class="mt-5">
-          <h2 class="text-success">Mes voitures</h2>
+      {# --- Si conducteur : voitures + trajets --- #}
+      {% if app.user.isConducteur %}
+        <div class="section-box bg-white">
+          <h3 class="text-success">🚗 Mes voitures</h3>
           {% for voiture in voitures %}
             <div class="card mb-2 p-3">
               <strong>{{ voiture.modele }}</strong> – {{ voiture.immatriculation }}
@@ -92,8 +89,8 @@
           {% endfor %}
           <a href="{{ path('voiture_create') }}" class="btn btn-success mt-3">➕ Ajouter une voiture</a>
 
-          <hr class="my-5">
-          <h2 class="text-success">Mes covoiturages</h2>
+          <hr class="my-4">
+          <h3 class="text-success">🛣️ Mes covoiturages</h3>
           {% for covoiturage in covoiturages %}
             <div class="card mb-2 p-3">
               <strong>{{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</strong> — {{ covoiturage.dateDepart|date('d/m/Y') }}
@@ -107,8 +104,7 @@
           {% endfor %}
           <a href="{{ path('covoiturage_create') }}" class="btn btn-success mt-3">➕ Proposer un trajet</a>
         </div>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -118,5 +114,3 @@
 </div>
 {% endif %}
 {% endblock %}
-
-

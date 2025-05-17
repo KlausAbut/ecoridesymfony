@@ -3,94 +3,126 @@
 {% block title %}Admin - Tableau de bord{% endblock %}
 
 {% block body %}
-<section class="py-5">
-  <div class="container">
-    <h1 class="text-center text mb-5">Tableau de bord Admin</h1>
+<section class="section-box">
+  <h2 class="text-center text-success mb-5">🛠️ Tableau de bord administrateur</h2>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
 
-      <!-- COVOITURAGES -->
-      <div class="col">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-success text-white text-center fw-bold">
-            Covoiturages à valider
-          </div>
-          <div class="card-body">
-            {% if covoiturages is not empty %}
-              {% for c in covoiturages %}
-                <div class="mb-3 border-bottom pb-2">
-                  <strong>{{ c.lieuDepart }} → {{ c.lieuArrivee }}</strong><br>
-                  📅 {{ c.dateDepart|date('d/m/Y') }}<br>
-                  👤 {{ c.createdBy.firstname }}
+    {# === COVOITURAGES === #}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-success text-white fw-bold text-center">
+          🚗 Covoiturages à valider
+        </div>
+        <div class="card-body">
+          {% if covoiturages is not empty %}
+            {% for c in covoiturages %}
+              <div class="mb-3 border-bottom pb-2">
+                <strong>{{ c.lieuDepart }} → {{ c.lieuArrivee }}</strong><br>
+                📅 {{ c.dateDepart|date('d/m/Y') }}<br>
+                👤 {{ c.createdBy.firstname }}
 
-                  <div class="mt-2 d-flex gap-2">
-                    <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-warning btn-sm">✏️ Modifier</a>
-                    <a href="{{ path('admin_covoiturage_valider', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
-                    <a href="{{ path('admin_covoiturage_supprimer', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
-                  </div>
+                <div class="mt-2 d-flex flex-wrap gap-2">
+                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-warning btn-sm">✏️</a>
+                  <a href="{{ path('admin_covoiturage_valider', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅</a>
+                  <a href="{{ path('admin_covoiturage_supprimer', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
                 </div>
-              {% endfor %}
-            {% else %}
-              <p class="text-muted">Aucun trajet en attente.</p>
-            {% endif %}
-          </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">Aucun trajet en attente.</p>
+          {% endif %}
         </div>
       </div>
-
-      <!-- AVIS -->
-      <div class="col">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-primary text-white text-center fw-bold">
-            Avis à modérer
-          </div>
-          <div class="card-body">
-            {% if avis is not empty %}
-              {% for a in avis %}
-                <div class="mb-3 border-bottom pb-2">
-                  “{{ a.commentaire }}”<br>
-                  ⭐️ {{ a.note }}/5<br>
-                  👤 {{ a.user.firstname }}
-
-                  <div class="mt-2 d-flex gap-2">
-                    <a href="{{ path('admin_avis_valider', {'id': a.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
-                    <a href="{{ path('admin_avis_supprimer', {'id': a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
-                  </div>
-                </div>
-              {% endfor %}
-            {% else %}
-              <p class="text-muted">Aucun avis en attente.</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <!-- VOITURES -->
-      <div class="col">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-secondary text-white text-center fw-bold">
-            Voitures enregistrées
-          </div>
-          <div class="card-body">
-            {% if voitures is not empty %}
-              {% for v in voitures %}
-                <div class="mb-3 border-bottom pb-2">
-                  {{ v.modele }} – {{ v.immatriculation }}<br>
-                  👤 {{ v.user.firstname }}
-
-                  <div class="mt-2 d-flex gap-2">
-                    <a href="{{ path('voiture_edit', {'id': v.id}) }}" class="btn btn-outline-warning btn-sm">✏️ Modifier</a>
-                    <a href="{{ path('admin_voiture_supprimer', {'id': v.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
-                  </div>
-                </div>
-              {% endfor %}
-            {% else %}
-              <p class="text-muted">Aucune voiture enregistrée.</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    {# === AVIS === #}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold text-center">
+          ⭐ Avis à modérer
+        </div>
+        <div class="card-body">
+          {% if avis is not empty %}
+            {% for a in avis %}
+              <div class="mb-3 border-bottom pb-2">
+                “{{ a.commentaire }}”<br>
+                ⭐ {{ a.note }}/5<br>
+                👤 {{ a.user.firstname }}
+
+                <div class="mt-2 d-flex gap-2">
+                  <a href="{{ path('admin_avis_valider', {'id': a.id}) }}" class="btn btn-outline-success btn-sm">✅</a>
+                  <a href="{{ path('admin_avis_supprimer', {'id': a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">Aucun avis en attente.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {# === VOITURES === #}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-secondary text-white fw-bold text-center">
+          🚘 Voitures enregistrées
+        </div>
+        <div class="card-body">
+          {% if voitures is not empty %}
+            {% for v in voitures %}
+              <div class="mb-3 border-bottom pb-2">
+                {{ v.modele }} – {{ v.immatriculation }}<br>
+                👤 {{ v.user.firstname }}
+
+                <div class="mt-2 d-flex gap-2">
+                  <a href="{{ path('voiture_edit', {'id': v.id}) }}" class="btn btn-outline-warning btn-sm">✏️</a>
+                  <a href="{{ path('admin_voiture_supprimer', {'id': v.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">Aucune voiture enregistrée.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white fw-bold text-center">
+          📜 Historique des covoiturages passés
+        </div>
+        <div class="card-body">
+          {% if historiques is not empty %}
+            {% for h in historiques %}
+              <div class="mb-3 border-bottom pb-2">
+                <strong>{{ h.lieuDepart }} → {{ h.lieuArrivee }}</strong><br>
+                ✅ Réalisé le {{ h.dateDepart|date('d/m/Y') }}<br>
+                👤 {{ h.createdBy.firstname }}
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">Aucun trajet passé enregistré.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white fw-bold text-center">
+          📊 Statistiques des crédits
+        </div>
+        <div class="card-body">
+          <p>Crédits totaux gagnés : <strong>{{ totalCredits }}</strong></p>
+          <p>Crédits gagnés aujourd'hui : <strong>{{ creditsToday }}</strong></p>
+          <canvas id="creditChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 {% endblock %}

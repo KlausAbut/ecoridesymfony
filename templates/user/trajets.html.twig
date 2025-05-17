@@ -3,21 +3,21 @@
 {% block title %}Mes trajets proposés{% endblock %}
 
 {% block body %}
-<main class="container">
-  <h1 class="mb-4">🚘 Mes trajets en tant que conducteur</h1>
+<section class="section-box">
+  <h2 class="text-center text-success mb-4">🚘 Mes trajets en tant que conducteur</h2>
 
   {% if covoiturages is empty %}
-    <p>Aucun trajet proposé pour l’instant.</p>
+    <p class="text-center text-muted">Aucun trajet proposé pour l’instant.</p>
   {% else %}
-    <section class="mt-5">
-      <table class="table">
-        <thead>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle text-center">
+        <thead class="table-success">
           <tr>
             <th>Participants</th>
             <th>Date</th>
             <th>Départ</th>
             <th>Arrivée</th>
-            <th>Places</th>
+            <th>Places restantes</th>
             <th>Statut</th>
             <th>Actions</th>
           </tr>
@@ -27,9 +27,9 @@
             <tr>
               <td>
                 {% if c.participants is empty %}
-                  Aucun
+                  <span class="text-muted">Aucun</span>
                 {% else %}
-                  <ul>
+                  <ul class="list-unstyled mb-0">
                     {% for participant in c.participants %}
                       <li>{{ participant.username }}</li>
                     {% endfor %}
@@ -40,17 +40,21 @@
               <td>{{ c.lieuDepart }}</td>
               <td>{{ c.lieuArrivee }}</td>
               <td>{{ c.nbPlace }}</td>
-              <td>{{ c.statut.value }}</td>
               <td>
-                <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">Supprimer</a>
+                <span class="badge bg-{{ c.statut.value == 'PUBLIÉ' ? 'success' : 'secondary' }}">
+                  {{ c.statut.value|capitalize }}
+                </span>
+              </td>
+              <td>
+                <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">✏️</a>
+                <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm"
+                   onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">🗑️</a>
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-    </section>
+    </div>
   {% endif %}
-</main>
+</section>
 {% endblock %}

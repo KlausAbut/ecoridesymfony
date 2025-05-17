@@ -8,29 +8,27 @@
   {% include 'default/carousel.html.twig' %}
 
   {# --- Section mission --- #}
-  <section class="py-5 bg-white border-bottom">
-    <div class="container text-center">
-      <h2 class="mb-4 text-success">Bienvenue sur EcoRide</h2>
-      <p class="lead mb-5">
-        Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
-      </p>
-      <div class="row justify-content-center">
-        <div class="col-md-5 mb-4">
-          <div class="card p-3 shadow-sm">
-            <img src="/images/eco9.jpg" class="card-img-top" alt="Mission">
-            <div class="card-body">
-              <h5 class="card-title">Notre mission</h5>
-              <p class="card-text">Faites des économies… nouvelles rencontres !</p>
-            </div>
+  <section class="section-box text-center">
+    <h2 class="mb-4 text-success">Bienvenue sur EcoRide</h2>
+    <p class="lead mb-5">
+      Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
+    </p>
+    <div class="row justify-content-center">
+      <div class="col-md-5 mb-4">
+        <div class="card p-3 shadow-sm">
+          <img src="/images/eco9.jpg" class="card-img-top" alt="Mission">
+          <div class="card-body">
+            <h5 class="card-title">Notre mission</h5>
+            <p class="card-text">Faites des économies… nouvelles rencontres !</p>
           </div>
         </div>
-        <div class="col-md-5 mb-4">
-          <div class="card p-3 shadow-sm">
-            <img src="/images/eco10.jpg" class="card-img-top" alt="Communauté">
-            <div class="card-body">
-              <h5 class="card-title">Rejoignez la communauté</h5>
-              <p class="card-text">Des centaines de trajets proposés… le vôtre !</p>
-            </div>
+      </div>
+      <div class="col-md-5 mb-4">
+        <div class="card p-3 shadow-sm">
+          <img src="/images/eco10.jpg" class="card-img-top" alt="Communauté">
+          <div class="card-body">
+            <h5 class="card-title">Rejoignez la communauté</h5>
+            <p class="card-text">Des centaines de trajets proposés… le vôtre !</p>
           </div>
         </div>
       </div>
@@ -38,18 +36,57 @@
   </section>
 
   {# --- Recherche de covoiturages --- #}
-  <section id="recherche" class="py-5 bg-light border-bottom">
-    {% include 'default/recherche.html.twig' %}
+  <section id="recherche" class="section-box text-center">
+    <h2 class="mb-4 text-success">Rechercher covoiturage</h2>
+
+    <form id="formRecherche" class="d-flex flex-wrap gap-2 justify-content-center bg-white p-3 rounded shadow-sm">
+      <input type="text" id="depart" name="depart" class="form-control w-auto" placeholder="Départ">
+      <input type="text" id="arrivee" name="arrivee" class="form-control w-auto" placeholder="Arrivée">
+      <input type="date" id="date" name="date" class="form-control w-auto">
+      <input type="number" id="prix" name="prix" class="form-control w-auto" placeholder="Prix max (€)">
+      <input type="number" id="note" name="note" class="form-control w-auto" placeholder="Note min">
+      <select id="energie" name="energie" class="form-select w-auto">
+        <option value="">Énergie</option>
+        <option value="électrique">Électrique</option>
+        <option value="essence">Essence</option>
+        <option value="diesel">Diesel</option>
+      </select>
+      <button type="submit" class="btn btn-success">Rechercher</button>
+    </form>
+
+    <div id="loadingSpinner" class="text-center my-3 d-none">Chargement...</div>
+    <div id="resultatsTrajets"></div>
   </section>
 
   {# --- Avis utilisateurs --- #}
-  <section id="avis" class="py-5 bg-white border-bottom">
+  <section id="avis" class="text-center">
+    <h2 class="mb-4 text-success"></h2>
     {% include 'default/avis.html.twig' %}
   </section>
 
   {# --- Contact --- #}
-  <section id="contact" class="py-5 bg-light">
-    {% include 'default/contact.html.twig' %}
+  <section id="contact" class="section-box text-center">
+    <h2 class="text-3xl font-bold text-green-700 mb-4">📬 Contactez-nous</h2>
+
+    <form method="post" class="mx-auto max-w-lg bg-green-50 p-6 rounded-lg shadow space-y-5">
+      <div>
+        <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+        <input type="text" id="nom" name="nom" class="w-full border border-gray-300 rounded p-2" required>
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" name="email" class="w-full border border-gray-300 rounded p-2" required>
+      </div>
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+        <textarea id="message" name="message" rows="5" class="w-full border border-gray-300 rounded p-2" required></textarea>
+      </div>
+      <div class="text-center pt-3">
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded transition">
+          Envoyer
+        </button>
+      </div>
+    </form>
   </section>
 
 {% endblock %}

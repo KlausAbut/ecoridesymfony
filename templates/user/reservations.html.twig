@@ -3,21 +3,22 @@
 {% block title %}Mes trajets réservés{% endblock %}
 
 {% block body %}
-<main class="container">
-  <h1 class="mb-4">🚗 Mes trajets réservés</h1>
+<section class="section-box">
+  <h2 class="text-center text-success mb-4">📅 Mes trajets réservés</h2>
 
   {% if participations is empty %}
-    <p>Aucune réservation pour l’instant.</p>
+    <p class="text-center text-muted">Aucune réservation pour l’instant.</p>
   {% else %}
-    <section class="mt-5">
-      <table class="table table-striped">
-        <thead>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-success">
           <tr>
-            <th>Date</th>
+            <th>Date du trajet</th>
             <th>Départ</th>
             <th>Arrivée</th>
             <th>Conducteur</th>
-            <th>Participation</th>
+            <th>Réservé le</th>
+            <th>Détail</th>
           </tr>
         </thead>
         <tbody>
@@ -29,16 +30,15 @@
               <td>{{ p.covoiturage.createdBy.username }}</td>
               <td>{{ p.dateParticipation|date('d/m/Y H:i') }}</td>
               <td>
-                <a href="{{ path('covoiturage_show', {id: p.covoiturage.id}) }}" class="btn btn-sm btn-outline-success">
-                    🔍 Détail
+                <a href="{{ path('covoiturage_show', {id: p.covoiturage.id}) }}" class="btn btn-outline-success btn-sm">
+                  🔍 Voir
                 </a>
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-    </section>
+    </div>
   {% endif %}
-</main>
+</section>
 {% endblock %}
-

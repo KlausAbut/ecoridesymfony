@@ -1,29 +1,21 @@
-<script>
-    window.routes = {
-        recherche: "{{ path('covoiturage_ajax_recherche') }}"
-    };
-</script>
+<section id="recherche" class="section-box text-center">
+  <h2 class="mb-4 text-success">Rechercher covoiturage</h2>
 
-<section id="recherche" class="py-5 shadow-lg rounded">
-    <div class="container">
-        <h2 class="text-center mb-4 text">Rechercher covoiturage</h2>
+  <form id="formRecherche" class="d-flex flex-wrap gap-2 justify-content-center bg-white p-3 rounded shadow-sm">
+    <input type="text" id="depart" name="depart" class="form-control w-auto" placeholder="Départ">
+    <input type="text" id="arrivee" name="arrivee" class="form-control w-auto" placeholder="Arrivée">
+    <input type="date" id="date" name="date" class="form-control w-auto">
+    <input type="number" id="prix" name="prix" class="form-control w-auto" placeholder="Prix max (€)">
+    <input type="number" id="note" name="note" class="form-control w-auto" placeholder="Note min">
+    <select id="energie" name="energie" class="form-select w-auto">
+      <option value="">Énergie</option>
+      <option value="électrique">Électrique</option>
+      <option value="essence">Essence</option>
+      <option value="diesel">Diesel</option>
+    </select>
+    <button type="submit" class="btn btn-success">Rechercher</button>
+  </form>
 
-        <form id="formRecherche" class="d-flex flex-wrap gap-2 align-items-end justify-content-center p-3 rounded bg-white shadow-sm">
-            <input type="text" id="depart" name="depart" class="form-control" placeholder="Départ">
-            <input type="text" id="arrivee" name="arrivee" class="form-control" placeholder="Arrivée">
-            <input type="date" id="date" name="date" class="form-control">
-            <input type="number" id="prix" name="prix" class="form-control" placeholder="Prix max (€)">
-            <input type="number" id="note" name="note" class="form-control" placeholder="Note min">
-            <select id="energie" name="energie" class="form-select">
-                <option value="">Énergie</option>
-                <option value="électrique">Électrique</option>
-                <option value="essence">Essence</option>
-                <option value="diesel">Diesel</option>
-            </select>
-        <button type="submit" class="btn btn-success">Rechercher</button>
-        </form>
-
-        <div id="loadingSpinner" class="text-center my-3 d-none">Chargement...</div>
-        <div id="resultatsTrajets"></div>
-    </div>
+  <div id="loadingSpinner" class="text-center my-3 d-none">Chargement...</div>
+  <div id="resultatsTrajets"></div>
 </section>

@@ -2,15 +2,53 @@
 {% block title %}Créer un employé{% endblock %}
 
 {% block body %}
-<section class="section-box">
+<section class="section-box mx-auto" style="max-width: 600px;">
   <h2 class="text-success mb-4">➕ Ajouter un employé</h2>
 
   {{ form_start(form) }}
-    {{ form_row(form.firstname) }}
-    {{ form_row(form.lastname) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password) }}
-    <button class="btn btn-success mt-3">Créer</button>
+
+    <div class="mb-3">
+      {{ form_label(form.firstname) }}
+      {{ form_widget(form.firstname, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.lastname) }}
+      {{ form_widget(form.lastname, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.username) }}
+      {{ form_widget(form.username, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.email) }}
+      {{ form_widget(form.email, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.telephone) }}
+      {{ form_widget(form.telephone, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.adresse) }}
+      {{ form_widget(form.adresse, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.dateNaissance) }}
+      {{ form_widget(form.dateNaissance, { attr: {'class': 'form-control', 'placeholder': 'JJ/MM/AAAA'} }) }}
+    </div>
+
+    <div class="mb-3">
+      {{ form_label(form.password) }}
+      {{ form_widget(form.password, { attr: {'class': 'form-control'} }) }}
+    </div>
+
+    <button class="btn btn-success mt-2">Créer</button>
+
   {{ form_end(form) }}
 </section>
 {% endblock %}

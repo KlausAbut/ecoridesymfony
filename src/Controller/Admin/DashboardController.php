@@ -13,8 +13,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\VoitureRepository;
 use App\Entity\Voiture;
+use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 use App\Enum\CovoiturageStatut;
 use App\Repository\UserRepository;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Form\EmployeType;
+
 
 
 #[IsGranted('ROLE_ADMIN')]
@@ -177,5 +182,18 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('admin_dashboard');
     }
+
+    #[Route('/admin/reactiver-utilisateur/{id}', name: 'admin_reactivate_user', methods: ['POST'])]
+    public function reactivateUser(User $user, EntityManagerInterface $em, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('reactivate' . $user->getId(), $request->request->get('_token'))) {
+            $user->setIsActive(true);
+            $em->flush();
+            $this->addFlash('success', 'Utilisateur réactivé.');
+        }
+
+    return $this->redirectToRoute('admin_dashboard');
+    }
+
 
 }

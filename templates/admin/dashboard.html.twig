@@ -5,7 +5,11 @@
 {% block body %}
 <section class="section-box">
   <h2 class="text-center text-success mb-5">🛠️ Tableau de bord administrateur</h2>
-
+   <div class="text-center">
+    <a href="{{ path('admin_admin_creer_employe') }}" class="btn btn-outline-primary mb-3">
+      ➕ Créer un employé
+    </a>
+  </div>
   <div class="row row-cols-1 row-cols-md-3 g-4">
 
     {# === COVOITURAGES === #}
@@ -145,7 +149,10 @@
                 {% if user.isActive %}
                   <button class="btn btn-sm btn-danger">⛔ Suspendre</button>
                 {% else %}
-                  <button class="btn btn-sm btn-secondary" disabled>Déjà suspendu</button>
+                  <form method="post" action="{{ path('admin_admin_reactivate_user', {'id': user.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('reactivate' ~ user.id) }}">
+                    <button class="btn btn-sm btn-success">✅ Réactiver</button>
+                  </form>
                 {% endif %}
               </form>
             </div>

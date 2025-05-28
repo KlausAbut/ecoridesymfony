@@ -10,6 +10,7 @@ use App\Enum\CovoiturageStatut;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
@@ -17,96 +18,106 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $lieux = [
-            ['Paris', 'Lyon'],
-            ['Marseille', 'Nice'],
-            ['Bordeaux', 'Toulouse'],
-            ['Lille', 'Strasbourg'],
-            ['Nantes', 'Rennes']
-        ];
-        
-        for ($i = 1; $i <= 5; $i++) {
+        $faker = Factory::create('fr_FR');
+        $users = [];
+        $chauffeurs = [];
+        $lieux = ['Paris','Lyon','Marseille','Nice','Bordeaux','Toulouse','Lille','Strasbourg','Nantes','Rennes','Madrid','Barcelone','Rome','Berlin','Bruxelles','Amsterdam','Zurich','Lisbonne','Vienne','Prague'];
+
+        // 👤 50 utilisateurs normaux
+        for ($i = 0; $i < 50; $i++) {
             $user = new User();
             $user->setUsername("user$i")
-                 ->setFirstname("Prenom$i")
-                 ->setLastname("Nom$i")
+                 ->setFirstname($faker->firstName)
+                 ->setLastname($faker->lastName)
                  ->setEmail("user$i@example.com")
-                 ->setAdresse("Paris")
-                 ->setTelephone("060000000$i")
-                 ->setDateNaissance('1990-01-01')
+                 ->setAdresse($faker->city)
+                 ->setTelephone($faker->phoneNumber)
+                 ->setDateNaissance($faker->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'))
                  ->setRoles(['ROLE_USER'])
                  ->setPhoto(null)
                  ->setPassword($this->passwordHasher->hashPassword($user, 'password'));
             $manager->persist($user);
-        
+            $users[] = $user;
+        }
+
+        // 👨‍✈️ 20 conducteurs avec voitures et covoiturages
+        for ($i = 0; $i < 20; $i++) {
+            $user = new User();
+            $user->setUsername("chauffeur$i")
+                 ->setFirstname($faker->firstName)
+                 ->setLastname($faker->lastName)
+                 ->setEmail("chauffeur$i@example.com")
+                 ->setAdresse($faker->city)
+                 ->setTelephone($faker->phoneNumber)
+                 ->setDateNaissance($faker->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'))
+                 ->setRoles(['ROLE_USER'])
+                 ->setPhoto(null)
+                 ->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+            $manager->persist($user);
+            $chauffeurs[] = $user;
+            $users[] = $user;
+
             $voiture = new Voiture();
             $voiture->setUser($user)
-                    ->setModele("Modèle$i")
-                    ->setImmatriculation("AB-123-$i")
-                    ->setEnergie($i % 2 === 0 ? 'électrique' : 'diesel')
-                    ->setCouleur("Gris")
-                    ->setDatePremiereImmatriculation('2020-01-01');
+                    ->setModele($faker->word)
+                    ->setImmatriculation(strtoupper($faker->bothify('??-###-??')))
+                    ->setEnergie($faker->randomElement(['électrique', 'diesel', 'essence']))
+                    ->setCouleur($faker->safeColorName)
+                    ->setDatePremiereImmatriculation($faker->dateTimeBetween('-10 years', '-1 year')->format('Y-m-d'));
             $manager->persist($voiture);
-        
-            [$depart, $arrivee] = $lieux[$i - 1];
-            $randomDate = new \DateTime("+{$i} days");
-            $randomHour = (new \DateTime())->setTime(mt_rand(6, 10), 0);
-        
-            $covoiturage = new Covoiturage();
-            $covoiturage->setCreatedBy($user)
-                        ->setVoiture($voiture)
-                        ->setLieuDepart($depart)
-                        ->setLieuArrivee($arrivee)
-                        ->setDateDepart($randomDate)
-                        ->setHeureDepart($randomHour)
-                        ->setDateArrivee(clone $randomDate)
-                        ->setHeureArrivee((clone $randomHour)->modify('+3 hours'))
-                        ->setNbPlace(3)
-                        ->setPrixPersonne(mt_rand(15, 45))
-                        ->setStatut(CovoiturageStatut::PUBLISHED)
-                        ->setPublishedAt(new \DateTime());
-            $manager->persist($covoiturage);
 
-            $existingAdmin = $manager->getRepository(User::class)->findOneBy(['email' => 'admin@admin.com']);
-                if (!$existingAdmin) {
-                    $admin = new User();
-                    $admin->setUsername('admin');
-                    $admin->setFirstname('Admin');
-                    $admin->setLastname('Admin');
-                    $admin->setEmail('admin@admin.com');
-                    $admin->setAdresse('Paris');
-                    $admin->setTelephone('0600000000');
-                    $admin->setDateNaissance('1990-01-01');
-                    $admin->setRoles(['ROLE_ADMIN']);
-                    $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin123'));
-                    $admin->setPhoto(null);
-                    $manager->persist($admin);
-}
+            // 🚗 5 covoiturages par chauffeur → total 100
+            for ($j = 0; $j < 5; $j++) {
+                [$depart, $arrivee] = $faker->randomElements($lieux, 2);
+                $date = $faker->dateTimeBetween('+1 days', '+2 months');
+                $heure = (clone $date)->setTime(mt_rand(6, 20), 0);
 
-
+                $covoiturage = new Covoiturage();
+                $covoiturage->setCreatedBy($user)
+                            ->setVoiture($voiture)
+                            ->setLieuDepart($depart)
+                            ->setLieuArrivee($arrivee)
+                            ->setDateDepart($date)
+                            ->setHeureDepart($heure)
+                            ->setDateArrivee($date)
+                            ->setHeureArrivee((clone $heure)->modify('+3 hours'))
+                            ->setNbPlace(3)
+                            ->setPrixPersonne(mt_rand(10, 40))
+                            ->setStatut(CovoiturageStatut::PUBLISHED)
+                            ->setPublishedAt(new \DateTime());
+                $manager->persist($covoiturage);
+            }
         }
 
-        for ($j = 1; $j <= 3; $j++) {
-            $participant = new User();
-            $participant->setUsername("participant{$i}_{$j}")
-                        ->setFirstname("PartPrenom{$i}_{$j}")
-                        ->setLastname("PartNom{$i}_{$j}")
-                        ->setEmail("participant{$i}_{$j}@example.com")
-                        ->setAdresse("Ville")
-                        ->setTelephone("07000000{$i}{$j}")
-                        ->setDateNaissance('1995-01-01')
-                        ->setRoles(['ROLE_USER'])
-                        ->setPhoto(null)
-                        ->setPassword($this->passwordHasher->hashPassword($participant, 'password'));
-            $manager->persist($participant);
-        
-            $participation = new Participation();
-            $participation->setUser($participant)
-                          ->setCovoiturage($covoiturage)
-                          ->setDateParticipation(new \DateTime());
-            $manager->persist($participation);
+        // 👨‍💼 2 employés
+        for ($i = 1; $i <= 2; $i++) {
+            $employee = new User();
+            $employee->setUsername("employee$i")
+                     ->setFirstname("Employé$i")
+                     ->setLastname("Support")
+                     ->setEmail("employee$i@ecoride.com")
+                     ->setAdresse("Paris")
+                     ->setTelephone("061122334$i")
+                     ->setDateNaissance('1985-01-01')
+                     ->setRoles(['ROLE_EMPLOYE'])
+                     ->setPassword($this->passwordHasher->hashPassword($employee, 'password'));
+            $manager->persist($employee);
         }
-        
+
+        // 👑 1 admin
+        $admin = new User();
+        $admin->setUsername('admin')
+              ->setFirstname('Admin')
+              ->setLastname('Admin')
+              ->setEmail('admin@admin.com')
+              ->setAdresse('Paris')
+              ->setTelephone('0600000000')
+              ->setDateNaissance('1990-01-01')
+              ->setRoles(['ROLE_ADMIN'])
+              ->setPassword($this->passwordHasher->hashPassword($admin, 'admin123'))
+              ->setPhoto(null);
+        $manager->persist($admin);
+
         $manager->flush();
     }
 }

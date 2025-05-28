@@ -21,7 +21,7 @@ final class Version20250410093803 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE user ADD is_conducteur TINYINT(1) NOT NULL
+            ALTER TABLE "user" ADD COLUMN is_conducteur BOOLEAN NOT NULL
         SQL);
     }
 
@@ -29,7 +29,7 @@ final class Version20250410093803 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE user DROP is_conducteur
+            ALTER TABLE "user" DROP COLUMN is_conducteur
         SQL);
     }
 }

@@ -5,7 +5,7 @@ WORKDIR /app
 # Install system dependencies and required PHP extensions
 RUN apt-get update && \
     apt-get install -y git unzip libpq-dev && \
-    pecl install mongodb && \
+    pecl install mongodb-1.21.1 && \
     docker-php-ext-enable mongodb && \
     docker-php-ext-install pdo pdo_pgsql
 

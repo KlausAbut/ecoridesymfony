@@ -5,7 +5,7 @@ WORKDIR /app
 # Install system dependencies and required PHP extensions
 RUN apt-get update && \
     apt-get install -y git unzip libpq-dev && \
-    pecl install mongodb-1.21.1 && \
+    pecl install mongodb && \
     docker-php-ext-enable mongodb && \
     docker-php-ext-install pdo pdo_pgsql
 
@@ -13,8 +13,9 @@ RUN apt-get update && \
 COPY . /app
 
 # Install Composer and project dependencies (optimized for production)
+# Ignore platform requirement for ext-mongodb mismatch
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer install --no-dev --optimize-autoloader
+    composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-mongodb
 
-# Expose port 8000 and start PHP built-in server for Heroku container
+# Expose port and start built-in server
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]

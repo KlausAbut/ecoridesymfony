@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si la ressource existe physiquement (fichier ou dossier), sert-la directement
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Sinon redirige tout vers index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

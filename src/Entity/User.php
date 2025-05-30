@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Entity]
+#[ORM\Table(name: 'users')]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

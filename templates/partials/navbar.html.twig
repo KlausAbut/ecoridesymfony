@@ -14,23 +14,24 @@
 
     <div class="nav-right">
       {% if app.user %}
-        <div class="dropdown-content">
-          {% if 'ROLE_ADMIN' in app.user.roles %}
-            <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+        <div class="dropdown">
+          <button class="btn btn-sm">⋮</button>
+          <div class="dropdown-content">
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+              <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+            {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
+              <a href="{{ path('employe_moderation') }}">🛠️ Employé</a>
+            {% else %}
+              <a href="{{ path('user_profile') }}">Mon profil</a>
+              <a href="{{ path('user_reservations') }}">Mes réservations</a>
+              <a href="{{ path('user_trajets') }}">Mes trajets</a>
+            {% endif %}
             <hr>
-          {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-            <a href="{{ path('employe_moderation') }}">🛠️ Employé</a>
-            <hr>
-          {% else %}
-            <a href="{{ path('user_profile') }}">Mon profil</a>
-            <a href="{{ path('user_reservations') }}">Mes réservations</a>
-            <a href="{{ path('user_trajets') }}">Mes trajets</a>
-            <hr>
-          {% endif %}
-          <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+            <a href="{{ path('app_logout') }}" class="text-danger">Déconnexion</a>
+          </div>
         </div>
       {% else %}
-        <a href="{{ path('app_login') }}" class="btn btn-success">Connexion</a>
+        <a href="{{ path('app_login') }}"    class="btn btn-success">Connexion</a>
         <a href="{{ path('app_register') }}" class="btn btn-success">Inscription</a>
       {% endif %}
     </div>

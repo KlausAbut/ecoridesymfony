@@ -17,14 +17,18 @@
       {% if app.user %}
         <div class="dropdown-content">
           {% if 'ROLE_ADMIN' in app.user.roles %}
-            <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a><hr>
+            <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+            <hr>
           {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-            <a href="{{ path('employe_moderation') }}">🛠️ Employé</a><hr>
+            <a href="{{ path('employe_moderation') }}">🛠️ Employé</a>
+            <hr>
           {% else %}
             <a href="{{ path('user_profile') }}">Mon profil</a>
             <a href="{{ path('user_reservations') }}">Mes réservations</a>
-            <a href="{{ path('user_trajets') }}">Mes trajets</a><hr>
+            <a href="{{ path('user_trajets') }}">Mes trajets</a>
+            <hr>
           {% endif %}
+
           <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         </div>
       {% else %}

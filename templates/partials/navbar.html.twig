@@ -7,7 +7,7 @@
     <div class="nav-center">
       <a href="{{ path('index') }}">Accueil</a>
       <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
-      <a href="#contact">Contact</a>
+      <a href="{{ path('contact') }}">Contact</a>
       <a href="{{ path('about') }}">À propos</a>
       <a href="{{ path('avis_list') }}">Avis</a>
     </div>
@@ -27,7 +27,6 @@
             <a href="{{ path('user_trajets') }}">Mes trajets</a>
             <hr>
           {% endif %}
-
           <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         </div>
       {% else %}
@@ -36,29 +35,28 @@
       {% endif %}
     </div>
 
-    {# burger + drawer mobile #}
-      <input type="checkbox" id="burger-toggle" class="hidden" />
-      <label for="burger-toggle" class="burger">☰</label>
-        <div class="nav-mobile">
-           {% if app.user %}
-          <a href="{{ path('index') }}">Accueil</a>
-          <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
-          <a href="{{ path('contact') }}">Contact</a>
-          <a href="{{ path('about') }}">À propos</a>
-          <a href="{{ path('avis_list') }}">Avis</a>
+    {# burger + drawer (toujours dans le même <nav>!) #}
+    <input type="checkbox" id="burger-toggle" class="hidden" />
+    <label for="burger-toggle" class="burger">☰</label>
 
-          {% if 'ROLE_ADMIN' in app.user.roles %}
-            <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a><hr>
-          {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-            <a href="{{ path('employe_moderation') }}">🛠️ Employé</a><hr>
-          {% else %}
-            <a href="{{ path('user_profile') }}">Mon profil</a>
-            <a href="{{ path('user_reservations') }}">Mes réservations</a>
-            <a href="{{ path('user_trajets') }}">Mes trajets</a><hr>
-          {% endif %}
+    <div class="nav-mobile">
+      <a href="{{ path('index') }}">Accueil</a>
+      <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
+      <a href="{{ path('contact') }}">Contact</a>
+      <a href="{{ path('about') }}">À propos</a>
+      <a href="{{ path('avis_list') }}">Avis</a>
 
-          <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
-        </div>
+      {% if app.user %}
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+          <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a><hr>
+        {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
+          <a href="{{ path('employe_moderation') }}">🛠️ Employé</a><hr>
+        {% else %}
+          <a href="{{ path('user_profile') }}">Mon profil</a>
+          <a href="{{ path('user_reservations') }}">Mes réservations</a>
+          <a href="{{ path('user_trajets') }}">Mes trajets</a><hr>
+        {% endif %}
+        <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
       {% else %}
         <a href="{{ path('app_login') }}" class="btn btn-success">Connexion</a>
         <a href="{{ path('app_register') }}" class="btn btn-success">Inscription</a>

@@ -37,9 +37,10 @@
     </div>
 
     {# burger + drawer mobile #}
-        <input type="checkbox" id="burger-toggle" class="hidden" />
-        <label for="burger-toggle" class="burger">☰</label>
+      <input type="checkbox" id="burger-toggle" class="hidden" />
+      <label for="burger-toggle" class="burger">☰</label>
         <div class="nav-mobile">
+           {% if app.user %}
           <a href="{{ path('index') }}">Accueil</a>
           <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
           <a href="{{ path('contact') }}">Contact</a>

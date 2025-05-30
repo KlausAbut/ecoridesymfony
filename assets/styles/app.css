@@ -161,11 +161,24 @@ p {
 .burger {
   display: none;
 }
+
+.nav-mobile {
+  display: none;
+}
+
+/* ===  MOBILE ONLY === */
+@media (max-width: 767px) {
+  /* on peut cacher desktop nav en mobile */
+  .nav-center,
+  .nav-right {
+    display: none !important;
+  }
+}
+
 /* === BOUTON BURGER : toujours visible === */
 .burger {
-  display: none;
+  display: block;
   font-size: 1.5rem;
-  padding: 0.5rem;
   cursor: pointer;
 }
 
@@ -183,19 +196,6 @@ p {
   padding: 1rem;
   z-index: 999;
 }
-
-/* === RESPONSIVE MOBILE ONLY === */
-@media (max-width: 767px) {
-  /* on peut cacher desktop nav en mobile */
-  .nav-center,
-  .nav-right {
-    display: none !important;
-  }
-}
-
-.burger {
-    display: block;
-  }
 
 /* === OUVERTURE DU DRAWER QUAND COCHÉ === */
 #burger-toggle:checked ~ .nav-mobile {

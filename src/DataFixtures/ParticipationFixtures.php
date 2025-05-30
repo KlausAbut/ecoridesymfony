@@ -16,7 +16,11 @@ class ParticipationFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        $users = $manager->getRepository(User::class)->findBy(['roles' => ['ROLE_USER']]);
+       $allUsers = $manager->getRepository(User::class)->findAll();
+        $users = array_filter(
+            $allUsers,
+            fn(User $u) => in_array('ROLE_USER', $u->getRoles(), true)
+        );
         $covoiturages = $manager->getRepository(Covoiturage::class)->findAll();
 
         if (count($users) === 0 || count($covoiturages) === 0) {

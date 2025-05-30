@@ -19,6 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\UserCredit;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Avis;
+use App\Form\AvisType;
+
+
 
 
 #[Route('/covoiturage', name: 'covoiturage_')]
@@ -36,7 +40,9 @@ class CovoiturageController extends AbstractController
     #[IsGranted('show', 'covoiturage')]
     public function show(
     Covoiturage $covoiturage,
-    AvisRepository $avisRepository
+    AvisRepository $avisRepository,
+    Request $request,
+    EntityManagerInterface $em
     ): Response {
     $conducteur = $covoiturage->getCreatedBy();
     $avisConducteur = $avisRepository->findBy([
@@ -44,10 +50,28 @@ class CovoiturageController extends AbstractController
         'statut' => 'VALIDÉ'
     ]);
 
-    return $this->render('covoiturage/showco.html.twig', [
-        'covoiturage' => $covoiturage,
-        'avis_conducteur' => $avisConducteur,
-    ]);
+     $avis = new Avis();
+        $avis->setUser($this->getUser());
+        $avis->setCovoiturage($covoiturage);
+        $formAvis = $this->createForm(AvisType::class, $avis);
+
+        $formAvis->handleRequest($request);
+        if ($formAvis->isSubmitted() && $formAvis->isValid()) {
+            // Tu peux forcer le statut par défaut :
+            $avis->setStatut('EN_ATTENTE');
+            $em->persist($avis);
+            $em->flush();
+
+            $this->addFlash('success', 'Merci pour votre avis, il sera visible après validation.');
+            // redirige pour éviter le repost du formulaire
+            return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
+        }
+
+        return $this->render('covoiturage/showco.html.twig', [
+            'covoiturage'     => $covoiturage,
+            'avis_conducteur' => $avisConducteur,
+            'formAvis'        => $formAvis->createView(),
+        ]);
     }
 
     #[Route('/participer/{id}', name: 'covoiturage_participer', methods: ['POST'])]

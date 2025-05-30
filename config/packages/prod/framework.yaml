@@ -1,0 +1,11 @@
+# config/packages/prod/framework.yaml
+framework:
+    # …
+    session:
+        cookie_secure: auto    # force HTTPS pour le cookie de session
+        cookie_samesite: lax    # évite les blocages cross-site
+    
+    # autorise Symfony à prendre en compte X-Forwarded-For & co
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    # si Heroku passe d’autres en-têtes comme X-Forwarded-Proto
+    trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port' ]

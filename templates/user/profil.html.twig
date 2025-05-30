@@ -12,10 +12,10 @@
       <div class="card shadow-sm p-4 bg-white mb-4">
         <div class="row g-4 align-items-center">
           <div class="col-md-4 text-center">
-            {% if user.photo %}
+            {% if app.user.photo %}
               <img src="data:image/jpeg;base64,{{ user.photo|convert_base64 }}" alt="Photo de profil" class="rounded-circle img-fluid" style="max-width: 150px;">
             {% else %}
-              <img src="/images/avatar.jpg" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
+              <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
             {% endif %}
             <p class="mt-2 fw-semibold">{{ app.user.firstname }} {{ app.user.lastname }}</p>
             <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>

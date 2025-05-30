@@ -101,9 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
             burger.addEventListener('click', () => {
                 menu.classList.toggle('show');
             });
-            burger.addEventListener('click', () => {
-            menu.classList.toggle('show'); 
-            });
         }
 
 

@@ -38,9 +38,9 @@
 
     {# burger + drawer (toujours dans le même <nav>!) #}
     <input type="checkbox" id="burger-toggle" class="hidden" />
-    <label for="burger-toggle" class="burger">☰</label>
-
-    <div class="nav-mobile">
+    <label for="burger-toggle" id="burger" class="burger">☰</label>
+    
+    <div id="menu" class="nav-mobile">
       <a href="{{ path('index') }}">Accueil</a>
       <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
       <a href="{{ path('contact') }}">Contact</a>

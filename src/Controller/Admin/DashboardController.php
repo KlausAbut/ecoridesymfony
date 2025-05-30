@@ -14,6 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\VoitureRepository;
 use App\Entity\Voiture;
 use App\Entity\User;
+use App\Enum\AvisStatut;
 use Symfony\Component\HttpFoundation\Request;
 use App\Enum\CovoiturageStatut;
 use App\Repository\UserRepository;
@@ -34,7 +35,10 @@ class DashboardController extends AbstractController
     UserRepository $userRepo,
     DocumentManager $dm
     ): Response {
-    $avis = $avisRepo->findBy(['statut' => 'EN_ATTENTE'], ['id' => 'DESC']);
+    $avis = $avisRepo->findBy(
+    ['statut' => AvisStatut::EN_ATTENTE->value],
+    ['id' => 'DESC']
+    );
     $covoiturages = $covoiturageRepo->findBy(['statut' => CovoiturageStatut::DRAFT]);
     $voitures = $voitureRepo->findAll();
     $users = $userRepo->findAllNonAdmin();
@@ -81,7 +85,7 @@ class DashboardController extends AbstractController
     {
         $avis = $repo->find($id);
         if ($avis) {
-            $avis->setStatut('VALIDÉ');
+            $avis->setStatut(AvisStatut::VALIDE);
             $em->flush();
             $this->addFlash('success', 'Avis validé.');
         }

@@ -158,6 +158,9 @@ p {
   width: 100%;
 }
 
+.burger {
+  display: none;
+}
 /* === BOUTON BURGER : toujours visible === */
 .burger {
   display: none;

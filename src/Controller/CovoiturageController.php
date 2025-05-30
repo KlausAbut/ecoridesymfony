@@ -21,7 +21,7 @@ use App\Document\UserCredit;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Avis;
 use App\Form\AvisType;
-
+use App\Enum\AvisStatut;
 
 
 
@@ -36,43 +36,52 @@ class CovoiturageController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name: 'show')]
+    #[Route('/show/{id}', name: 'show', methods: ['GET', 'POST'])]
     #[IsGranted('show', 'covoiturage')]
     public function show(
-    Covoiturage $covoiturage,
-    AvisRepository $avisRepository,
-    Request $request,
-    EntityManagerInterface $em
+        Covoiturage $covoiturage,
+        AvisRepository $avisRepository,
+        Request $request,
+        EntityManagerInterface $em
     ): Response {
+    // 1) Récupère les avis validés
     $conducteur = $covoiturage->getCreatedBy();
     $avisConducteur = $avisRepository->findBy([
-        'user' => $conducteur,
-        'statut' => 'VALIDÉ'
+        'user'   => $conducteur,
+        'statut' => AvisStatut::VALIDE,
     ]);
 
-     $avis = new Avis();
-        $avis->setUser($this->getUser());
-        $avis->setCovoiturage($covoiturage);
-        $formAvis = $this->createForm(AvisType::class, $avis);
+    // 2) Prépare le formulaire d'avis
+    $formAvis = null;
+    if ($this->isGranted('IS_AUTHENTICATED_FULLY') 
+        && in_array($this->getUser(), $covoiturage->getParticipants()->toArray(), true)
+    ) {
+        $avis = new Avis();
+        $avis->setUser($this->getUser())
+             ->setCovoiturage($covoiturage)
+             ->setStatut(AvisStatut::EN_ATTENTE);
 
+        $formAvis = $this->createForm(AvisType::class, $avis);
         $formAvis->handleRequest($request);
+
         if ($formAvis->isSubmitted() && $formAvis->isValid()) {
-            // Tu peux forcer le statut par défaut :
-            $avis->setStatut('EN_ATTENTE');
             $em->persist($avis);
             $em->flush();
 
             $this->addFlash('success', 'Merci pour votre avis, il sera visible après validation.');
-            // redirige pour éviter le repost du formulaire
-            return $this->redirectToRoute('covoiturage_show', ['id' => $covoiturage->getId()]);
+            return $this->redirectToRoute('covoiturage_show', [
+                'id' => $covoiturage->getId(),
+            ]);
         }
-
-        return $this->render('covoiturage/showco.html.twig', [
-            'covoiturage'     => $covoiturage,
-            'avis_conducteur' => $avisConducteur,
-            'formAvis'        => $formAvis->createView(),
-        ]);
     }
+
+    // 3) Rendu du template
+    return $this->render('covoiturage/showco.html.twig', [
+        'covoiturage'     => $covoiturage,
+        'avis_conducteur' => $avisConducteur,
+        'formAvis'        => $formAvis?->createView(),
+    ]);
+}
 
     #[Route('/participer/{id}', name: 'covoiturage_participer', methods: ['POST'])]
     public function participer(Request $request, Covoiturage $covoiturage, EntityManagerInterface $em, DocumentManager $dm): RedirectResponse

@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
+use App\Enum\AvisStatut;
 
 class AvisFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -35,7 +36,11 @@ class AvisFixtures extends Fixture implements DependentFixtureInterface
             $avis->setCommentaire($faker->sentence(8));
             $avis->setNote($faker->numberBetween(3, 5));
             $avis->setCovoiturage($faker->randomElement($covoiturages));
-            $avis->setStatut($i < 15 ? 'valide' : 'EN_ATTENTE');
+            $avis->setStatut(
+            $i < 15
+                ? AvisStatut::VALIDE
+                : AvisStatut::EN_ATTENTE
+        );
             $manager->persist($avis);
         }
 

@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\AvisStatut;
+use Doctrine\DBAL\Types\Types;
+
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
 class Avis
@@ -19,8 +22,8 @@ class Avis
     #[ORM\Column(length: 255)]
     private ?string $note = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $statut = 'EN_ATTENTE';
+    #[ORM\Column(type: Types::STRING, length: 20, enumType: AvisStatut::class)]
+    private AvisStatut $statut = AvisStatut::EN_ATTENTE;
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
@@ -63,15 +66,14 @@ class Avis
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): AvisStatut
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(AvisStatut $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 

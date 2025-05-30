@@ -17,8 +17,11 @@ class AvisFixtures extends Fixture implements DependentFixtureInterface
         dump('AvisFixtures exécutée');
 
         $faker = Factory::create('fr_FR');
-        $users = $manager->getRepository(User::class)->findAll();
-        $users = array_filter($users, fn($u) => in_array('ROLE_USER', $u->getRoles()));
+        $allUsers = $manager->getRepository(User::class)->findAll();
+        $users = array_filter(
+            $allUsers,
+            fn(User $u) => in_array('ROLE_USER', $u->getRoles(), true)
+        );
         $covoiturages = $manager->getRepository(Covoiturage::class)->findAll();
 
         dump('Nb users : ' . count($users));

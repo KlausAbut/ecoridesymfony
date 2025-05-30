@@ -33,24 +33,31 @@
       {% endif %}
     </div>
 
-     {% if app.user %}
-    {# checkbox + label pour burger 100% CSS #}
-    <input type="checkbox" id="burger-toggle" class="hidden" />
-    <label for="burger-toggle" class="burger">☰</label>
+    {# burger + drawer mobile #}
+        <input type="checkbox" id="burger-toggle" class="hidden" />
+        <label for="burger-toggle" class="burger">☰</label>
+        <div class="nav-mobile">
+          <a href="{{ path('index') }}">Accueil</a>
+          <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
+          <a href="{{ path('contact') }}">Contact</a>
+          <a href="{{ path('about') }}">À propos</a>
+          <a href="{{ path('avis_list') }}">Avis</a>
 
-    {# drawer mobile+desktop #}
-    <div class="nav-mobile">
-      <a href="{{ path('index') }}">Accueil</a>
-      <a href="{{ path('covoiturage_list') }}">Covoiturages</a>
-      <a href="{{ path('contact') }}">Contact</a>
-      <a href="{{ path('about') }}">À propos</a>
-      <a href="{{ path('avis_list') }}">Avis</a>
-    
-        <a href="{{ path('user_profile') }}">Mon profil</a>
-        <a href="{{ path('user_reservations') }}">Mes réservations</a>
-        <a href="{{ path('user_trajets') }}">Mes trajets</a>
-        <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+          {% if 'ROLE_ADMIN' in app.user.roles %}
+            <a href="{{ path('admin_dashboard') }}">⚙️ Admin</a><hr>
+          {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
+            <a href="{{ path('employe_moderation') }}">🛠️ Employé</a><hr>
+          {% else %}
+            <a href="{{ path('user_profile') }}">Mon profil</a>
+            <a href="{{ path('user_reservations') }}">Mes réservations</a>
+            <a href="{{ path('user_trajets') }}">Mes trajets</a><hr>
+          {% endif %}
 
+          <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+        </div>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-success">Connexion</a>
+        <a href="{{ path('app_register') }}" class="btn btn-success">Inscription</a>
       {% endif %}
     </div>
   </nav>

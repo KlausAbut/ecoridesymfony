@@ -219,6 +219,24 @@ class Covoiturage
         return $this;
     }
 
+    public function addAvis(Avis $avis): self
+    {
+        if (!$this->avis->contains($avis)) {
+            $this->avis->add($avis);
+            $avis->setCovoiturage($this);
+        }
+        return $this;
+    }
+
+    public function removeAvis(Avis $avis): self
+    {
+        if ($this->avis->removeElement($avis) && $avis->getCovoiturage() === $this) {
+            $avis->setCovoiturage(null);
+        }
+        return $this;
+    }
+
+
     /**
      * @return Collection<int, User>
      */

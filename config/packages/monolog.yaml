@@ -26,7 +26,10 @@ when@dev:
                 type:  mongo
                 level: info
                 mongo:
-                    host:       '%env(MONGODB_HOST)%'
+                    host:
+                      - cluster0-shard-00-00.ghj94.mongodb.net
+                      - cluster0-shard-00-01.ghj94.mongodb.net
+                      - cluster0-shard-00-02.ghj94.mongodb.net
                     port:       '%env(int:MONGODB_PORT)%'
                     user:       '%env(MONGODB_USER)%'
                     pass:       '%env(MONGODB_PASS)%'
@@ -76,7 +79,10 @@ when@prod:
                 type:  mongo
                 level: info
                 mongo:
-                    host:       '%env(MONGODB_HOST)%'
+                    host:
+                      - cluster0-shard-00-00.ghj94.mongodb.net
+                      - cluster0-shard-00-01.ghj94.mongodb.net
+                      - cluster0-shard-00-02.ghj94.mongodb.net
                     port:       '%env(int:MONGODB_PORT)%'
                     user:       '%env(MONGODB_USER)%'
                     pass:       '%env(MONGODB_PASS)%'

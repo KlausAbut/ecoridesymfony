@@ -23,7 +23,7 @@ when@dev:
                 channels: ["!event", "!doctrine", "!console"]
             mongodb:
                 type: service
-                id: monolog.handler.mongodb
+                id:   app.monolog.mongodb_handler
                 level: info
 
 
@@ -67,5 +67,5 @@ when@prod:
                 formatter: monolog.formatter.json
             mongodb:
                 type: service
-                id: monolog.handler.mongodb
+                id:   app.monolog.mongodb_handler
                 level: info

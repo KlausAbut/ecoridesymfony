@@ -13,22 +13,19 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     
-    monolog.handler.mongodb:
+    App.MongoDBClient:
+        class: MongoDB\Client
+        arguments:
+        - '%env(MONGODB_URI)%'
+
+    app.monolog.mongodb_handler:
         class: Monolog\Handler\MongoDBHandler
         arguments:
-        - '@=new MongoDB\Client(
-            sprintf(
-                "mongodb://%s:%s@%s:%s/%s",
-                env("MONGODB_USER"),
-                env("MONGODB_PASS"),
-                env("MONGODB_HOST"),
-                env("MONGODB_PORT"),
-                env("MONGODB_DB")
-            )
-            )'
-        - '%env(MONGODB_DB)%'
-        - 'logs'
-        - Monolog\Logger::DEBUG
+            - '@App.MongoDBClient'
+            - '%env(MONGODB_DB)%'
+            - 'logs'
+            - Monolog\Logger::DEBUG
+
         
     App\Twig\AppExtension:
         tags: ['twig.extension']

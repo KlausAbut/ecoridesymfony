@@ -158,10 +158,12 @@ p {
   width: 100%;
 }
 
-#menu.show {
+nav.navbar {
   display: flex !important;
-  transform: translateX(0) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
+
 
 /* === DROPDOWN UTILISATEUR === */
 

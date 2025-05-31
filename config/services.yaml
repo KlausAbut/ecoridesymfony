@@ -24,7 +24,7 @@ services:
             - '@App.MongoDBClient'
             - '%env(MONGODB_DB)%'
             - 'logs'
-            - '!php/const Monolog\Logger::DEBUG'
+            - 100
 
         
     App\Twig\AppExtension:

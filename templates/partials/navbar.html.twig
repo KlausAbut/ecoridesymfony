@@ -1,92 +1,98 @@
 <header>
- <nav class="navbar navbar-light fixed-top shadow-sm">
+<nav class="navbar navbar-light fixed-top shadow-sm">
   <div class="container">
-    {# 1) Logo toujours visible #}
+   
     <a class="navbar-brand" href="{{ path('index') }}">
       <span class="green">Eco</span>Ride
     </a>
 
-    {# 2) Bouton “hamburger” visible UNIQUEMENT en mobile (<lg) #}
+   
     <button
       class="navbar-toggler d-lg-none"
       type="button"
       data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasMenu"
       aria-controls="offcanvasMenu"
+      aria-expanded="false"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    {# 3) Liens en desktop (>=lg), cachés en mobile par d-none d-lg-flex #}
-    <ul class="navbar-nav d-none d-lg-flex ms-auto">
-      <li class="nav-item">
-        <a class="nav-link py-1" href="{{ path('index') }}">Accueil</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link py-1" href="{{ path('covoiturage_list') }}">Covoiturages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link py-1" href="{{ path('contact') }}">Contact</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link py-1" href="{{ path('about') }}">À propos</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link py-1" href="{{ path('avis_list') }}">Avis</a>
-      </li>
-
-      {# Si connecté, menu “Mon compte”… sinon boutons #}
-      {% if app.user %}
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle py-1"
-            href="#"
-            id="userDropdownDesktop"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Mon compte
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
-            {% if 'ROLE_ADMIN' in app.user.roles %}
-              <li>
-                <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
-              </li>
-            {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-              <li>
-                <a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a>
-              </li>
-            {% else %}
-              <li>
-                <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a>
-              </li>
-            {% endif %}
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
-            </li>
-          </ul>
-        </li>
-      {% else %}
-        <li class="nav-item me-2">
-          <a class="btn btn-success btn-sm" href="{{ path('app_login') }}">Connexion</a>
+   
+    <div class="d-none d-lg-flex w-100 align-items-center">
+      
+      <ul class="navbar-nav mx-auto mb-0">
+        <li class="nav-item">
+          <a class="nav-link py-1" href="{{ path('index') }}">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-success btn-sm" href="{{ path('app_register') }}">Inscription</a>
+          <a class="nav-link py-1" href="{{ path('covoiturage_list') }}">Covoiturages</a>
         </li>
-      {% endif %}
-    </ul>
+        <li class="nav-item">
+          <a class="nav-link py-1" href="{{ path('contact') }}">Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-1" href="{{ path('about') }}">À propos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-1" href="{{ path('avis_list') }}">Avis</a>
+        </li>
+      </ul>
+
+      
+      <ul class="navbar-nav">
+        {% if app.user %}
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle py-1"
+              href="#"
+              id="userDropdownDesktop"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Mon compte
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
+              {% if 'ROLE_ADMIN' in app.user.roles %}
+                <li>
+                  <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+                </li>
+              {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
+                <li>
+                  <a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a>
+                </li>
+              {% else %}
+                <li>
+                  <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a>
+                </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item me-2">
+            <a class="btn btn-success btn-sm" href="{{ path('app_login') }}">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-success btn-sm" href="{{ path('app_register') }}">Inscription</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 
-  {# 4) OFFCANVAS : visible UNIQUEMENT en mobile (<lg) #}
+  
   <div
     class="offcanvas offcanvas-start d-lg-none"
     tabindex="-1"
@@ -105,7 +111,7 @@
       ></button>
     </div>
     <div class="offcanvas-body">
-      {# Liens verticaux en mobile #}
+      
       <ul class="nav flex-column mb-3">
         <li class="nav-item">
           <a class="nav-link py-2" href="{{ path('index') }}">Accueil</a>
@@ -124,7 +130,6 @@
         </li>
       </ul>
 
-      {# Connexion/Inscription ou menu utilisateur en mobile #}
       {% if app.user %}
         <div class="dropdown mb-3">
           <a

@@ -27,7 +27,7 @@ class VoitureController extends AbstractController
     }
 
     #[Route('/show/{id}', name:'show')]
-    public function show(Voiture $voiture = null)
+    public function show(?Voiture $voiture = null)
     {
         return $this->render('voiture/show.html.twig', [
             'voiture' => $voiture

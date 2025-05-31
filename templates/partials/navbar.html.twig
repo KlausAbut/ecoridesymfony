@@ -1,23 +1,24 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
+    <div class="container">
       <a class="navbar-brand" href="{{ path('index') }}">
         <span class="green">Eco</span>Ride
       </a>
+
       <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#navbarMenu"
-        aria-controls="navbarMenu"
+        data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarMenu">
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 nav-center justify-content-center">
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item">
             <a class="nav-link" href="{{ path('index') }}">Accueil</a>
           </li>
@@ -35,7 +36,7 @@
           </li>
         </ul>
 
-        <ul class="navbar-nav mb-2 mb-lg-0 nav-right">
+        <ul class="navbar-nav ms-auto">
           {% if app.user %}
             <li class="nav-item dropdown">
               <a
@@ -75,8 +76,8 @@
               </ul>
             </li>
           {% else %}
-            <li class="nav-item">
-              <a class="btn btn-success me-2" href="{{ path('app_login') }}">Connexion</a>
+            <li class="nav-item me-2">
+              <a class="btn btn-success" href="{{ path('app_login') }}">Connexion</a>
             </li>
             <li class="nav-item">
               <a class="btn btn-success" href="{{ path('app_register') }}">Inscription</a>

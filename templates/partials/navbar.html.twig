@@ -1,60 +1,76 @@
 <header>
- <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+ <nav class="navbar navbar-light bg-white fixed-top shadow-sm">
   <div class="container">
-    {# 1) Brand (logo) #}
+    {# 1) Logo toujours visible #}
     <a class="navbar-brand" href="{{ path('index') }}">
       <span class="green">Eco</span>Ride
     </a>
 
-    {# 2) Bouton “hamburger” #}
+    {# 2) Bouton qui ouvre l’offcanvas #}
     <button
       class="navbar-toggler"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#mainNavbar"
-      aria-controls="mainNavbar"
-      aria-expanded="false"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasMenu"
+      aria-controls="offcanvasMenu"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    {# 3) Contenu “collapsé” (sera caché sous 992px) #}
-    <div class="collapse navbar-collapse" id="mainNavbar">
-      {# 3a) Liens principaux, alignés à gauche #}
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link py-1" href="{{ path('index') }}">Accueil</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link py-1" href="{{ path('covoiturage_list') }}">Covoiturages</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link py-1" href="{{ path('contact') }}">Contact</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link py-1" href="{{ path('about') }}">À propos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link py-1" href="{{ path('avis_list') }}">Avis</a>
-        </li>
-      </ul>
+    {# 3) Offcanvas (cache) #}
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasMenu"
+      aria-labelledby="offcanvasMenuLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">
+          <span class="green">Eco</span>Ride
+        </h5>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
 
-      {# 3b) Partie droite : Connexion/Inscription ou Menu utilisateur #}
-      <ul class="navbar-nav mb-2 mb-lg-0">
+      <div class="offcanvas-body">
+        {# Liens principaux #}
+        <ul class="nav flex-column mb-3">
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{{ path('index') }}">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{{ path('covoiturage_list') }}">Covoiturages</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{{ path('contact') }}">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{{ path('about') }}">À propos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{{ path('avis_list') }}">Avis</a>
+          </li>
+        </ul>
+
+        {# Connexion/Inscription ou menu utilisateur #}
         {% if app.user %}
-          <li class="nav-item dropdown">
+          <div class="dropdown mb-3">
             <a
-              class="nav-link dropdown-toggle py-1"
+              class="nav-link dropdown-toggle"
               href="#"
-              id="userDropdown"
+              id="userDropdownOffcanvas"
               role="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               Mon compte
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <ul class="dropdown-menu" aria-labelledby="userDropdownOffcanvas">
               {% if 'ROLE_ADMIN' in app.user.roles %}
                 <li>
                   <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
@@ -79,16 +95,14 @@
                 <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
               </li>
             </ul>
-          </li>
+          </div>
         {% else %}
-          <li class="nav-item me-2">
-            <a class="btn btn-success btn-sm" href="{{ path('app_login') }}">Connexion</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-success btn-sm" href="{{ path('app_register') }}">Inscription</a>
-          </li>
+          <div class="d-grid gap-2">
+            <a class="btn btn-success" href="{{ path('app_login') }}">Connexion</a>
+            <a class="btn btn-success" href="{{ path('app_register') }}">Inscription</a>
+          </div>
         {% endif %}
-      </ul>
+      </div>
     </div>
   </div>
 </nav>

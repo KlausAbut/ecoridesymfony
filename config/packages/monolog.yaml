@@ -25,8 +25,9 @@ when@dev:
             mongodb:
                 type:   mongo
                 level:  info
-                dsn:     '%env(resolve:MONGODB_URI)%'
-                collection: symfony_logs
+                mongo:
+                    connection_string: '%env(resolve:MONGODB_URI)%'
+                    collection: symfony_logs
 
 when@test:
     monolog:
@@ -68,5 +69,6 @@ when@prod:
             mongodb:
                 type:       mongo
                 level:      info
-                dsn:        '%env(resolve:MONGODB_URI)%'
-                collection: symfony_logs
+                mongo:
+                    connection_string: '%env(resolve:MONGODB_URI)%'
+                    collection: symfony_logs

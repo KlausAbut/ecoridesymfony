@@ -4,8 +4,6 @@
       <a class="navbar-brand" href="{{ path('index') }}">
         <span class="green">Eco</span>Ride
       </a>
-
-      <!-- Toggler button Bootstrap -->
       <button
         class="navbar-toggler"
         type="button"
@@ -14,18 +12,27 @@
         aria-controls="navbarMenu"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        id="burger"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarMenu">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-center">
-          <li class="nav-item"><a class="nav-link" href="{{ path('index') }}">Accueil</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ path('contact') }}">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ path('about') }}">À propos</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ path('avis_list') }}">Avis</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('index') }}">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('covoiturage_list') }}">Covoiturages</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('contact') }}">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('about') }}">À propos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('avis_list') }}">Avis</a>
+          </li>
         </ul>
 
         <ul class="navbar-nav mb-2 mb-lg-0 nav-right">
@@ -39,25 +46,41 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <i class="bi bi-person-circle"></i> <!-- ou votre icône -->
+                Mon compte
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 {% if 'ROLE_ADMIN' in app.user.roles %}
-                  <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a></li>
+                  <li>
+                    <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+                  </li>
                 {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-                  <li><a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a></li>
+                  <li>
+                    <a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a>
+                  </li>
                 {% else %}
-                  <li><a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a></li>
-                  <li><a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a></li>
-                  <li><a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a></li>
+                  <li>
+                    <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{{ path('user_reservations') }}">Mes réservations</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{{ path('user_trajets') }}">Mes trajets</a>
+                  </li>
                 {% endif %}
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+                </li>
               </ul>
             </li>
           {% else %}
-            <li class="nav-item"><a class="btn btn-success me-2" href="{{ path('app_login') }}">Connexion</a></li>
-            <li class="nav-item"><a class="btn btn-success" href="{{ path('app_register') }}">Inscription</a></li>
+            <li class="nav-item">
+              <a class="btn btn-success me-2" href="{{ path('app_login') }}">Connexion</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-success" href="{{ path('app_register') }}">Inscription</a>
+            </li>
           {% endif %}
         </ul>
       </div>

@@ -164,6 +164,13 @@ nav.navbar {
   opacity: 1 !important;
 }
 
+.navbar-collapse.collapse {
+  
+  visibility: visible !important;
+  display: flex !important;       
+  flex-basis: auto;              
+  flex-grow: 1;                   
+}
 
 /* === DROPDOWN UTILISATEUR === */
 

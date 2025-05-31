@@ -23,15 +23,11 @@ when@dev:
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
             mongodb:
-                type:   mongo
-                level:  info
-                mongo:
-                    host:     '%env(MONGODB_HOST)%'
-                    port:     '%env(int:MONGODB_PORT)%'
-                    user:     '%env(MONGODB_USER)%'     
-                    pass:     '%env(MONGODB_PASS)%'     
-                    database: '%env(MONGODB_DB)%'
-                    collection: symfony_logs
+                type:       mongodb
+                level:      info
+                dsn:        '%env(resolve:MONGODB_URI)%'
+                collection: symfony_logs
+
 
 
 when@test:
@@ -72,13 +68,8 @@ when@prod:
                 path: php://stderr
                 formatter: monolog.formatter.json
             mongodb:
-                type:       mongo
+                type:       mongodb
                 level:      info
-                channels: ["!no_mongo"]
-                mongo:
-                    host:     '%env(MONGODB_HOST)%'
-                    port:     '%env(int:MONGODB_PORT)%'
-                    user:     '%env(MONGODB_USER)%'
-                    pass:     '%env(MONGODB_PASS)%'
-                    database: '%env(MONGODB_DB)%'
-                    collection: symfony_logs
+                dsn:        '%env(resolve:MONGODB_URI)%'
+                collection: symfony_logs
+

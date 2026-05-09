@@ -7,18 +7,24 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
-      <h1 class="mb-0" style="font-size: 1.8rem;">🚘 Mes voitures</h1>
+      <h1 class="mb-0 d-flex align-items-center gap-2" style="font-size: 1.8rem;">
+        <i data-lucide="car" style="width:28px;height:28px;stroke:var(--eco-secondary);"></i>Mes voitures
+      </h1>
       <p class="text-muted mb-0" style="font-size: 0.9rem;">Vos véhicules enregistrés</p>
     </div>
-    <a href="{{ path('voiture_create') }}" class="btn btn-success">➕ Ajouter une voiture</a>
+    <a href="{{ path('voiture_create') }}" class="btn btn-success d-flex align-items-center gap-2">
+      <i data-lucide="plus" class="icon-sm"></i>Ajouter une voiture
+    </a>
   </div>
 
   {% if voitures is empty %}
     <div class="card p-5 text-center">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">🚗</div>
+      <i data-lucide="car" style="width:56px;height:56px;stroke:var(--eco-border);margin-bottom:1rem;"></i>
       <h5 class="mb-2">Aucune voiture enregistrée</h5>
       <p class="text-muted mb-4">Ajoutez votre premier véhicule pour commencer à proposer des trajets.</p>
-      <a href="{{ path('voiture_create') }}" class="btn btn-success mx-auto" style="max-width: 220px;">➕ Ajouter une voiture</a>
+      <a href="{{ path('voiture_create') }}" class="btn btn-success mx-auto d-flex align-items-center gap-2" style="max-width: 220px;">
+        <i data-lucide="plus" class="icon-sm"></i>Ajouter une voiture
+      </a>
     </div>
   {% else %}
     <div class="d-flex flex-column gap-3">
@@ -27,14 +33,18 @@
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3">
               <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                   style="width:48px;height:48px;background:var(--eco-mint);font-size:1.4rem;border:2px solid var(--eco-secondary);">🚘</div>
+                   style="width:48px;height:48px;background:var(--eco-mint);border:2px solid var(--eco-secondary);">
+                <i data-lucide="car" style="width:22px;height:22px;stroke:var(--eco-primary);"></i>
+              </div>
               <div>
                 <div class="fw-semibold">{{ voiture.modele }}</div>
                 <div class="text-muted" style="font-size: 0.82rem;">
                   {{ voiture.immatriculation }}
                   &nbsp;·&nbsp;
                   {% if voiture.energie == 'électrique' %}
-                    <span style="color: var(--eco-secondary);">⚡ Électrique</span>
+                    <span style="color: var(--eco-secondary);" class="d-inline-flex align-items-center gap-1">
+                      <i data-lucide="zap" style="width:12px;height:12px;stroke:var(--eco-secondary);fill:var(--eco-secondary);"></i>Électrique
+                    </span>
                   {% else %}
                     {{ voiture.energie|capitalize }}
                   {% endif %}
@@ -42,12 +52,13 @@
               </div>
             </div>
             <div class="d-flex gap-2">
-              <a href="{{ path('voiture_edit', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-primary">✏️ Modifier</a>
+              <a href="{{ path('voiture_edit', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+                <i data-lucide="pencil" class="icon-xs"></i>Modifier
+              </a>
               {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('voiture_delete', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-danger"
-                   x-data
-                   @click.prevent="if(confirm('Supprimer cette voiture ?')) window.location.href = $el.href">
-                  🗑️ Supprimer
+                   x-data @click.prevent="if(confirm('Supprimer cette voiture ?')) window.location.href = $el.href">
+                  <i data-lucide="trash-2" class="icon-xs"></i>
                 </a>
               {% endif %}
             </div>

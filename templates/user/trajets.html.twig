@@ -14,18 +14,24 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
-      <h1 class="mb-0" style="font-size: 1.8rem;">🛣️ Mes trajets</h1>
+      <h1 class="mb-0 d-flex align-items-center gap-2" style="font-size: 1.8rem;">
+        <i data-lucide="route" style="width:28px;height:28px;stroke:var(--eco-secondary);"></i>Mes trajets
+      </h1>
       <p class="text-muted mb-0" style="font-size: 0.9rem;">Vos trajets proposés en tant que conducteur</p>
     </div>
-    <a href="{{ path('covoiturage_create') }}" class="btn btn-success">➕ Proposer un trajet</a>
+    <a href="{{ path('covoiturage_create') }}" class="btn btn-success d-flex align-items-center gap-2">
+      <i data-lucide="plus" class="icon-sm"></i>Proposer un trajet
+    </a>
   </div>
 
   {% if covoiturages is empty %}
     <div class="card p-5 text-center">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">🛣️</div>
+      <i data-lucide="route" style="width:56px;height:56px;stroke:var(--eco-border);margin-bottom:1rem;"></i>
       <h5 class="mb-2">Aucun trajet proposé</h5>
       <p class="text-muted mb-4">Commencez par proposer votre premier trajet et gagnez des crédits.</p>
-      <a href="{{ path('covoiturage_create') }}" class="btn btn-success mx-auto" style="max-width: 240px;">➕ Proposer un trajet</a>
+      <a href="{{ path('covoiturage_create') }}" class="btn btn-success mx-auto d-flex align-items-center gap-2" style="max-width: 240px;">
+        <i data-lucide="plus" class="icon-sm"></i>Proposer un trajet
+      </a>
     </div>
   {% else %}
     <div class="d-flex flex-column gap-3">
@@ -38,10 +44,12 @@
               <div class="fw-semibold fs-6 mb-1">
                 {{ c.lieuDepart }} <span style="color:var(--eco-secondary);">→</span> {{ c.lieuArrivee }}
               </div>
-              <div class="text-muted" style="font-size:0.83rem;">📅 {{ c.dateDepart|date('d/m/Y') }}</div>
-              <div class="text-muted" style="font-size:0.83rem;">🪑 {{ c.nbPlace }} place{{ c.nbPlace > 1 ? 's' : '' }} restante{{ c.nbPlace > 1 ? 's' : '' }}</div>
-
-              {# Statut badge #}
+              <div class="text-muted d-flex align-items-center gap-1" style="font-size:0.83rem;">
+                <i data-lucide="calendar" class="icon-xs"></i>{{ c.dateDepart|date('d/m/Y') }}
+              </div>
+              <div class="text-muted d-flex align-items-center gap-1" style="font-size:0.83rem;">
+                <i data-lucide="users" class="icon-xs"></i>{{ c.nbPlace }} place{{ c.nbPlace > 1 ? 's' : '' }} restante{{ c.nbPlace > 1 ? 's' : '' }}
+              </div>
               <div class="mt-2">
                 <span class="badge
                   {% if c.statut.value == 'DRAFT' %}bg-warning text-dark
@@ -49,11 +57,15 @@
                   {% elseif c.statut.value == 'CANCELLED' %}bg-danger
                   {% elseif c.statut.value == 'TERMINE' %}bg-secondary
                   {% else %}bg-light text-dark
-                  {% endif %}">
-                  {% if c.statut.value == 'DRAFT' %}⏳ Brouillon
-                  {% elseif c.statut.value == 'PUBLISHED' %}🟢 En cours
-                  {% elseif c.statut.value == 'CANCELLED' %}❌ Annulé
-                  {% elseif c.statut.value == 'TERMINE' %}✅ Terminé
+                  {% endif %} d-inline-flex align-items-center gap-1">
+                  {% if c.statut.value == 'DRAFT' %}
+                    <i data-lucide="clock" style="width:12px;height:12px;"></i>Brouillon
+                  {% elseif c.statut.value == 'PUBLISHED' %}
+                    <i data-lucide="circle-check" style="width:12px;height:12px;"></i>En cours
+                  {% elseif c.statut.value == 'CANCELLED' %}
+                    <i data-lucide="x-circle" style="width:12px;height:12px;"></i>Annulé
+                  {% elseif c.statut.value == 'TERMINE' %}
+                    <i data-lucide="check-circle" style="width:12px;height:12px;"></i>Terminé
                   {% else %}{{ c.statut.value }}
                   {% endif %}
                 </span>
@@ -62,14 +74,16 @@
 
             {# Participants #}
             <div class="col-md-3">
-              <div class="text-muted small mb-1 fw-semibold">👥 Participants</div>
+              <div class="text-muted small mb-1 fw-semibold d-flex align-items-center gap-1">
+                <i data-lucide="users" class="icon-xs"></i>Participants
+              </div>
               {% if c.participants is empty %}
                 <span class="text-muted small">Aucun passager</span>
               {% else %}
                 <div class="d-flex flex-column gap-1">
                   {% for participant in c.participants %}
                     <div class="d-flex align-items-center gap-1" style="font-size:0.85rem;">
-                      <span style="color:var(--eco-secondary);">•</span> {{ participant.username }}
+                      <i data-lucide="user" class="icon-xs" style="stroke:var(--eco-secondary);"></i>{{ participant.username }}
                     </div>
                   {% endfor %}
                 </div>
@@ -78,7 +92,9 @@
 
             {# Avis #}
             <div class="col-md-2">
-              <div class="text-muted small mb-1 fw-semibold">⭐ Avis reçus</div>
+              <div class="text-muted small mb-1 fw-semibold d-flex align-items-center gap-1">
+                <i data-lucide="star" class="icon-xs"></i>Avis reçus
+              </div>
               {% set avisValides = c.getAvis|filter(v => v.statut.value == 'VALIDÉ') %}
               {% if avisValides is empty %}
                 <span class="text-muted small">Aucun</span>
@@ -86,7 +102,9 @@
                 {% set total = 0 %}
                 {% for avis in avisValides %}{% set total = total + avis.note %}{% endfor %}
                 {% set moyenne = (total / avisValides|length)|number_format(1) %}
-                <div class="fw-semibold" style="color:#f59e0b;">{{ moyenne }}/5</div>
+                <div class="fw-semibold d-flex align-items-center gap-1" style="color:#f59e0b;">
+                  <i data-lucide="star" style="width:14px;height:14px;stroke:#f59e0b;fill:#f59e0b;"></i>{{ moyenne }}/5
+                </div>
                 <div class="text-muted small">{{ avisValides|length }} avis</div>
               {% endif %}
             </div>
@@ -97,28 +115,38 @@
                 {% if c.statut.value == 'DRAFT' %}
                   <form method="post" action="{{ path('covoiturage_covoiturage_demarrer', {'id': c.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('demarrer' ~ c.id) }}">
-                    <button type="submit" class="btn btn-success btn-sm w-100">🚦 Démarrer</button>
+                    <button type="submit" class="btn btn-success btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                      <i data-lucide="play" class="icon-xs"></i>Démarrer
+                    </button>
                   </form>
                 {% elseif c.statut.value == 'PUBLISHED' %}
                   <form method="post" action="{{ path('covoiturage_covoiturage_arriver', {'id': c.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('arriver' ~ c.id) }}">
-                    <button type="submit" class="btn btn-success btn-sm w-100">✅ Marquer arrivée</button>
+                    <button type="submit" class="btn btn-success btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                      <i data-lucide="check-circle" class="icon-xs"></i>Marquer arrivée
+                    </button>
                   </form>
                 {% endif %}
 
                 <div class="d-flex gap-2">
-                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-sm btn-outline-primary flex-grow-1">✏️ Modifier</a>
+                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-sm btn-outline-primary flex-grow-1 d-flex align-items-center justify-content-center gap-1">
+                    <i data-lucide="pencil" class="icon-xs"></i>Modifier
+                  </a>
                   <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-sm btn-outline-danger"
-                     x-data @click.prevent="if(confirm('Supprimer ce trajet ?')) window.location.href = $el.href">🗑️</a>
+                     x-data @click.prevent="if(confirm('Supprimer ce trajet ?')) window.location.href = $el.href">
+                    <i data-lucide="trash-2" class="icon-xs"></i>
+                  </a>
                 </div>
 
                 {% if c.statut.value == 'TERMINE' %}
                   {% if c.id not in avisIds %}
-                    <a href="{{ path('avis_create', {'id': c.id}) }}" class="btn btn-sm btn-outline-success w-100">
-                      📝 Donner un avis
+                    <a href="{{ path('avis_create', {'id': c.id}) }}" class="btn btn-sm btn-outline-success w-100 d-flex align-items-center justify-content-center gap-1">
+                      <i data-lucide="star" class="icon-xs"></i>Donner un avis
                     </a>
                   {% else %}
-                    <span class="badge bg-success w-100 py-2">✔️ Avis donné</span>
+                    <span class="badge bg-success w-100 py-2 d-flex align-items-center justify-content-center gap-1">
+                      <i data-lucide="check" style="width:12px;height:12px;"></i>Avis donné
+                    </span>
                   {% endif %}
                 {% endif %}
               </div>

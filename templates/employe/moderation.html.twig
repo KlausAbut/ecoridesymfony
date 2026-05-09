@@ -2,31 +2,50 @@
 {% block title %}Modération des avis{% endblock %}
 
 {% block body %}
-<section class="section-box">
-  <h2 class="text-success mb-4 text-center">🛠️ Modération des avis</h2>
+<div class="page-wrapper">
+
+  <div class="text-center mb-4">
+    <i data-lucide="shield-check" style="width:48px;height:48px;stroke:var(--eco-secondary);"></i>
+    <h1 style="font-size:1.8rem;" class="mb-1 mt-2">Modération des avis</h1>
+    <p class="text-muted">Validez ou supprimez les avis en attente</p>
+  </div>
 
   {% for message in app.flashes('success') %}
     <div class="alert alert-success text-center">{{ message }}</div>
   {% endfor %}
 
   {% if avis is not empty %}
-    <div class="row">
+    <div class="row g-4">
       {% for a in avis %}
-        <div class="col-md-6 mb-4">
-          <div class="card shadow-sm p-3">
-            <p><strong>⭐ {{ a.note }}/5</strong></p>
-            <p class="fst-italic">"{{ a.commentaire }}"</p>
-            <p class="text-muted mb-2">Par : {{ a.user.firstname }}</p>
+        <div class="col-md-6">
+          <div class="card p-4 h-100">
+            <div class="mb-2">
+              {% for i in 1..5 %}
+                <i data-lucide="star" style="width:16px;height:16px;stroke:#f59e0b;{{ i <= a.note ? 'fill:#f59e0b;' : '' }}"></i>
+              {% endfor %}
+              <span class="fw-semibold ms-1">{{ a.note }}/5</span>
+            </div>
+            <blockquote class="fst-italic text-muted mb-3" style="border-left:3px solid var(--eco-secondary);padding-left:0.8rem;font-size:0.9rem;">
+              "{{ a.commentaire }}"
+            </blockquote>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i data-lucide="user" class="icon-sm"></i>
+              <span class="fw-semibold" style="font-size:0.88rem;">{{ a.user.firstname }}</span>
+            </div>
 
-            <div class="d-flex gap-2">
-              <form method="post" action="{{ path('employe_avis_valider', {id: a.id}) }}">
+            <div class="d-flex gap-2 mt-auto">
+              <form method="post" action="{{ path('employe_avis_valider', {id: a.id}) }}" class="flex-grow-1">
                 <input type="hidden" name="_token" value="{{ csrf_token('avis_valider' ~ a.id) }}">
-                <button type="submit" class="btn btn-outline-success btn-sm">✅ Valider</button>
+                <button type="submit" class="btn btn-outline-success btn-sm w-100">
+                  <i data-lucide="check-circle" class="icon-sm me-1"></i>Valider
+                </button>
               </form>
               <form method="post" action="{{ path('employe_avis_supprimer', {id: a.id}) }}"
-                    onsubmit="return confirm('Supprimer cet avis ?')">
+                    x-data @submit.prevent="if(confirm('Supprimer cet avis ?')) $el.submit()">
                 <input type="hidden" name="_token" value="{{ csrf_token('avis_supprimer' ~ a.id) }}">
-                <button type="submit" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i data-lucide="trash-2" class="icon-sm"></i>
+                </button>
               </form>
             </div>
           </div>
@@ -34,7 +53,11 @@
       {% endfor %}
     </div>
   {% else %}
-    <p class="text-muted text-center">Aucun avis à modérer pour le moment.</p>
+    <div class="card p-5 text-center">
+      <i data-lucide="check-circle" style="width:56px;height:56px;stroke:var(--eco-secondary);margin-bottom:1rem;"></i>
+      <h5 class="mb-1">Tout est à jour</h5>
+      <p class="text-muted mb-0">Aucun avis à modérer pour le moment.</p>
+    </div>
   {% endif %}
-</section>
+</div>
 {% endblock %}

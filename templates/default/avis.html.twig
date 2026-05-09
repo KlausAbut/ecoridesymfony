@@ -1,32 +1,72 @@
-<section id="avis" class="py-5 rounded">
-  <div class="container">
-    <h2 class="text-center mb-4">Avis des utilisateurs</h2>
+{% if avisList is not empty %}
+<div x-data="{
+    current: 0,
+    total: {{ avisList|length }},
+    prev() { this.current = (this.current - 1 + this.total) % this.total; },
+    next() { this.current = (this.current + 1) % this.total; }
+}" x-init="setInterval(() => next(), 5000)">
 
-    {% if avisList is not empty %}
-      <div id="avisCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          {% for avis in avisList %}
-            <div class="carousel-item {% if loop.first %}active{% endif %}">
-              <blockquote class="blockquote text-center">
-                <p class="mb-3">“{{ avis.commentaire }}”</p>
-                <footer class="blockquote-footer">{{ avis.user.firstname }}</footer>
-                <div class="mt-2 text-warning">
-                  {% for i in 1..avis.note %}⭐️{% endfor %}
-                </div>
-              </blockquote>
+  {# Carte principale #}
+  <div class="position-relative" style="min-height: 200px;">
+    {% for avis in avisList %}
+      <div x-show="current === {{ loop.index0 }}"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="opacity-0 transform translate-y-2"
+           x-transition:enter-end="opacity-100 transform translate-y-0"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0"
+           style="display:none;">
+        <div class="card p-4 mx-auto" style="max-width: 620px; border-left: 4px solid var(--eco-secondary);">
+          <div class="mb-3">
+            {% for i in 1..5 %}
+              <i data-lucide="star" style="width:18px;height:18px;stroke:#f59e0b;{{ i <= avis.note ? 'fill:#f59e0b;' : '' }}"></i>
+            {% endfor %}
+          </div>
+          <p class="fst-italic mb-3" style="font-size: 1.05rem; color: var(--eco-text); line-height: 1.7;">
+            "{{ avis.commentaire }}"
+          </p>
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                 style="width:36px;height:36px;background:var(--eco-mint);border:2px solid var(--eco-secondary);">
+              <i data-lucide="user" style="width:18px;height:18px;stroke:var(--eco-primary);"></i>
             </div>
-          {% endfor %}
+            <div>
+              <div class="fw-semibold" style="font-size:0.9rem;">{{ avis.user.firstname }}</div>
+              <div class="text-muted" style="font-size:0.78rem;">Membre EcoRide</div>
+            </div>
+          </div>
         </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#avisCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#avisCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
       </div>
-    {% else %}
-      <p class="text-center text-muted">Aucun avis pour le moment.</p>
-    {% endif %}
+    {% endfor %}
   </div>
-</section>
+
+  {# Navigation #}
+  <div class="d-flex align-items-center justify-content-center gap-3 mt-4">
+    <button @click="prev()" class="btn btn-outline-success btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;">
+      <i data-lucide="chevron-left" style="width:16px;height:16px;"></i>
+    </button>
+
+    <div class="d-flex gap-2">
+      {% for avis in avisList %}
+        <button @click="current = {{ loop.index0 }}"
+                :style="current === {{ loop.index0 }} ? 'background:var(--eco-secondary);width:24px;' : 'background:var(--eco-border);width:8px;'"
+                style="height:8px;border-radius:4px;border:none;padding:0;transition:all 0.3s ease;cursor:pointer;">
+        </button>
+      {% endfor %}
+    </div>
+
+    <button @click="next()" class="btn btn-outline-success btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;">
+      <i data-lucide="chevron-right" style="width:16px;height:16px;"></i>
+    </button>
+  </div>
+
+  {# Compteur #}
+  <p class="text-center text-muted mt-2" style="font-size:0.8rem;">
+    <span x-text="current + 1"></span> / {{ avisList|length }}
+  </p>
+
+</div>
+{% else %}
+  <p class="text-muted mb-0">Aucun avis pour le moment.</p>
+{% endif %}

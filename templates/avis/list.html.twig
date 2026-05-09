@@ -11,35 +11,31 @@
   {% endfor %}
   {% set moyenne = avis|length > 0 ? (total / avis|length)|number_format(1) : null %}
 
-  {# Header #}
   <div class="text-center mb-5">
-    <h1 class="mb-2">⭐ Avis de la communauté</h1>
+    <i data-lucide="star" style="width:48px;height:48px;stroke:#f59e0b;fill:#f59e0b;"></i>
+    <h1 class="mb-2 mt-2">Avis de la communauté</h1>
     <p class="text-muted" style="max-width: 500px; margin: 0 auto;">
       Ce que les membres pensent de leurs expériences EcoRide.
     </p>
   </div>
 
-  {# Note globale #}
   {% if moyenne %}
     <div class="card p-4 mb-5 text-center" style="max-width: 360px; margin: 0 auto 2rem;">
       <div style="font-size: 3rem; font-weight: 700; color: var(--eco-primary);">{{ moyenne }}</div>
       <div class="mb-2">
         {% for i in 1..5 %}
-          <span style="font-size: 1.4rem; color: {{ i <= moyenne|round ? '#f59e0b' : 'var(--eco-border)' }};">★</span>
+          <i data-lucide="star" style="width:22px;height:22px;stroke:#f59e0b;{{ i <= moyenne|round ? 'fill:#f59e0b;' : '' }}"></i>
         {% endfor %}
       </div>
-      <div class="text-muted" style="font-size: 0.85rem;">
-        Note moyenne sur {{ avis|length }} avis
-      </div>
+      <div class="text-muted" style="font-size: 0.85rem;">Note moyenne sur {{ avis|length }} avis</div>
     </div>
   {% else %}
     <div class="card p-5 text-center mb-5">
-      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⭐</div>
+      <i data-lucide="star" style="width:48px;height:48px;stroke:var(--eco-border);margin-bottom:0.5rem;"></i>
       <p class="text-muted mb-0">Aucun avis pour le moment.</p>
     </div>
   {% endif %}
 
-  {# Grille d'avis #}
   {% if avis is not empty %}
     <div class="row g-4">
       {% for a in avis %}
@@ -47,7 +43,7 @@
           <div class="card p-4 h-100">
             <div class="mb-2">
               {% for i in 1..5 %}
-                <span style="color: {{ i <= a.note ? '#f59e0b' : 'var(--eco-border)' }};">★</span>
+                <i data-lucide="star" style="width:16px;height:16px;stroke:#f59e0b;{{ i <= a.note ? 'fill:#f59e0b;' : '' }}"></i>
               {% endfor %}
               <span class="fw-semibold ms-1">{{ a.note }}/5</span>
             </div>
@@ -56,7 +52,9 @@
             </blockquote>
             <div class="mt-auto d-flex align-items-center gap-2">
               <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                   style="width:32px;height:32px;background:var(--eco-mint);font-size:0.9rem;">👤</div>
+                   style="width:32px;height:32px;background:var(--eco-mint);">
+                <i data-lucide="user" style="width:16px;height:16px;stroke:var(--eco-primary);"></i>
+              </div>
               <span class="fw-semibold" style="font-size: 0.88rem;">{{ a.user.firstname }}</span>
             </div>
           </div>

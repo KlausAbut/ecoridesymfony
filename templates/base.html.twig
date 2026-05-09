@@ -40,7 +40,8 @@
 
     {# Bouton flottant dark mode #}
     <button id="darkModeToggle" aria-label="Basculer mode sombre">
-        <span id="darkModeIcon">🌙</span>
+        <i data-lucide="moon" id="iconMoon" style="width:22px;height:22px;stroke:#fff;"></i>
+        <i data-lucide="sun"  id="iconSun"  style="width:22px;height:22px;stroke:#fff;display:none;"></i>
     </button>
     <div id="darkModeTooltip" style="
         position: fixed; bottom: 5.4rem; right: 1.8rem;
@@ -56,42 +57,33 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% endblock %}
 
     <script>
+        lucide.createIcons();
+
         (function () {
             const btn     = document.getElementById('darkModeToggle');
-            const icon    = document.getElementById('darkModeIcon');
-            const tooltip = document.getElementById('darkModeTooltip');
-            const html    = document.documentElement;
+            const iconMoon = document.getElementById('iconMoon');
+            const iconSun  = document.getElementById('iconSun');
+            const tooltip  = document.getElementById('darkModeTooltip');
+            const html     = document.documentElement;
 
-            function applyTheme(theme, animate) {
+            function applyTheme(theme) {
                 html.setAttribute('data-theme', theme);
                 localStorage.setItem('ecoride-theme', theme);
-
-                if (animate) {
-                    icon.style.transform = 'rotate(-180deg) scale(0.5)';
-                    icon.style.opacity   = '0';
-                    setTimeout(function () {
-                        icon.textContent     = theme === 'dark' ? '☀️' : '🌙';
-                        tooltip.textContent  = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
-                        icon.style.transform = '';
-                        icon.style.opacity   = '';
-                    }, 180);
-                } else {
-                    icon.textContent    = theme === 'dark' ? '☀️' : '🌙';
-                    tooltip.textContent = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
-                }
+                const isDark = theme === 'dark';
+                iconMoon.style.display = isDark ? 'none'         : 'inline-block';
+                iconSun.style.display  = isDark ? 'inline-block' : 'none';
+                tooltip.textContent    = isDark ? 'Mode clair'   : 'Mode sombre';
             }
 
-            icon.style.transition = 'transform 0.18s ease, opacity 0.18s ease';
-
-            applyTheme(localStorage.getItem('ecoride-theme') || 'light', false);
+            applyTheme(localStorage.getItem('ecoride-theme') || 'light');
 
             btn.addEventListener('click', function () {
-                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                applyTheme(next, true);
+                applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
             });
 
             btn.addEventListener('mouseenter', function () {

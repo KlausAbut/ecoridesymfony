@@ -7,8 +7,8 @@
   <div style="width: 100%; max-width: 560px;">
 
     <div class="text-center mb-4">
-      <div style="font-size: 2.5rem;">📬</div>
-      <h1 style="font-size: 1.8rem;" class="mb-1">Contactez-nous</h1>
+      <i data-lucide="mail" style="width:48px;height:48px;stroke:var(--eco-secondary);"></i>
+      <h1 style="font-size: 1.8rem;" class="mb-1 mt-2">Contactez-nous</h1>
       <p class="text-muted" style="font-size: 0.9rem;">Une question ? Une suggestion ? On vous répond rapidement.</p>
     </div>
 
@@ -19,23 +19,30 @@
 
       <form method="post" action="{{ path('contact') }}" x-data="{ sending: false }" @submit="sending = true">
         <div class="mb-3">
-          <label for="nom" class="form-label fw-semibold">Nom</label>
+          <label for="nom" class="form-label fw-semibold">
+            <i data-lucide="user" class="icon-xs me-1"></i>Nom
+          </label>
           <input type="text" id="nom" name="nom" class="form-control" placeholder="Jean Dupont" required>
         </div>
 
         <div class="mb-3">
-          <label for="email" class="form-label fw-semibold">Email</label>
+          <label for="email" class="form-label fw-semibold">
+            <i data-lucide="at-sign" class="icon-xs me-1"></i>Email
+          </label>
           <input type="email" id="email" name="email" class="form-control" placeholder="jean@example.com" required>
         </div>
 
         <div class="mb-4">
-          <label for="message" class="form-label fw-semibold">Message</label>
+          <label for="message" class="form-label fw-semibold">
+            <i data-lucide="message-square" class="icon-xs me-1"></i>Message
+          </label>
           <textarea id="message" name="message" rows="5" class="form-control"
                     placeholder="Décrivez votre demande..." required></textarea>
         </div>
 
         <button type="submit" class="btn btn-success w-100" :disabled="sending">
-          <span x-show="!sending">Envoyer le message ✉️</span>
+          <i data-lucide="send" class="icon-sm me-2"></i>
+          <span x-show="!sending">Envoyer le message</span>
           <span x-show="sending">Envoi en cours…</span>
         </button>
       </form>

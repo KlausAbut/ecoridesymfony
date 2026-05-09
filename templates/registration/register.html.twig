@@ -7,8 +7,8 @@
   <div style="width: 100%; max-width: 640px;">
 
     <div class="text-center mb-4">
-      <div style="font-size: 2.5rem;">🌿</div>
-      <h1 style="font-size: 1.8rem;" class="mb-1">Créer un compte</h1>
+      <i data-lucide="leaf" style="width:48px;height:48px;stroke:var(--eco-secondary);"></i>
+      <h1 style="font-size: 1.8rem;" class="mb-1 mt-2">Créer un compte</h1>
       <p class="text-muted">Rejoignez la communauté EcoRide</p>
     </div>
 
@@ -21,62 +21,74 @@
              if (this.password.length < 10) return 2;
              return 3;
            },
-           strengthLabel() {
-             return ['', 'Faible', 'Moyen', 'Fort'][this.strength()];
-           },
-           strengthColor() {
-             return ['', '#ef4444', '#f59e0b', 'var(--eco-secondary)'][this.strength()];
-           }
+           strengthLabel() { return ['', 'Faible', 'Moyen', 'Fort'][this.strength()]; },
+           strengthColor() { return ['', '#ef4444', '#f59e0b', 'var(--eco-secondary)'][this.strength()]; }
          }">
 
       {{ form_start(registrationForm) }}
 
       <div class="row g-3 mb-3">
         <div class="col-sm-6">
-          <label class="form-label fw-semibold">Prénom</label>
+          <label class="form-label fw-semibold d-flex align-items-center gap-1">
+            <i data-lucide="user" class="icon-xs"></i>Prénom
+          </label>
           {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control', 'placeholder': 'Jean'}}) }}
           {{ form_errors(registrationForm.firstname) }}
         </div>
         <div class="col-sm-6">
-          <label class="form-label fw-semibold">Nom</label>
+          <label class="form-label fw-semibold d-flex align-items-center gap-1">
+            <i data-lucide="user" class="icon-xs"></i>Nom
+          </label>
           {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Dupont'}}) }}
           {{ form_errors(registrationForm.lastname) }}
         </div>
       </div>
 
       <div class="mb-3">
-        <label class="form-label fw-semibold">Nom d'utilisateur</label>
+        <label class="form-label fw-semibold d-flex align-items-center gap-1">
+          <i data-lucide="at-sign" class="icon-xs"></i>Nom d'utilisateur
+        </label>
         {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control', 'placeholder': '@jean_dupont'}}) }}
         {{ form_errors(registrationForm.username) }}
       </div>
 
       <div class="mb-3">
-        <label class="form-label fw-semibold">Adresse e-mail</label>
+        <label class="form-label fw-semibold d-flex align-items-center gap-1">
+          <i data-lucide="mail" class="icon-xs"></i>Adresse e-mail
+        </label>
         {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'jean@example.com'}}) }}
         {{ form_errors(registrationForm.email) }}
       </div>
 
       <div class="row g-3 mb-3">
         <div class="col-sm-6">
-          <label class="form-label fw-semibold">Téléphone</label>
+          <label class="form-label fw-semibold d-flex align-items-center gap-1">
+            <i data-lucide="phone" class="icon-xs"></i>Téléphone
+          </label>
           {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control', 'placeholder': '06 12 34 56 78'}}) }}
           {{ form_errors(registrationForm.telephone) }}
         </div>
         <div class="col-sm-6">
-          <label class="form-label fw-semibold">Date de naissance</label>
+          <label class="form-label fw-semibold d-flex align-items-center gap-1">
+            <i data-lucide="calendar" class="icon-xs"></i>Date de naissance
+          </label>
           {{ form_widget(registrationForm.date_naissance, {'attr': {'class': 'form-control'}}) }}
           {{ form_errors(registrationForm.date_naissance) }}
         </div>
       </div>
 
       <div class="mb-3">
-        <label class="form-label fw-semibold">Adresse</label>
+        <label class="form-label fw-semibold d-flex align-items-center gap-1">
+          <i data-lucide="map-pin" class="icon-xs"></i>Adresse
+        </label>
         {{ form_widget(registrationForm.adresse, {'attr': {'class': 'form-control', 'placeholder': '12 rue des Lilas, Paris'}}) }}
         {{ form_errors(registrationForm.adresse) }}
       </div>
 
       <div class="mb-3">
-        <label class="form-label fw-semibold">Mot de passe</label>
+        <label class="form-label fw-semibold d-flex align-items-center gap-1">
+          <i data-lucide="lock" class="icon-xs"></i>Mot de passe
+        </label>
         {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'x-model': 'password'}}) }}
         {{ form_errors(registrationForm.plainPassword) }}
         <div class="mt-2" x-show="password.length > 0">
@@ -93,8 +105,8 @@
         {{ form_errors(registrationForm.agreeTerms) }}
       </div>
 
-      <button type="submit" class="btn btn-success w-100 py-2" style="font-size: 1rem;">
-        Créer mon compte 🌿
+      <button type="submit" class="btn btn-success w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+        <i data-lucide="user-plus" class="icon-sm"></i>Créer mon compte
       </button>
 
       {{ form_end(registrationForm) }}

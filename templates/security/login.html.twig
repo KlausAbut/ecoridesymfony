@@ -7,8 +7,8 @@
   <div style="width: 100%; max-width: 440px;">
 
     <div class="text-center mb-4">
-      <div style="font-size: 2.5rem;">🌿</div>
-      <h1 style="font-size: 1.8rem;" class="mb-1">Connexion</h1>
+      <i data-lucide="leaf" style="width:48px;height:48px;stroke:var(--eco-secondary);"></i>
+      <h1 style="font-size: 1.8rem;" class="mb-1 mt-2">Connexion</h1>
       <p class="text-muted">Bon retour sur EcoRide</p>
     </div>
 
@@ -26,17 +26,23 @@
 
       <form method="post">
         <div class="mb-3">
-          <label for="username" class="form-label">Nom d'utilisateur</label>
+          <label for="username" class="form-label fw-semibold">
+            <i data-lucide="user" class="icon-xs me-1"></i>Nom d'utilisateur
+          </label>
           <input type="text" value="{{ last_username }}" name="_username" id="username"
                  class="form-control" autocomplete="username" required autofocus>
         </div>
         <div class="mb-4">
-          <label for="password" class="form-label">Mot de passe</label>
+          <label for="password" class="form-label fw-semibold">
+            <i data-lucide="lock" class="icon-xs me-1"></i>Mot de passe
+          </label>
           <input type="password" name="_password" id="password"
                  class="form-control" autocomplete="current-password" required>
         </div>
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <button class="btn btn-success w-100" type="submit">Se connecter</button>
+        <button class="btn btn-success w-100 py-2" type="submit">
+          <i data-lucide="log-in" class="icon-sm me-2"></i>Se connecter
+        </button>
       </form>
 
       <p class="text-center mt-4 mb-0" style="font-size: 0.9rem;">

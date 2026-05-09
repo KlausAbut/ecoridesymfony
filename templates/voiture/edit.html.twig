@@ -9,8 +9,8 @@
   <div style="width: 100%; max-width: 520px;">
 
     <div class="text-center mb-4">
-      <div style="font-size: 2.5rem;">🚘</div>
-      <h1 style="font-size: 1.8rem;" class="mb-1">
+      <i data-lucide="car" style="width:48px;height:48px;stroke:var(--eco-secondary);"></i>
+      <h1 style="font-size: 1.8rem;" class="mb-1 mt-2">
         {{ is_create ? 'Ajouter une voiture' : 'Modifier la voiture' }}
       </h1>
       <p class="text-muted" style="font-size: 0.9rem;">
@@ -21,21 +21,18 @@
     <div class="card p-4">
       {{ form_start(form) }}
 
-      <div class="mb-3">
-        {{ form_row(form.modele) }}
-      </div>
-      <div class="mb-3">
-        {{ form_row(form.immatriculation) }}
-      </div>
-      <div class="mb-4">
-        {{ form_row(form.energie) }}
-      </div>
+      <div class="mb-3">{{ form_row(form.modele) }}</div>
+      <div class="mb-3">{{ form_row(form.immatriculation) }}</div>
+      <div class="mb-4">{{ form_row(form.energie) }}</div>
 
       <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-success flex-grow-1">
-          {{ is_create ? '➕ Ajouter' : '💾 Sauvegarder' }}
+        <button type="submit" class="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2">
+          <i data-lucide="{{ is_create ? 'plus' : 'save' }}" class="icon-sm"></i>
+          {{ is_create ? 'Ajouter' : 'Sauvegarder' }}
         </button>
-        <a href="{{ path('user_profile') }}" class="btn btn-outline-secondary">Annuler</a>
+        <a href="{{ path('user_profile') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+          <i data-lucide="x" class="icon-sm"></i>Annuler
+        </a>
       </div>
 
       {{ form_end(form) }}

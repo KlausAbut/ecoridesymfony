@@ -3,7 +3,7 @@
   <div class="container-fluid px-4">
 
     <a class="navbar-brand" href="{{ path('index') }}">
-      🌿 <span class="green">Eco</span>Ride
+      <i data-lucide="leaf" style="width:20px;height:20px;stroke:var(--eco-secondary);margin-right:6px;vertical-align:middle;"></i><span class="green">Eco</span>Ride
     </a>
 
     <button
@@ -22,19 +22,29 @@
 
       <ul class="navbar-nav mx-auto mb-0 flex-row gap-2">
         <li class="nav-item">
-          <a class="nav-link px-3 py-2 rounded" href="{{ path('index') }}">Accueil</a>
+          <a class="nav-link px-3 py-2 rounded" href="{{ path('index') }}">
+            <i data-lucide="home" class="icon-sm me-1"></i>Accueil
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 py-2 rounded" href="{{ path('covoiturage_list') }}">Covoiturages</a>
+          <a class="nav-link px-3 py-2 rounded" href="{{ path('covoiturage_list') }}">
+            <i data-lucide="car" class="icon-sm me-1"></i>Covoiturages
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 py-2 rounded" href="{{ path('contact') }}">Contact</a>
+          <a class="nav-link px-3 py-2 rounded" href="{{ path('contact') }}">
+            <i data-lucide="mail" class="icon-sm me-1"></i>Contact
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 py-2 rounded" href="{{ path('about') }}">À propos</a>
+          <a class="nav-link px-3 py-2 rounded" href="{{ path('about') }}">
+            <i data-lucide="info" class="icon-sm me-1"></i>À propos
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 py-2 rounded" href="{{ path('avis_list') }}">Avis</a>
+          <a class="nav-link px-3 py-2 rounded" href="{{ path('avis_list') }}">
+            <i data-lucide="star" class="icon-sm me-1"></i>Avis
+          </a>
         </li>
       </ul>
 
@@ -49,40 +59,56 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              👤 Mon compte
+              <i data-lucide="user" class="icon-sm me-1"></i>Mon compte
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
               {% if 'ROLE_ADMIN' in app.user.roles %}
                 <li>
-                  <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
+                  <a class="dropdown-item" href="{{ path('admin_dashboard') }}">
+                    <i data-lucide="settings" class="icon-sm me-2"></i>Admin
+                  </a>
                 </li>
               {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
                 <li>
-                  <a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a>
+                  <a class="dropdown-item" href="{{ path('employe_moderation') }}">
+                    <i data-lucide="shield-check" class="icon-sm me-2"></i>Employé
+                  </a>
                 </li>
               {% else %}
                 <li>
-                  <a class="dropdown-item" href="{{ path('user_profile') }}">👤 Mon profil</a>
+                  <a class="dropdown-item" href="{{ path('user_profile') }}">
+                    <i data-lucide="user-circle" class="icon-sm me-2"></i>Mon profil
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ path('user_reservations') }}">📋 Mes réservations</a>
+                  <a class="dropdown-item" href="{{ path('user_reservations') }}">
+                    <i data-lucide="calendar" class="icon-sm me-2"></i>Mes réservations
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ path('user_trajets') }}">🚗 Mes trajets</a>
+                  <a class="dropdown-item" href="{{ path('user_trajets') }}">
+                    <i data-lucide="route" class="icon-sm me-2"></i>Mes trajets
+                  </a>
                 </li>
               {% endif %}
               <li><hr class="dropdown-divider"></li>
               <li>
-                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">🚪 Déconnexion</a>
+                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                  <i data-lucide="log-out" class="icon-sm me-2"></i>Déconnexion
+                </a>
               </li>
             </ul>
           </li>
         {% else %}
           <li class="nav-item me-2">
-            <a class="btn btn-outline-light btn-sm" href="{{ path('app_login') }}">Connexion</a>
+            <a class="btn btn-outline-light btn-sm" href="{{ path('app_login') }}">
+              <i data-lucide="log-in" class="icon-sm me-1"></i>Connexion
+            </a>
           </li>
           <li class="nav-item">
-            <a class="btn btn-light btn-sm fw-semibold" style="color: var(--eco-primary);" href="{{ path('app_register') }}">Inscription</a>
+            <a class="btn btn-light btn-sm fw-semibold" style="color: var(--eco-primary);" href="{{ path('app_register') }}">
+              <i data-lucide="user-plus" class="icon-sm me-1"></i>Inscription
+            </a>
           </li>
         {% endif %}
       </ul>
@@ -98,77 +124,64 @@
   >
     <div class="offcanvas-header border-bottom border-secondary">
       <h5 class="offcanvas-title" id="offcanvasMenuLabel">
-        🌿 <span style="color: var(--eco-light);">Eco</span>Ride
+        <i data-lucide="leaf" style="width:18px;height:18px;stroke:var(--eco-light);margin-right:6px;"></i><span style="color: var(--eco-light);">Eco</span>Ride
       </h5>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="offcanvas"
-        aria-label="Close"
-      ></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
 
       <ul class="nav flex-column mb-3">
         <li class="nav-item">
-          <a class="nav-link py-2" href="{{ path('index') }}">🏠 Accueil</a>
+          <a class="nav-link py-2" href="{{ path('index') }}">
+            <i data-lucide="home" class="icon-sm me-2"></i>Accueil
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link py-2" href="{{ path('covoiturage_list') }}">🚗 Covoiturages</a>
+          <a class="nav-link py-2" href="{{ path('covoiturage_list') }}">
+            <i data-lucide="car" class="icon-sm me-2"></i>Covoiturages
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link py-2" href="{{ path('contact') }}">📬 Contact</a>
+          <a class="nav-link py-2" href="{{ path('contact') }}">
+            <i data-lucide="mail" class="icon-sm me-2"></i>Contact
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link py-2" href="{{ path('about') }}">ℹ️ À propos</a>
+          <a class="nav-link py-2" href="{{ path('about') }}">
+            <i data-lucide="info" class="icon-sm me-2"></i>À propos
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link py-2" href="{{ path('avis_list') }}">⭐ Avis</a>
+          <a class="nav-link py-2" href="{{ path('avis_list') }}">
+            <i data-lucide="star" class="icon-sm me-2"></i>Avis
+          </a>
         </li>
       </ul>
 
       {% if app.user %}
         <div class="dropdown mb-3">
-          <a
-            class="nav-link dropdown-toggle py-2"
-            href="#"
-            id="userDropdownMobile"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            👤 Mon compte
+          <a class="nav-link dropdown-toggle py-2" href="#" id="userDropdownMobile" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            <i data-lucide="user" class="icon-sm me-2"></i>Mon compte
           </a>
           <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
             {% if 'ROLE_ADMIN' in app.user.roles %}
-              <li>
-                <a class="dropdown-item" href="{{ path('admin_dashboard') }}">⚙️ Admin</a>
-              </li>
+              <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}"><i data-lucide="settings" class="icon-sm me-2"></i>Admin</a></li>
             {% elseif 'ROLE_EMPLOYE' in app.user.roles %}
-              <li>
-                <a class="dropdown-item" href="{{ path('employe_moderation') }}">🛠️ Employé</a>
-              </li>
+              <li><a class="dropdown-item" href="{{ path('employe_moderation') }}"><i data-lucide="shield-check" class="icon-sm me-2"></i>Employé</a></li>
             {% else %}
-              <li>
-                <a class="dropdown-item" href="{{ path('user_profile') }}">👤 Mon profil</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ path('user_reservations') }}">📋 Mes réservations</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ path('user_trajets') }}">🚗 Mes trajets</a>
-              </li>
+              <li><a class="dropdown-item" href="{{ path('user_profile') }}"><i data-lucide="user-circle" class="icon-sm me-2"></i>Mon profil</a></li>
+              <li><a class="dropdown-item" href="{{ path('user_reservations') }}"><i data-lucide="calendar" class="icon-sm me-2"></i>Mes réservations</a></li>
+              <li><a class="dropdown-item" href="{{ path('user_trajets') }}"><i data-lucide="route" class="icon-sm me-2"></i>Mes trajets</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
-            <li>
-              <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">🚪 Déconnexion</a>
-            </li>
+            <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}"><i data-lucide="log-out" class="icon-sm me-2"></i>Déconnexion</a></li>
           </ul>
         </div>
       {% else %}
         <div class="d-grid gap-2 mt-2">
-          <a class="btn btn-outline-light" href="{{ path('app_login') }}">Connexion</a>
-          <a class="btn btn-light fw-semibold" style="color: var(--eco-primary);" href="{{ path('app_register') }}">Inscription</a>
+          <a class="btn btn-outline-light" href="{{ path('app_login') }}"><i data-lucide="log-in" class="icon-sm me-1"></i>Connexion</a>
+          <a class="btn btn-light fw-semibold" style="color: var(--eco-primary);" href="{{ path('app_register') }}"><i data-lucide="user-plus" class="icon-sm me-1"></i>Inscription</a>
         </div>
       {% endif %}
     </div>

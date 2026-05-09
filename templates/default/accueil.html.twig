@@ -11,7 +11,9 @@
 
   {# --- Mission --- #}
   <section class="section-box text-center">
-    <h2 class="mb-2">🌿 Bienvenue sur EcoRide</h2>
+    <h2 class="mb-2">
+      <i data-lucide="leaf" style="width:28px;height:28px;stroke:var(--eco-secondary);vertical-align:middle;margin-right:8px;"></i>Bienvenue sur EcoRide
+    </h2>
     <p class="lead mb-5" style="max-width: 600px; margin: 0 auto 2rem;">
       Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
     </p>
@@ -20,7 +22,9 @@
         <div class="card h-100 text-start">
           <img src="{{ asset('build/images/eco9.jpg') }}" alt="Mission" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
           <div class="card-body p-4">
-            <h5 class="card-title">🎯 Notre mission</h5>
+            <h5 class="card-title d-flex align-items-center gap-2">
+              <i data-lucide="target" style="width:20px;height:20px;stroke:var(--eco-secondary);"></i>Notre mission
+            </h5>
             <p class="card-text">Faites des économies tout en réduisant votre empreinte carbone. Chaque trajet partagé compte.</p>
           </div>
         </div>
@@ -29,7 +33,9 @@
         <div class="card h-100 text-start">
           <img src="{{ asset('build/images/eco10.jpg') }}" alt="Communauté" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
           <div class="card-body p-4">
-            <h5 class="card-title">👥 Rejoignez la communauté</h5>
+            <h5 class="card-title d-flex align-items-center gap-2">
+              <i data-lucide="users" style="width:20px;height:20px;stroke:var(--eco-secondary);"></i>Rejoignez la communauté
+            </h5>
             <p class="card-text">Des centaines de trajets proposés chaque jour. Trouvez le vôtre en quelques clics.</p>
           </div>
         </div>
@@ -39,26 +45,38 @@
 
   {# --- Recherche --- #}
   <section id="recherche" class="section-box">
-    <h2 class="text-center mb-4">🔍 Rechercher un covoiturage</h2>
+    <h2 class="text-center mb-4">
+      <i data-lucide="search" style="width:24px;height:24px;stroke:var(--eco-secondary);vertical-align:middle;margin-right:8px;"></i>Rechercher un covoiturage
+    </h2>
     <form id="formRecherche" class="row g-3 align-items-end justify-content-center">
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <label class="form-label small fw-semibold">Départ</label>
+        <label class="form-label small fw-semibold">
+          <i data-lucide="map-pin" class="icon-xs me-1"></i>Départ
+        </label>
         <input type="text" id="depart" name="depart" class="form-control" placeholder="Ville de départ">
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <label class="form-label small fw-semibold">Arrivée</label>
+        <label class="form-label small fw-semibold">
+          <i data-lucide="map-pin" class="icon-xs me-1"></i>Arrivée
+        </label>
         <input type="text" id="arrivee" name="arrivee" class="form-control" placeholder="Ville d'arrivée">
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <label class="form-label small fw-semibold">Date</label>
+        <label class="form-label small fw-semibold">
+          <i data-lucide="calendar" class="icon-xs me-1"></i>Date
+        </label>
         <input type="date" id="date" name="date" class="form-control">
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <label class="form-label small fw-semibold">Prix max (€)</label>
+        <label class="form-label small fw-semibold">
+          <i data-lucide="banknote" class="icon-xs me-1"></i>Prix max (€)
+        </label>
         <input type="number" id="prix" name="prix" class="form-control" placeholder="Ex: 30">
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <label class="form-label small fw-semibold">Énergie</label>
+        <label class="form-label small fw-semibold">
+          <i data-lucide="zap" class="icon-xs me-1"></i>Énergie
+        </label>
         <select id="energie" name="energie" class="form-select">
           <option value="">Toutes</option>
           <option value="électrique">Électrique</option>
@@ -67,7 +85,9 @@
         </select>
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
-        <button type="submit" class="btn btn-success w-100">Rechercher</button>
+        <button type="submit" class="btn btn-success w-100">
+          <i data-lucide="search" class="icon-sm me-1"></i>Rechercher
+        </button>
       </div>
     </form>
 
@@ -80,7 +100,11 @@
 
   {# --- Avis --- #}
   <section id="avis" class="section-box text-center">
-    <h2 class="mb-4">⭐ Avis de nos utilisateurs</h2>
+    <div class="mb-4">
+      <i data-lucide="star" style="width:32px;height:32px;stroke:#f59e0b;fill:#f59e0b;"></i>
+      <h2 class="mt-2 mb-1">Ce que disent nos membres</h2>
+      <p class="text-muted" style="font-size:0.9rem;">Des milliers de trajets partagés, des centaines de sourires</p>
+    </div>
     {% include 'default/avis.html.twig' %}
   </section>
 
@@ -88,7 +112,9 @@
   <section id="contact" class="section-box">
     <div class="row justify-content-center">
       <div class="col-lg-6">
-        <h2 class="text-center mb-4">📬 Contactez-nous</h2>
+        <h2 class="text-center mb-4">
+          <i data-lucide="mail" style="width:24px;height:24px;stroke:var(--eco-secondary);vertical-align:middle;margin-right:8px;"></i>Contactez-nous
+        </h2>
         <form method="post" class="d-flex flex-column gap-3">
           <div>
             <label class="form-label small fw-semibold">Nom</label>
@@ -103,7 +129,9 @@
             <textarea name="message" rows="5" class="form-control" placeholder="Votre message…" required></textarea>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-success px-5">Envoyer</button>
+            <button type="submit" class="btn btn-success px-5">
+              <i data-lucide="send" class="icon-sm me-2"></i>Envoyer
+            </button>
           </div>
         </form>
       </div>

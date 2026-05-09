@@ -7,16 +7,24 @@
   <div class="section-box">
 
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
-      <h1 class="mb-0">🚗 Covoiturages disponibles</h1>
+      <h1 class="mb-0 d-flex align-items-center gap-2">
+        <i data-lucide="car" style="width:28px;height:28px;stroke:var(--eco-secondary);"></i>
+        Covoiturages disponibles
+      </h1>
       {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.isConducteur %}
-        <a href="{{ path('covoiturage_create') }}" class="btn btn-success">➕ Proposer un trajet</a>
+        <a href="{{ path('covoiturage_create') }}" class="btn btn-success">
+          <i data-lucide="plus" class="icon-sm me-1"></i>Proposer un trajet
+        </a>
       {% endif %}
     </div>
 
     {% if covoiturages is empty %}
       <div class="text-center py-5">
+        <i data-lucide="car" style="width:56px;height:56px;stroke:var(--eco-border);margin-bottom:1rem;"></i>
         <p class="text-muted fs-5">Aucun covoiturage disponible pour le moment.</p>
-        <a href="{{ path('index') }}#recherche" class="btn btn-outline-success mt-2">🔍 Faire une recherche</a>
+        <a href="{{ path('index') }}#recherche" class="btn btn-outline-success mt-2">
+          <i data-lucide="search" class="icon-sm me-1"></i>Faire une recherche
+        </a>
       </div>
     {% else %}
       <div class="row g-4">
@@ -32,22 +40,38 @@
                       {{ covoiturage.lieuArrivee }}
                     </h5>
                     {% if covoiturage.voiture.energie == 'électrique' %}
-                      <span class="badge-eco ms-2 flex-shrink-0">🌿 Éco</span>
+                      <span class="badge-eco ms-2 flex-shrink-0 d-flex align-items-center gap-1">
+                        <i data-lucide="zap" style="width:12px;height:12px;stroke:var(--eco-primary);fill:var(--eco-primary);"></i>Éco
+                      </span>
                     {% endif %}
                   </div>
 
                   <ul class="list-unstyled mb-3" style="font-size: 0.9rem; color: var(--eco-text-muted);">
-                    <li class="mb-1">🗓️ {{ covoiturage.dateDepart|date('d/m/Y') }} à {{ covoiturage.heureDepart|date('H:i') }}</li>
-                    <li class="mb-1">🚘 {{ covoiturage.voiture.modele ?? 'Véhicule non spécifié' }}</li>
-                    <li class="mb-1">👤 {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}</li>
-                    <li>💺 {{ covoiturage.nbPlace }} place{{ covoiturage.nbPlace > 1 ? 's' : '' }} restante{{ covoiturage.nbPlace > 1 ? 's' : '' }}</li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                      <i data-lucide="calendar" class="icon-sm flex-shrink-0"></i>
+                      {{ covoiturage.dateDepart|date('d/m/Y') }} à {{ covoiturage.heureDepart|date('H:i') }}
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                      <i data-lucide="car" class="icon-sm flex-shrink-0"></i>
+                      {{ covoiturage.voiture.modele ?? 'Véhicule non spécifié' }}
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                      <i data-lucide="user" class="icon-sm flex-shrink-0"></i>
+                      {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                      <i data-lucide="users" class="icon-sm flex-shrink-0"></i>
+                      {{ covoiturage.nbPlace }} place{{ covoiturage.nbPlace > 1 ? 's' : '' }} restante{{ covoiturage.nbPlace > 1 ? 's' : '' }}
+                    </li>
                   </ul>
 
                   <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--eco-border);">
                     <span style="font-size: 1.1rem; font-weight: 600; color: var(--eco-primary);">
                       {{ covoiturage.prixPersonne }} €
                     </span>
-                    <span class="btn btn-outline-success btn-sm">Voir le trajet →</span>
+                    <span class="btn btn-outline-success btn-sm">
+                      Voir le trajet <i data-lucide="arrow-right" class="icon-xs ms-1"></i>
+                    </span>
                   </div>
                 </div>
               </div>

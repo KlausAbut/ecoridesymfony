@@ -611,6 +611,23 @@ footer a:hover { color: #fff; text-decoration: underline; }
 }
 
 /* ============================================
+   ICÔNES LUCIDE
+   ============================================ */
+
+.lucide {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.icon-xs  { width: 14px; height: 14px; }
+.icon-sm  { width: 16px; height: 16px; }
+.icon-md  { width: 20px; height: 20px; }
+.icon-lg  { width: 28px; height: 28px; }
+.icon-xl  { width: 40px; height: 40px; }
+.icon-2xl { width: 56px; height: 56px; }
+
+/* ============================================
    EFFETS HOVER
    ============================================ */
 

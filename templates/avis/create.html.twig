@@ -7,13 +7,12 @@
   <div style="width: 100%; max-width: 520px;">
 
     <div class="text-center mb-4">
-      <div style="font-size: 2.5rem;">⭐</div>
-      <h1 style="font-size: 1.8rem;" class="mb-1">Laisser un avis</h1>
+      <i data-lucide="star" style="width:48px;height:48px;stroke:#f59e0b;fill:#f59e0b;"></i>
+      <h1 style="font-size: 1.8rem;" class="mb-1 mt-2">Laisser un avis</h1>
       <p class="text-muted" style="font-size: 0.9rem;">Partagez votre expérience avec la communauté</p>
     </div>
 
-    <div class="card p-4"
-         x-data="{ note: 0, hovered: 0 }">
+    <div class="card p-4" x-data="{ note: 0, hovered: 0 }">
 
       {{ form_start(form) }}
 
@@ -25,9 +24,11 @@
                     @mouseover="hovered = {{ i }}"
                     @mouseleave="hovered = 0"
                     @click="note = {{ i }}; document.getElementById('avis_note').value = {{ i }}"
-                    :style="(hovered >= {{ i }} || note >= {{ i }}) ? 'color:#f59e0b;transform:scale(1.2)' : 'color:var(--eco-border)'"
-                    style="font-size:1.8rem;background:none;border:none;cursor:pointer;transition:all 0.15s ease;padding:0;">
-              ★
+                    style="background:none;border:none;cursor:pointer;padding:0;transition:transform 0.15s ease;"
+                    :style="(hovered >= {{ i }} || note >= {{ i }}) ? 'transform:scale(1.2)' : ''">
+              <i data-lucide="star"
+                 style="width:28px;height:28px;transition:all 0.15s ease;"
+                 :style="(hovered >= {{ i }} || note >= {{ i }}) ? 'stroke:#f59e0b;fill:#f59e0b;' : 'stroke:var(--eco-border);'"></i>
             </button>
           {% endfor %}
         </div>
@@ -36,12 +37,16 @@
       </div>
 
       <div class="mb-4">
-        <label class="form-label fw-semibold">Votre commentaire</label>
+        <label class="form-label fw-semibold d-flex align-items-center gap-1">
+          <i data-lucide="message-square" class="icon-xs"></i>Votre commentaire
+        </label>
         {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Décrivez votre expérience...'}}) }}
         {{ form_errors(form.commentaire) }}
       </div>
 
-      <button class="btn btn-success w-100">Envoyer mon avis ✅</button>
+      <button class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+        <i data-lucide="send" class="icon-sm"></i>Envoyer mon avis
+      </button>
 
       {{ form_end(form) }}
     </div>

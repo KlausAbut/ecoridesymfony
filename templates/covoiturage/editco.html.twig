@@ -2,32 +2,57 @@
 
 {% form_theme form with ['form/template.html.twig'] %}
 
-{% block title %}{{ is_create ? 'Créer un covoiturage' : 'Modifier le covoiturage' }}{% endblock %}
+{% block title %}{{ is_create ? 'Proposer un trajet' : 'Modifier le trajet' }} — EcoRide{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h2 class="mb-4 text-success">{{ is_create ? 'Ajouter un covoiturage' : 'Modifier le covoiturage' }}</h2>
+<div class="page-wrapper">
 
-    <div class="card shadow-sm p-4">
-        {{ form_start(form) }}
+  <div class="text-center mb-4">
+    <div style="font-size: 2.5rem;">🛣️</div>
+    <h1 style="font-size: 1.8rem;" class="mb-1">
+      {{ is_create ? 'Proposer un trajet' : 'Modifier le trajet' }}
+    </h1>
+    <p class="text-muted" style="font-size: 0.9rem;">
+      {{ is_create ? 'Partagez votre route et gagnez des crédits.' : 'Mettez à jour les informations du trajet.' }}
+    </p>
+  </div>
 
-        {{ form_row(form.date_depart) }}
-        {{ form_row(form.heure_depart) }}
-        {{ form_row(form.date_arrivee) }}
-        {{ form_row(form.heure_arrivee) }}
-        {{ form_row(form.lieu_depart) }}
-        {{ form_row(form.lieu_arrivee) }}
-        {{ form_row(form.nb_place) }}
-        {{ form_row(form.prix_personne) }}
+  <div style="max-width: 680px; margin: 0 auto;">
+    <div class="card p-4">
+      {{ form_start(form) }}
 
-        {# Champs masqués automatiquement (voiture, statut, createdBy, etc.) #}
-        {{ form_rest(form) }}
+      <h6 class="mb-3" style="color: var(--eco-primary); font-weight: 600;">📍 Départ</h6>
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">{{ form_row(form.lieu_depart) }}</div>
+        <div class="col-sm-3">{{ form_row(form.date_depart) }}</div>
+        <div class="col-sm-3">{{ form_row(form.heure_depart) }}</div>
+      </div>
 
-        <button type="submit" class="btn btn-success mt-3">
-            {{ is_create ? 'Créer' : 'Mettre à jour' }}
+      <h6 class="mb-3" style="color: var(--eco-primary); font-weight: 600;">🏁 Arrivée</h6>
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">{{ form_row(form.lieu_arrivee) }}</div>
+        <div class="col-sm-3">{{ form_row(form.date_arrivee) }}</div>
+        <div class="col-sm-3">{{ form_row(form.heure_arrivee) }}</div>
+      </div>
+
+      <h6 class="mb-3" style="color: var(--eco-primary); font-weight: 600;">⚙️ Détails</h6>
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">{{ form_row(form.nb_place) }}</div>
+        <div class="col-sm-6">{{ form_row(form.prix_personne) }}</div>
+      </div>
+
+      {{ form_rest(form) }}
+
+      <div class="d-flex gap-2 mt-2">
+        <button type="submit" class="btn btn-success flex-grow-1">
+          {{ is_create ? '➕ Publier le trajet' : '💾 Sauvegarder' }}
         </button>
+        <a href="{{ path('user_profile') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
 
-        {{ form_end(form) }}
+      {{ form_end(form) }}
     </div>
+  </div>
+
 </div>
 {% endblock %}

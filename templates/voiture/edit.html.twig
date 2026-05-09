@@ -1,20 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form with [
-    'form/template.html.twig'
-] %}
+{% form_theme form with ['form/template.html.twig'] %}
 
+{% block title %}{{ is_create ? 'Ajouter une voiture' : 'Modifier la voiture' }} — EcoRide{% endblock %}
 
 {% block body %}
+<div class="page-wrapper d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+  <div style="width: 100%; max-width: 520px;">
 
-    <h2>{{ is_create ? 'Ajouter une voiture' : 'Modifier cet voiture' }}</h2>
+    <div class="text-center mb-4">
+      <div style="font-size: 2.5rem;">🚘</div>
+      <h1 style="font-size: 1.8rem;" class="mb-1">
+        {{ is_create ? 'Ajouter une voiture' : 'Modifier la voiture' }}
+      </h1>
+      <p class="text-muted" style="font-size: 0.9rem;">
+        {{ is_create ? 'Enregistrez votre véhicule pour proposer des trajets.' : 'Mettez à jour les informations de votre véhicule.' }}
+      </p>
+    </div>
 
-    {{ form_start(form) }}
+    <div class="card p-4">
+      {{ form_start(form) }}
 
-    {{ form_row(form.modele) }}
-    {{ form_row(form.immatriculation) }}
-    {{ form_row(form.energie) }}
-    
-    {{ form_end(form) }}
+      <div class="mb-3">
+        {{ form_row(form.modele) }}
+      </div>
+      <div class="mb-3">
+        {{ form_row(form.immatriculation) }}
+      </div>
+      <div class="mb-4">
+        {{ form_row(form.energie) }}
+      </div>
 
-{% endblock %} 
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success flex-grow-1">
+          {{ is_create ? '➕ Ajouter' : '💾 Sauvegarder' }}
+        </button>
+        <a href="{{ path('user_profile') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+
+      {{ form_end(form) }}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,16 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Laisser un avis{% endblock %}
+{% block title %}Laisser un avis — EcoRide{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2 class="mb-4">Laisser un avis</h2>
+<div class="page-wrapper d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+  <div style="width: 100%; max-width: 520px;">
 
-    {{ form_start(form) }}
-        {{ form_row(form.note) }}
-        {{ form_row(form.commentaire) }}
+    <div class="text-center mb-4">
+      <div style="font-size: 2.5rem;">⭐</div>
+      <h1 style="font-size: 1.8rem;" class="mb-1">Laisser un avis</h1>
+      <p class="text-muted" style="font-size: 0.9rem;">Partagez votre expérience avec la communauté</p>
+    </div>
 
-        <button class="btn btn-success mt-3">Envoyer</button>
-    {{ form_end(form) }}
+    <div class="card p-4"
+         x-data="{ note: 0, hovered: 0 }">
+
+      {{ form_start(form) }}
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold mb-2">Note</label>
+        <div class="d-flex gap-2 mb-2">
+          {% for i in 1..5 %}
+            <button type="button"
+                    @mouseover="hovered = {{ i }}"
+                    @mouseleave="hovered = 0"
+                    @click="note = {{ i }}; document.getElementById('avis_note').value = {{ i }}"
+                    :style="(hovered >= {{ i }} || note >= {{ i }}) ? 'color:#f59e0b;transform:scale(1.2)' : 'color:var(--eco-border)'"
+                    style="font-size:1.8rem;background:none;border:none;cursor:pointer;transition:all 0.15s ease;padding:0;">
+              ★
+            </button>
+          {% endfor %}
+        </div>
+        <div style="display:none;">{{ form_widget(form.note) }}</div>
+        <div class="text-muted small" x-text="note > 0 ? note + '/5 — ' + ['','Très mauvais','Mauvais','Correct','Bien','Excellent'][note] : 'Cliquez pour noter'"></div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Votre commentaire</label>
+        {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Décrivez votre expérience...'}}) }}
+        {{ form_errors(form.commentaire) }}
+      </div>
+
+      <button class="btn btn-success w-100">Envoyer mon avis ✅</button>
+
+      {{ form_end(form) }}
+    </div>
+
+  </div>
 </div>
 {% endblock %}

@@ -1,44 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes trajets réservés{% endblock %}
+{% block title %}Mes réservations — EcoRide{% endblock %}
 
 {% block body %}
-<section class="section-box">
-  <h2 class="text-center text-success mb-4">📅 Mes trajets réservés</h2>
+<div class="page-wrapper">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="mb-0" style="font-size: 1.8rem;">📅 Mes réservations</h1>
+      <p class="text-muted mb-0" style="font-size: 0.9rem;">Vos trajets réservés en tant que passager</p>
+    </div>
+    <a href="{{ path('covoiturage_list') }}" class="btn btn-success">🔍 Chercher un trajet</a>
+  </div>
 
   {% if participations is empty %}
-    <p class="text-center text-muted">Aucune réservation pour l’instant.</p>
+    <div class="card p-5 text-center">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+      <h5 class="mb-2">Aucune réservation</h5>
+      <p class="text-muted mb-4">Vous n'avez pas encore réservé de trajet.</p>
+      <a href="{{ path('covoiturage_list') }}" class="btn btn-success mx-auto" style="max-width: 220px;">Trouver un trajet</a>
+    </div>
   {% else %}
-    <div class="table-responsive">
-      <table class="table table-hover align-middle text-center">
-        <thead class="table-success">
-          <tr>
-            <th>Date du trajet</th>
-            <th>Départ</th>
-            <th>Arrivée</th>
-            <th>Conducteur</th>
-            <th>Réservé le</th>
-            <th>Détail</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in participations %}
-            <tr>
-              <td>{{ p.covoiturage.dateDepart|date('d/m/Y') }}</td>
-              <td>{{ p.covoiturage.lieuDepart }}</td>
-              <td>{{ p.covoiturage.lieuArrivee }}</td>
-              <td>{{ p.covoiturage.createdBy.username }}</td>
-              <td>{{ p.dateParticipation|date('d/m/Y H:i') }}</td>
-              <td>
-                <a href="{{ path('covoiturage_show', {id: p.covoiturage.id}) }}" class="btn btn-outline-success btn-sm">
-                  🔍 Voir
-                </a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="d-flex flex-column gap-3">
+      {% for p in participations %}
+        <div class="card p-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                   style="width:48px;height:48px;background:var(--eco-mint);font-size:1.3rem;border:2px solid var(--eco-secondary);">🚗</div>
+              <div>
+                <div class="fw-semibold">
+                  {{ p.covoiturage.lieuDepart }}
+                  <span style="color: var(--eco-secondary);">→</span>
+                  {{ p.covoiturage.lieuArrivee }}
+                </div>
+                <div class="text-muted" style="font-size: 0.82rem;">
+                  📅 {{ p.covoiturage.dateDepart|date('d/m/Y') }}
+                  &nbsp;·&nbsp;
+                  👤 {{ p.covoiturage.createdBy.username }}
+                </div>
+                <div class="text-muted" style="font-size: 0.78rem;">
+                  Réservé le {{ p.dateParticipation|date('d/m/Y à H:i') }}
+                </div>
+              </div>
+            </div>
+            <a href="{{ path('covoiturage_show', {id: p.covoiturage.id}) }}" class="btn btn-sm btn-outline-primary">
+              🔍 Voir le trajet
+            </a>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   {% endif %}
-</section>
+
+</div>
 {% endblock %}

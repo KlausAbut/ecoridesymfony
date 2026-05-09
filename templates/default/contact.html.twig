@@ -1,24 +1,46 @@
-<section id="contact" class="section-box text-center">
-  <h2 class="text-success mb-4">📬 Contactez-nous</h2>
+{% extends 'base.html.twig' %}
 
-  <form method="post" action="{{ path('contact') }}" class="mx-auto bg-white p-4 rounded shadow-sm" style="max-width: 500px;">
-    <div class="mb-3 text-start">
-      <label for="nom" class="form-label">Nom</label>
-      <input type="text" id="nom" name="nom" class="form-control" required>
+{% block title %}Contact — EcoRide{% endblock %}
+
+{% block body %}
+<div class="page-wrapper d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+  <div style="width: 100%; max-width: 560px;">
+
+    <div class="text-center mb-4">
+      <div style="font-size: 2.5rem;">📬</div>
+      <h1 style="font-size: 1.8rem;" class="mb-1">Contactez-nous</h1>
+      <p class="text-muted" style="font-size: 0.9rem;">Une question ? Une suggestion ? On vous répond rapidement.</p>
     </div>
 
-    <div class="mb-3 text-start">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" id="email" name="email" class="form-control" required>
+    <div class="card p-4">
+      {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+
+      <form method="post" action="{{ path('contact') }}" x-data="{ sending: false }" @submit="sending = true">
+        <div class="mb-3">
+          <label for="nom" class="form-label fw-semibold">Nom</label>
+          <input type="text" id="nom" name="nom" class="form-control" placeholder="Jean Dupont" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Email</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="jean@example.com" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="message" class="form-label fw-semibold">Message</label>
+          <textarea id="message" name="message" rows="5" class="form-control"
+                    placeholder="Décrivez votre demande..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100" :disabled="sending">
+          <span x-show="!sending">Envoyer le message ✉️</span>
+          <span x-show="sending">Envoi en cours…</span>
+        </button>
+      </form>
     </div>
 
-    <div class="mb-3 text-start">
-      <label for="message" class="form-label">Message</label>
-      <textarea id="message" name="message" rows="5" class="form-control" required></textarea>
-    </div>
-
-    <div class="text-center">
-      <button type="submit" class="btn btn-success">Envoyer</button>
-    </div>
-  </form>
-</section>
+  </div>
+</div>
+{% endblock %}

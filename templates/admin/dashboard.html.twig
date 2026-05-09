@@ -1,194 +1,265 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin - Tableau de bord{% endblock %}
+{% block title %}Admin — Tableau de bord{% endblock %}
 
 {% block body %}
-<section class="section-box">
-  <h2 class="text-center text-success mb-5">🛠️ Tableau de bord administrateur</h2>
-   <div class="text-center">
-    <a href="{{ path('admin_admin_creer_employe') }}" class="btn btn-outline-primary mb-3">
-      ➕ Créer un employé
-    </a>
-  </div>
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="page-wrapper">
 
-    {# === COVOITURAGES === #}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-success text-white fw-bold text-center">
-          🚗 Covoiturages à valider
-        </div>
-        <div class="card-body">
-          {% if covoiturages is not empty %}
+  {# Header admin #}
+  <div class="dashboard-header mb-4">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+           style="width:56px;height:56px;background:rgba(255,255,255,0.2);font-size:1.6rem;border:2px solid rgba(255,255,255,0.4);">🛠️</div>
+      <div>
+        <h1 class="mb-0" style="font-size:1.6rem;color:#fff;">Tableau de bord administrateur</h1>
+        <p class="mb-0" style="font-size:0.88rem;color:rgba(255,255,255,0.75);">Gestion globale de la plateforme EcoRide</p>
+      </div>
+      <div class="ms-auto">
+        <a href="{{ path('admin_admin_creer_employe') }}" class="btn btn-light btn-sm">➕ Créer un employé</a>
+      </div>
+    </div>
+  </div>
+
+  {# Stats rapides #}
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">🚗</div>
+        <div class="stat-value">{{ covoiturages|length }}</div>
+        <div class="stat-label">Trajets en attente</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">{{ avis|length }}</div>
+        <div class="stat-label">Avis à modérer</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">🚘</div>
+        <div class="stat-value">{{ voitures|length }}</div>
+        <div class="stat-label">Voitures</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">🪙</div>
+        <div class="stat-value">{{ totalCredits }}</div>
+        <div class="stat-label">Crédits totaux</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    {# Covoiturages à valider #}
+    <div class="col-lg-4">
+      <div class="card p-4 h-100">
+        <h5 class="mb-3" style="color:var(--eco-primary);">🚗 Trajets en attente</h5>
+        {% if covoiturages is empty %}
+          <p class="text-muted mb-0">Aucun trajet en attente.</p>
+        {% else %}
+          <div class="d-flex flex-column gap-3">
             {% for c in covoiturages %}
-              <div class="mb-3 border-bottom pb-2">
-                <strong>{{ c.lieuDepart }} → {{ c.lieuArrivee }}</strong><br>
-                📅 {{ c.dateDepart|date('d/m/Y') }}<br>
-                👤 {{ c.createdBy.firstname }}
-
-                <div class="mt-2 d-flex flex-wrap gap-2">
-                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-warning btn-sm">✏️</a>
-                  <a href="{{ path('admin_covoiturage_valider', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅</a>
-                  <a href="{{ path('admin_covoiturage_supprimer', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <p class="text-muted">Aucun trajet en attente.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-    {# === AVIS === #}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-primary text-white fw-bold text-center">
-          ⭐ Avis à modérer
-        </div>
-        <div class="card-body">
-          {% if avis is not empty %}
-            {% for a in avis %}
-              <div class="mb-3 border-bottom pb-2">
-                “{{ a.commentaire }}”<br>
-                ⭐ {{ a.note }}/5<br>
-                👤 {{ a.user.firstname }}
-
-                <div class="mt-2 d-flex gap-2">
-                  <a href="{{ path('admin_avis_valider', {'id': a.id}) }}" class="btn btn-outline-success btn-sm">✅</a>
-                  <a href="{{ path('admin_avis_supprimer', {'id': a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <p class="text-muted">Aucun avis en attente.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-    {# === VOITURES === #}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-secondary text-white fw-bold text-center">
-          🚘 Voitures enregistrées
-        </div>
-        <div class="card-body">
-          {% if voitures is not empty %}
-            {% for v in voitures %}
-              <div class="mb-3 border-bottom pb-2">
-                {{ v.modele }} – {{ v.immatriculation }}<br>
-                👤 {{ v.user.firstname }}
-
-                <div class="mt-2 d-flex gap-2">
-                  <a href="{{ path('voiture_edit', {'id': v.id}) }}" class="btn btn-outline-warning btn-sm">✏️</a>
-                  <a href="{{ path('admin_voiture_supprimer', {'id': v.id}) }}" class="btn btn-outline-danger btn-sm">🗑️</a>
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <p class="text-muted">Aucune voiture enregistrée.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white fw-bold text-center">
-          📜 Historique des covoiturages passés
-        </div>
-        <div class="card-body">
-          {% if historiques is not empty %}
-            {% for h in historiques %}
-              <div class="mb-3 border-bottom pb-2">
-                <strong>{{ h.lieuDepart }} → {{ h.lieuArrivee }}</strong><br>
-                ✅ Réalisé le {{ h.dateDepart|date('d/m/Y') }}<br>
-                👤 {{ h.createdBy.firstname }}
-              </div>
-            {% endfor %}
-          {% else %}
-            <p class="text-muted">Aucun trajet passé enregistré.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-header bg-info text-white fw-bold text-center">
-          📊 Statistiques des crédits
-        </div>
-        <div class="card-body">
-          <p>Crédits totaux gagnés : <strong>{{ totalCredits }}</strong></p>
-          <p>Crédits gagnés aujourd'hui : <strong>{{ creditsToday }}</strong></p>
-          <canvas id="creditChart" height="150"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white fw-bold text-center">
-          👥 Gestion des utilisateurs
-        </div>
-        <div class="card-body">
-          {% for user in users %}
-            <div class="border-bottom pb-2 mb-3">
-              <strong>{{ user.firstname }} {{ user.lastname }}</strong> — {{ user.email }}<br>
-              Rôle(s) : {{ user.roles|join(', ') }}<br>
-              Statut : 
-              {% if user.isActive %}
-                <span class="badge bg-success">Actif</span>
-              {% else %}
-                <span class="badge bg-secondary">Suspendu</span>
-              {% endif %}
-
-              <form method="post" action="{{ path('admin_admin_suspend_user', {'id': user.id}) }}" class="mt-2 d-inline">
-                <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ user.id) }}">
-                {% if user.isActive %}
-                  <button class="btn btn-sm btn-danger">⛔ Suspendre</button>
-                {% else %}
-                  <form method="post" action="{{ path('admin_admin_reactivate_user', {'id': user.id}) }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token('reactivate' ~ user.id) }}">
-                    <button class="btn btn-sm btn-success">✅ Réactiver</button>
+              <div class="p-3 rounded" style="background:var(--eco-surface-2);border:1px solid var(--eco-border);">
+                <div class="fw-semibold mb-1">{{ c.lieuDepart }} <span style="color:var(--eco-secondary);">→</span> {{ c.lieuArrivee }}</div>
+                <div class="text-muted small mb-2">📅 {{ c.dateDepart|date('d/m/Y') }} · 👤 {{ c.createdBy.firstname }}</div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-sm btn-outline-primary">✏️</a>
+                  <form method="post" action="{{ path('admin_covoiturage_valider', {'id': c.id}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('valider_cov' ~ c.id) }}">
+                    <button class="btn btn-sm btn-outline-success">✅ Valider</button>
                   </form>
-                {% endif %}
-              </form>
-            </div>
-          {% else %}
-            <p class="text-muted">Aucun utilisateur trouvé.</p>
-          {% endfor %}
-        </div>
+                  <form method="post" action="{{ path('admin_covoiturage_supprimer', {'id': c.id}) }}" class="d-inline"
+                        x-data @submit.prevent="if(confirm('Supprimer ce trajet ?')) $el.submit()">
+                    <input type="hidden" name="_token" value="{{ csrf_token('suppr_cov' ~ c.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">🗑️</button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     </div>
-  </div>
-</section>
 
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    const ctx = document.getElementById('creditChart');
-    if (ctx) {
-        new Chart(ctx, {
+    {# Avis à modérer #}
+    <div class="col-lg-4">
+      <div class="card p-4 h-100">
+        <h5 class="mb-3" style="color:var(--eco-primary);">⭐ Avis à modérer</h5>
+        {% if avis is empty %}
+          <p class="text-muted mb-0">Aucun avis en attente.</p>
+        {% else %}
+          <div class="d-flex flex-column gap-3">
+            {% for a in avis %}
+              <div class="p-3 rounded" style="background:var(--eco-surface-2);border:1px solid var(--eco-border);">
+                <div class="fst-italic text-muted small mb-1">"{{ a.commentaire|slice(0, 80) }}{% if a.commentaire|length > 80 %}…{% endif %}"</div>
+                <div class="mb-2">
+                  {% for i in 1..5 %}
+                    <span style="color:{{ i <= a.note ? '#f59e0b' : 'var(--eco-border)' }};">★</span>
+                  {% endfor %}
+                  · 👤 {{ a.user.firstname }}
+                </div>
+                <div class="d-flex gap-2">
+                  <form method="post" action="{{ path('admin_avis_valider', {'id': a.id}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('valider_avis' ~ a.id) }}">
+                    <button class="btn btn-sm btn-outline-success">✅ Valider</button>
+                  </form>
+                  <form method="post" action="{{ path('admin_avis_supprimer', {'id': a.id}) }}" class="d-inline"
+                        x-data @submit.prevent="if(confirm('Supprimer cet avis ?')) $el.submit()">
+                    <input type="hidden" name="_token" value="{{ csrf_token('suppr_avis' ~ a.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">🗑️</button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Voitures #}
+    <div class="col-lg-4">
+      <div class="card p-4 h-100">
+        <h5 class="mb-3" style="color:var(--eco-primary);">🚘 Voitures</h5>
+        {% if voitures is empty %}
+          <p class="text-muted mb-0">Aucune voiture enregistrée.</p>
+        {% else %}
+          <div class="d-flex flex-column gap-3">
+            {% for v in voitures %}
+              <div class="p-3 rounded" style="background:var(--eco-surface-2);border:1px solid var(--eco-border);">
+                <div class="fw-semibold">{{ v.modele }}</div>
+                <div class="text-muted small mb-2">{{ v.immatriculation }} · 👤 {{ v.user.firstname }}</div>
+                <div class="d-flex gap-2">
+                  <a href="{{ path('voiture_edit', {'id': v.id}) }}" class="btn btn-sm btn-outline-primary">✏️</a>
+                  <form method="post" action="{{ path('admin_voiture_supprimer', {'id': v.id}) }}" class="d-inline"
+                        x-data @submit.prevent="if(confirm('Supprimer cette voiture ?')) $el.submit()">
+                    <input type="hidden" name="_token" value="{{ csrf_token('suppr_voiture' ~ v.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">🗑️</button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Statistiques crédits #}
+    <div class="col-lg-6">
+      <div class="card p-4">
+        <h5 class="mb-3" style="color:var(--eco-primary);">📊 Statistiques des crédits</h5>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <div class="stat-card">
+              <div class="stat-icon">🪙</div>
+              <div class="stat-value">{{ totalCredits }}</div>
+              <div class="stat-label">Total gagnés</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card">
+              <div class="stat-icon">📅</div>
+              <div class="stat-value">{{ creditsToday }}</div>
+              <div class="stat-label">Aujourd'hui</div>
+            </div>
+          </div>
+        </div>
+        <canvas id="creditChart" height="180"></canvas>
+      </div>
+    </div>
+
+    {# Historique #}
+    <div class="col-lg-6">
+      <div class="card p-4">
+        <h5 class="mb-3" style="color:var(--eco-primary);">📜 Trajets passés</h5>
+        {% if historiques is empty %}
+          <p class="text-muted mb-0">Aucun trajet passé enregistré.</p>
+        {% else %}
+          <div class="d-flex flex-column gap-2" style="max-height: 340px; overflow-y: auto;">
+            {% for h in historiques %}
+              <div class="trip-row">
+                <div class="trip-info">
+                  <div class="fw-semibold">{{ h.lieuDepart }} → {{ h.lieuArrivee }}</div>
+                  <div class="text-muted" style="font-size:0.82rem;">{{ h.dateDepart|date('d/m/Y') }} · 👤 {{ h.createdBy.firstname }}</div>
+                </div>
+                <span class="badge-eco" style="font-size:0.72rem;">Terminé</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Gestion utilisateurs #}
+    <div class="col-12">
+      <div class="card p-4">
+        <h5 class="mb-3" style="color:var(--eco-primary);">👥 Gestion des utilisateurs</h5>
+        {% if users is empty %}
+          <p class="text-muted mb-0">Aucun utilisateur trouvé.</p>
+        {% else %}
+          <div class="d-flex flex-column gap-2">
+            {% for user in users %}
+              <div class="p-3 rounded d-flex justify-content-between align-items-center flex-wrap gap-2"
+                   style="background:var(--eco-surface-2);border:1px solid var(--eco-border);">
+                <div>
+                  <div class="fw-semibold">{{ user.firstname }} {{ user.lastname }}</div>
+                  <div class="text-muted small">{{ user.email }} · {{ user.roles|join(', ') }}</div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  {% if user.isActive %}
+                    <span class="badge bg-success">Actif</span>
+                    <form method="post" action="{{ path('admin_admin_suspend_user', {'id': user.id}) }}"
+                          x-data @submit.prevent="if(confirm('Suspendre cet utilisateur ?')) $el.submit()">
+                      <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ user.id) }}">
+                      <button class="btn btn-sm btn-outline-danger">⛔ Suspendre</button>
+                    </form>
+                  {% else %}
+                    <span class="badge bg-secondary">Suspendu</span>
+                    <form method="post" action="{{ path('admin_admin_reactivate_user', {'id': user.id}) }}">
+                      <input type="hidden" name="_token" value="{{ csrf_token('reactivate' ~ user.id) }}">
+                      <button class="btn btn-sm btn-outline-success">✅ Réactiver</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('creditChart');
+if (ctx) {
+    new Chart(ctx, {
         type: 'bar',
         data: {
             labels: {{ chartLabels|json_encode|raw }},
             datasets: [{
-            label: 'Crédits par jour',
-            data: {{ chartData|json_encode|raw }},
-            backgroundColor: 'rgba(40, 167, 69, 0.6)',
-            borderColor: 'rgba(40, 167, 69, 1)',
-            borderWidth: 1
+                label: 'Crédits par jour',
+                data: {{ chartData|json_encode|raw }},
+                backgroundColor: 'rgba(82,183,136,0.5)',
+                borderColor: 'rgba(82,183,136,1)',
+                borderWidth: 1,
+                borderRadius: 4
             }]
         },
         options: {
             responsive: true,
+            plugins: { legend: { display: false } },
             scales: {
-            y: { beginAtZero: true }
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
             }
         }
-        });
-    }
-    </script>
-
+    });
+}
+</script>
 {% endblock %}

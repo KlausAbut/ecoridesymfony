@@ -80,9 +80,12 @@ class DashboardController extends AbstractController
     ]);
     }
 
-    #[Route('/avis/valider/{id}', name: 'avis_valider')]
-    public function validerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/avis/valider/{id}', name: 'avis_valider', methods: ['POST'])]
+    public function validerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('valider_avis' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
         $avis = $repo->find($id);
         if ($avis) {
             $avis->setStatut(AvisStatut::VALIDE);
@@ -93,9 +96,12 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/avis/supprimer/{id}', name: 'avis_supprimer')]
-    public function supprimerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/avis/supprimer/{id}', name: 'avis_supprimer', methods: ['POST'])]
+    public function supprimerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('suppr_avis' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
         $avis = $repo->find($id);
         if ($avis) {
             $em->remove($avis);
@@ -106,9 +112,12 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/covoiturage/valider/{id}', name: 'covoiturage_valider')]
-    public function validerCovoiturage(int $id, CovoiturageRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/covoiturage/valider/{id}', name: 'covoiturage_valider', methods: ['POST'])]
+    public function validerCovoiturage(int $id, CovoiturageRepository $repo, EntityManagerInterface $em, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('valider_cov' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
         $covoiturage = $repo->find($id);
         if ($covoiturage) {
             $covoiturage->setStatut(CovoiturageStatut::PUBLISHED);
@@ -119,9 +128,12 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/covoiturage/supprimer/{id}', name: 'covoiturage_supprimer')]
-    public function supprimerCovoiturage(int $id, CovoiturageRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/covoiturage/supprimer/{id}', name: 'covoiturage_supprimer', methods: ['POST'])]
+    public function supprimerCovoiturage(int $id, CovoiturageRepository $repo, EntityManagerInterface $em, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('suppr_cov' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
         $covoiturage = $repo->find($id);
         if ($covoiturage) {
             foreach ($covoiturage->getParticipations() as $participation) {
@@ -130,14 +142,17 @@ class DashboardController extends AbstractController
             $em->remove($covoiturage);
             $em->flush();
             $this->addFlash('success', 'Covoiturage et participations supprimés.');
-    }
+        }
 
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/voiture/supprimer/{id}', name: 'voiture_supprimer')]
-    public function supprimerVoiture(Voiture $voiture, EntityManagerInterface $em): Response
+    #[Route('/voiture/supprimer/{id}', name: 'voiture_supprimer', methods: ['POST'])]
+    public function supprimerVoiture(Voiture $voiture, EntityManagerInterface $em, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('suppr_voiture' . $voiture->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
         if (count($voiture->getCovoiturages()) > 0) {
             $this->addFlash('danger', 'Impossible de supprimer cette voiture : elle est utilisée dans un covoiturage.');
             return $this->redirectToRoute('admin_dashboard');

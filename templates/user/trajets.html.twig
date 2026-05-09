@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes trajets proposés{% endblock %}
+{% block title %}Mes trajets — EcoRide{% endblock %}
 
 {% block body %}
-{% set avisIds = [] %}
 {% set avisIds = [] %}
 {% for a in userAvis %}
   {% if a.covoiturage is not null %}
@@ -11,102 +10,125 @@
   {% endif %}
 {% endfor %}
 
-<section class="section-box">
-  <h2 class="text-center text-success mb-4">🚘 Mes trajets en tant que conducteur</h2>
+<div class="page-wrapper">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="mb-0" style="font-size: 1.8rem;">🛣️ Mes trajets</h1>
+      <p class="text-muted mb-0" style="font-size: 0.9rem;">Vos trajets proposés en tant que conducteur</p>
+    </div>
+    <a href="{{ path('covoiturage_create') }}" class="btn btn-success">➕ Proposer un trajet</a>
+  </div>
 
   {% if covoiturages is empty %}
-    <p class="text-center text-muted">Aucun trajet proposé pour l’instant.</p>
+    <div class="card p-5 text-center">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🛣️</div>
+      <h5 class="mb-2">Aucun trajet proposé</h5>
+      <p class="text-muted mb-4">Commencez par proposer votre premier trajet et gagnez des crédits.</p>
+      <a href="{{ path('covoiturage_create') }}" class="btn btn-success mx-auto" style="max-width: 240px;">➕ Proposer un trajet</a>
+    </div>
   {% else %}
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped align-middle text-center">
-        <thead class="table-success">
-          <tr>
-            <th>Participants</th>
-            <th>Date</th>
-            <th>Départ</th>
-            <th>Arrivée</th>
-            <th>Places restantes</th>
-            <th>Statut</th>
-            <th>Actions</th>
-            <th>Avis reçus</th> {# ➕ NOUVELLE COLONNE #}
-          </tr>
-        </thead>
-        <tbody>
-          {% for c in covoiturages %}
-            <tr>
-              <td>
-                {% if c.participants is empty %}
-                  <span class="text-muted">Aucun</span>
-                {% else %}
-                  <ul class="list-unstyled mb-0">
-                    {% for participant in c.participants %}
-                      <li>{{ participant.username }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-              </td>
-              <td>{{ c.dateDepart|date('d/m/Y') }}</td>
-              <td>{{ c.lieuDepart }}</td>
-              <td>{{ c.lieuArrivee }}</td>
-              <td>{{ c.nbPlace }}</td>
-              <td>
-                <span class="badge 
-                  {% if c.statut.value == 'DRAFT' %}bg-warning
+    <div class="d-flex flex-column gap-3">
+      {% for c in covoiturages %}
+        <div class="card p-4">
+          <div class="row g-3 align-items-start">
+
+            {# Infos trajet #}
+            <div class="col-md-4">
+              <div class="fw-semibold fs-6 mb-1">
+                {{ c.lieuDepart }} <span style="color:var(--eco-secondary);">→</span> {{ c.lieuArrivee }}
+              </div>
+              <div class="text-muted" style="font-size:0.83rem;">📅 {{ c.dateDepart|date('d/m/Y') }}</div>
+              <div class="text-muted" style="font-size:0.83rem;">🪑 {{ c.nbPlace }} place{{ c.nbPlace > 1 ? 's' : '' }} restante{{ c.nbPlace > 1 ? 's' : '' }}</div>
+
+              {# Statut badge #}
+              <div class="mt-2">
+                <span class="badge
+                  {% if c.statut.value == 'DRAFT' %}bg-warning text-dark
                   {% elseif c.statut.value == 'PUBLISHED' %}bg-success
                   {% elseif c.statut.value == 'CANCELLED' %}bg-danger
                   {% elseif c.statut.value == 'TERMINE' %}bg-secondary
-                  {% else %}bg-light
+                  {% else %}bg-light text-dark
                   {% endif %}">
-                  {{ c.statut.value|capitalize }}
+                  {% if c.statut.value == 'DRAFT' %}⏳ Brouillon
+                  {% elseif c.statut.value == 'PUBLISHED' %}🟢 En cours
+                  {% elseif c.statut.value == 'CANCELLED' %}❌ Annulé
+                  {% elseif c.statut.value == 'TERMINE' %}✅ Terminé
+                  {% else %}{{ c.statut.value }}
+                  {% endif %}
                 </span>
-              </td>
-              <td class="d-flex flex-column gap-1">
+              </div>
+            </div>
+
+            {# Participants #}
+            <div class="col-md-3">
+              <div class="text-muted small mb-1 fw-semibold">👥 Participants</div>
+              {% if c.participants is empty %}
+                <span class="text-muted small">Aucun passager</span>
+              {% else %}
+                <div class="d-flex flex-column gap-1">
+                  {% for participant in c.participants %}
+                    <div class="d-flex align-items-center gap-1" style="font-size:0.85rem;">
+                      <span style="color:var(--eco-secondary);">•</span> {{ participant.username }}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            {# Avis #}
+            <div class="col-md-2">
+              <div class="text-muted small mb-1 fw-semibold">⭐ Avis reçus</div>
+              {% set avisValides = c.getAvis|filter(v => v.statut.value == 'VALIDÉ') %}
+              {% if avisValides is empty %}
+                <span class="text-muted small">Aucun</span>
+              {% else %}
+                {% set total = 0 %}
+                {% for avis in avisValides %}{% set total = total + avis.note %}{% endfor %}
+                {% set moyenne = (total / avisValides|length)|number_format(1) %}
+                <div class="fw-semibold" style="color:#f59e0b;">{{ moyenne }}/5</div>
+                <div class="text-muted small">{{ avisValides|length }} avis</div>
+              {% endif %}
+            </div>
+
+            {# Actions #}
+            <div class="col-md-3">
+              <div class="d-flex flex-column gap-2">
                 {% if c.statut.value == 'DRAFT' %}
                   <form method="post" action="{{ path('covoiturage_covoiturage_demarrer', {'id': c.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('demarrer' ~ c.id) }}">
-                    <button type="submit" class="btn btn-outline-primary btn-sm w-100">🚦 Démarrer</button>
+                    <button type="submit" class="btn btn-success btn-sm w-100">🚦 Démarrer</button>
                   </form>
                 {% elseif c.statut.value == 'PUBLISHED' %}
                   <form method="post" action="{{ path('covoiturage_covoiturage_arriver', {'id': c.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('arriver' ~ c.id) }}">
-                    <button type="submit" class="btn btn-outline-success btn-sm w-100">✅ Arrivée</button>
+                    <button type="submit" class="btn btn-success btn-sm w-100">✅ Marquer arrivée</button>
                   </form>
                 {% endif %}
 
-                <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">✏️</a>
-                <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-outline-danger btn-sm"
-                  onclick="return confirm('Es-tu sûr de vouloir supprimer ce trajet ?')">🗑️</a>
+                <div class="d-flex gap-2">
+                  <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-sm btn-outline-primary flex-grow-1">✏️ Modifier</a>
+                  <a href="{{ path('covoiturage_delete', {'id': c.id}) }}" class="btn btn-sm btn-outline-danger"
+                     x-data @click.prevent="if(confirm('Supprimer ce trajet ?')) window.location.href = $el.href">🗑️</a>
+                </div>
 
                 {% if c.statut.value == 'TERMINE' %}
                   {% if c.id not in avisIds %}
-                    <a href="{{ path('avis_create', { 'id': c.id }) }}" class="btn btn-sm btn-outline-success">
+                    <a href="{{ path('avis_create', {'id': c.id}) }}" class="btn btn-sm btn-outline-success w-100">
                       📝 Donner un avis
                     </a>
                   {% else %}
-                    <span class="badge bg-success">✔️ Avis donné</span>
+                    <span class="badge bg-success w-100 py-2">✔️ Avis donné</span>
                   {% endif %}
                 {% endif %}
-              </td>
+              </div>
+            </div>
 
-              <td>
-                {% set avisValides = c.getAvis|filter(v => v.statut.value == 'VALIDÉ') %}
-                {% if avisValides is empty %}
-                  <span class="text-muted small">Aucun</span>
-                {% else %}
-                  {% set total = 0 %}
-                  {% for avis in avisValides %}
-                    {% set total = total + avis.note %}
-                  {% endfor %}
-                  {% set moyenne = (total / avisValides|length)|number_format(1) %}
-                  ⭐ {{ moyenne }}/5<br>
-                  <small class="text-muted">({{ avisValides|length }} avis)</small>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   {% endif %}
-</section>
+
+</div>
 {% endblock %}

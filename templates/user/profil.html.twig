@@ -246,7 +246,9 @@
         <div style="font-size:2.4rem;font-weight:700;color:var(--eco-primary);">{{ credit.amount ?? 0 }}</div>
         <div class="text-muted mb-3">crédits disponibles</div>
         <div class="progress" style="height:8px;background:var(--eco-border);border-radius:4px;">
-          <div class="progress-bar" style="width:{{ [(credit.amount ?? 0) * 5, 100]|min }}%;background:linear-gradient(90deg,var(--eco-secondary),var(--eco-primary));border-radius:4px;"></div>
+          {% set creditPct = (credit.amount ?? 0) * 5 %}
+          {% set creditPct = creditPct > 100 ? 100 : creditPct %}
+          <div class="progress-bar" style="width:{{ creditPct }}%;background:linear-gradient(90deg,var(--eco-secondary),var(--eco-primary));border-radius:4px;"></div>
         </div>
         <div class="text-muted mt-2" style="font-size:0.78rem;">1 crédit = 1 trajet</div>
       </div>

@@ -20,7 +20,7 @@
     <div class="row g-4 justify-content-center">
       <div class="col-md-5">
         <div class="card h-100 text-start">
-          <img src="{{ asset('build/images/eco9.jpg') }}" alt="Mission" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&fit=crop" alt="Mission" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
           <div class="card-body p-4">
             <h5 class="card-title d-flex align-items-center gap-2">
               <i data-lucide="target" style="width:20px;height:20px;stroke:var(--eco-secondary);"></i>Notre mission
@@ -31,7 +31,7 @@
       </div>
       <div class="col-md-5">
         <div class="card h-100 text-start">
-          <img src="{{ asset('build/images/eco10.jpg') }}" alt="Communauté" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=700&q=80&fit=crop" alt="Communauté" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
           <div class="card-body p-4">
             <h5 class="card-title d-flex align-items-center gap-2">
               <i data-lucide="users" style="width:20px;height:20px;stroke:var(--eco-secondary);"></i>Rejoignez la communauté
@@ -85,15 +85,26 @@
         </select>
       </div>
       <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="users" class="icon-xs me-1"></i>Places min.
+        </label>
+        <select id="places" name="places" class="form-select">
+          <option value="">Peu importe</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2 d-flex align-items-end">
         <button type="submit" class="btn btn-success w-100">
           <i data-lucide="search" class="icon-sm me-1"></i>Rechercher
         </button>
       </div>
     </form>
 
+    <div id="recentSearches"></div>
     <div id="loadingSpinner" class="text-center my-4 d-none">
       <div class="spinner-border text-success" role="status"></div>
-      <p class="mt-2 text-muted small">Recherche en cours…</p>
     </div>
     <div id="resultatsTrajets" class="mt-4"></div>
   </section>

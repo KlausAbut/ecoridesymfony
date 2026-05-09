@@ -202,14 +202,15 @@ class CovoiturageController extends AbstractController
     }
 
     #[Route('/ajax/recherche', name: 'ajax_recherche', methods: ['GET'])]
-    public function ajaxRecherche(Request $request, CovoiturageRepository $repo): JsonResponse
+    public function ajaxRecherche(Request $request, CovoiturageRepository $repo, AvisRepository $avisRepository): JsonResponse
     {
-        $depart = $request->query->get('depart');
-        $arrivee = $request->query->get('arrivee');
-        $date = $request->query->get('date');
-        $prixMax = $request->query->get('prix');
-        $noteMin = $request->query->get('note');
-        $energie = $request->query->get('energie');
+        $depart    = $request->query->get('depart');
+        $arrivee   = $request->query->get('arrivee');
+        $date      = $request->query->get('date');
+        $prixMax   = $request->query->get('prix');
+        $noteMin   = $request->query->get('note');
+        $energie   = $request->query->get('energie');
+        $placesMin = $request->query->get('places');
 
         $dateObj = null;
         if (!empty($date)) {
@@ -219,19 +220,23 @@ class CovoiturageController extends AbstractController
             }
         }
 
-        $resultats = $repo->rechercherTrajets($depart, $arrivee, $dateObj, $prixMax, $noteMin, $energie);
+        $resultats = $repo->rechercherTrajets($depart, $arrivee, $dateObj, $prixMax ? (float)$prixMax : null, $noteMin ? (float)$noteMin : null, $energie, $placesMin ? (int)$placesMin : null);
 
         $data = [];
         foreach ($resultats as $trajet) {
+            $conducteur = $trajet->getCreatedBy();
+            $note = $avisRepository->getAverageNoteByUser($conducteur);
             $data[] = [
-                'id' => $trajet->getId(),
-                'lieuDepart' => $trajet->getLieuDepart(),
+                'id'          => $trajet->getId(),
+                'lieuDepart'  => $trajet->getLieuDepart(),
                 'lieuArrivee' => $trajet->getLieuArrivee(),
-                'date' => $trajet->getDateDepart()->format('d/m/Y'),
-                'heure' => $trajet->getHeureDepart()->format('H:i'),
-                'conducteur' => $trajet->getCreatedBy()->getFirstname(),
-                'prix' => $trajet->getPrixPersonne(),
-                'ecologique' => $trajet->getVoiture()->getEnergie() === 'électrique',
+                'date'        => $trajet->getDateDepart()->format('d/m/Y'),
+                'heure'       => $trajet->getHeureDepart()->format('H:i'),
+                'conducteur'  => $conducteur->getFirstname(),
+                'prix'        => $trajet->getPrixPersonne(),
+                'nbPlace'     => $trajet->getNbPlace(),
+                'note'        => $note,
+                'ecologique'  => $trajet->getVoiture()->getEnergie() === 'électrique',
             ];
         }
 

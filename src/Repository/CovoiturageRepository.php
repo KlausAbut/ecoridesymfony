@@ -42,7 +42,7 @@ class CovoiturageRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function rechercherTrajets(?string $depart, ?string $arrivee, ?\DateTime $date = null, ?float $prixMax = null, ?float $noteMin = null, ?string $energie = null): array
+    public function rechercherTrajets(?string $depart, ?string $arrivee, ?\DateTime $date = null, ?float $prixMax = null, ?float $noteMin = null, ?string $energie = null, ?int $placesMin = null): array
     {
         $qb = $this->createQueryBuilder('c')
         ->andWhere('c.statut = :statut')
@@ -82,7 +82,12 @@ class CovoiturageRepository extends ServiceEntityRepository
            ->andWhere('v.energie = :energie')
            ->setParameter('energie', $energie);
     }
-    
+
+    if ($placesMin !== null) {
+        $qb->andWhere('c.nb_place >= :placesMin')
+           ->setParameter('placesMin', $placesMin);
+    }
+
     return $qb->orderBy('c.date_depart', 'ASC')->getQuery()->getResult();
     }
 }

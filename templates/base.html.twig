@@ -23,12 +23,19 @@
 </head>
 <body>
 
+    {# Flash → data attributes pour JS toast #}
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success text-center mt-3 mx-3">{{ message }}</div>
+        <span class="flash-toast d-none" data-message="{{ message }}" data-type="success"></span>
     {% endfor %}
     {% for message in app.flashes('danger') %}
-        <div class="alert alert-danger text-center mt-3 mx-3">{{ message }}</div>
+        <span class="flash-toast d-none" data-message="{{ message }}" data-type="danger"></span>
     {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <span class="flash-toast d-none" data-message="{{ message }}" data-type="warning"></span>
+    {% endfor %}
+
+    {# Toast container #}
+    <div id="toastContainer"></div>
 
     {% include 'partials/navbar.html.twig' %}
 
@@ -37,6 +44,63 @@
     </main>
 
     {% include 'partials/footer.html.twig' %}
+
+    {# Bottom nav mobile #}
+    <nav class="bottom-nav">
+        <div class="bottom-nav__items">
+            <a href="{{ path('index') }}" class="bottom-nav__item {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Accueil
+            </a>
+            <a href="#recherche" class="bottom-nav__item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Chercher
+            </a>
+            {% if app.user %}
+            <a href="{{ path('user_trajets') }}" class="bottom-nav__item {{ app.request.get('_route') == 'user_trajets' ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h4l2-8h6l2 8h4"/><path d="M5 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0"/><path d="M15 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0"/></svg>
+                Trajets
+            </a>
+            <a href="{{ path('user_profile') }}" class="bottom-nav__item {{ app.request.get('_route') == 'user_profile' ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profil
+            </a>
+            {% else %}
+            <a href="{{ path('app_login') }}" class="bottom-nav__item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                Connexion
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {# Chatbot toggle #}
+    <button id="chatToggle" class="chat-toggle" aria-label="Ouvrir l'assistant">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    {# Chatbot window #}
+    <div id="chatWindow" class="chat-window">
+        <div class="chat-header">
+            <div class="chat-header__avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </div>
+            <div>
+                <div class="chat-header__title">Assistant EcoRide</div>
+                <div class="chat-header__sub">● En ligne</div>
+            </div>
+            <button id="chatClose" class="chat-close" aria-label="Fermer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+        <form id="chatForm" class="chat-form">
+            <input id="chatInput" type="text" placeholder="Posez votre question…" autocomplete="off">
+            <button type="submit" aria-label="Envoyer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </form>
+    </div>
 
     {# Bouton flottant dark mode #}
     <button id="darkModeToggle" aria-label="Basculer mode sombre">

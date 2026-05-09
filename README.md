@@ -1,118 +1,152 @@
 # EcoRide
 
-**EcoRide** est une application Symfony de covoiturage écoresponsable.
+**EcoRide** est une application web de covoiturage écoresponsable développée avec Symfony 7. Elle permet aux utilisateurs de proposer et rejoindre des trajets partagés, de réduire leur empreinte carbone et de réaliser des économies.
 
 ---
 
-## 🚗 Fonctionnalités principales
+## Aperçu
 
-* Recherche de trajets en AJAX sans rechargement de page
-* Création de covoiturages pour les conducteurs
-* Participation à un trajet pour les passagers
-* Système de connexion/inscription
-* Espace personnel pour voir ses trajets / réservations
-* Zone d'administration pour validation des trajets et des avis
-* Laisser un avis sur un covoiturage terminé
+- Design moderne avec palette "Night Garden" (vert forêt / menthe / violet)
+- Recherche de trajets en temps réel (AJAX) avec skeleton loader
+- Système de crédits pour les réservations
+- Chatbot assistant intégré (Claude AI)
+- Interface responsive avec navigation mobile
+- Mode sombre / clair
 
 ---
 
-## ⚙️ Installation locale
+## Fonctionnalités
 
-### 1. Cloner le projet
+### Visiteurs
+- Recherche de trajets par départ, arrivée, date, prix max, énergie, places disponibles
+- Tri des résultats par date, prix ou note
+- Consultation des avis membres
+- Page de contact
+
+### Utilisateurs connectés
+- Inscription / connexion
+- Profil avec statistiques (crédits, trajets, CO₂ économisé, note moyenne)
+- Réservation de trajets (1 crédit par réservation)
+- Laisser un avis après un trajet terminé
+- Historique des réservations et trajets
+
+### Conducteurs
+- Enregistrer un véhicule
+- Proposer, démarrer et terminer des trajets
+- Gérer ses covoiturages
+
+### Employés
+- Modération des avis (valider / refuser)
+- Validation des trajets
+
+### Administrateurs
+- Tableau de bord EasyAdmin
+- Gestion complète des utilisateurs, trajets et avis
+- Attribution des rôles
+
+---
+
+## Stack technique
+
+| Composant | Technologie |
+|---|---|
+| Backend | Symfony 7.2 / PHP 8.2 |
+| Base de données SQL | MySQL (Doctrine ORM) |
+| Base de données NoSQL | MongoDB (crédits utilisateurs) |
+| Frontend | Bootstrap 5.3 + Tailwind CSS |
+| JavaScript | Alpine.js + Webpack Encore |
+| Icônes | Lucide Icons |
+| Conteneurisation | Docker |
+| IA | Anthropic Claude (chatbot) |
+
+---
+
+## Installation
+
+### Prérequis
+- Docker & Docker Compose
+- Node.js 18+
+
+### Lancer le projet
 
 ```bash
-git clone https://github.com/KlausAbut/ecoridesymfony.git
+# Cloner le dépôt
+git clone <url-du-repo>
 cd ecoridesymfony
-```
 
-### 2. Lancer Docker
+# Copier et configurer l'environnement
+cp .env .env.local
+# Modifier .env.local avec vos valeurs (DB, MongoDB, ANTHROPIC_API_KEY)
 
-```bash
+# Démarrer les conteneurs
 docker compose up -d
-```
 
-### 3. Installer les dépendances PHP
-
-```bash
+# Installer les dépendances PHP
 docker compose exec www composer install
-```
 
-### 4. Créer la base de données et charger les fixtures
-
-```bash
+# Créer la base de données et appliquer les migrations
 docker compose exec www php bin/console doctrine:database:create
-
 docker compose exec www php bin/console doctrine:migrations:migrate
 
-docker compose exec www php bin/console doctrine:fixtures:load
-```
-
-### 5. Installer les dépendances front
-
-```bash
+# Installer les dépendances JS et builder les assets
 npm install
 npm run build
 ```
 
-### 6. Accéder au site
-
-[http://localhost:8080](http://localhost:8080)
-
----
-
-## 📊 Stack technique
-
-* Symfony 6.4
-* PHP 8.2
-* MySQL / Doctrine
-* Webpack Encore
-* Bootstrap 5 + Tailwind CSS mixé
-* JavaScript vanilla + fetch/ajax
+L'application est accessible sur [http://localhost:8082](http://localhost:8082)
+phpMyAdmin : [http://localhost:8780](http://localhost:8780)
 
 ---
 
-## 🤖 Accès de démo
+## Variables d'environnement
 
-* Admin : `admin@ecoride.com` / `admin`
-* Utilisateur : `user@ecoride.com` / `user`
-
----
-
-## 🔧 Fonctionnalités à venir
-
-* Paiement en ligne
-* Carte interactive des trajets (Leaflet ou Google Maps)
-* Sélection des places disponibles
-* Notification e-mail à la validation d’un trajet
-
----
-
-## 🚧 Auteur
-
-> Ce projet a été réalisé par [@KlausAbut](https://github.com/KlausAbut) et [@Saritahh](https://github.com/Saritahh).
-
----
-
-## 📋 Check-list déploiement Heroku (manuel)
-
-### ✅ Prérequis
-
-* Créer un compte Heroku
-* Installer la CLI Heroku
-* Ajouter un fichier `Procfile`, `composer.json`, `package.json`, `postcss.config.js` bien configurés
-
-### 🚀 Déploiement rapide
-
-```bash
-heroku create ecoride-demo --buildpack heroku/php
-heroku addons:create heroku-postgresql:hobby-dev
-
-git push heroku main
-heroku run php bin/console doctrine:migrations:migrate
+```env
+DATABASE_URL=mysql://root@mysql:3306/ecoride_symfony
+MONGODB_URL=mongodb://localhost:27017
+MONGODB_DB=ecoride
+ANTHROPIC_API_KEY=        # Optionnel — active le chatbot IA
 ```
 
-### ⚠️ Attention
+---
 
-* Pensez à configurer les variables d'environnement (`APP_ENV`, `APP_SECRET`, `DATABASE_URL`, `MAILER_DSN`, etc.)
-* Les assets doivent être compilés avant déploiement (`npm run build` + `php bin/console asset-map:compile` si utile)
+## Comptes de test
 
+| Rôle | Email | Mot de passe |
+|---|---|---|
+| Admin | admin@ecoride.fr | admin |
+| Employé | employe@ecoride.fr | employe |
+| Conducteur | conducteur@ecoride.fr | password |
+| Passager | user@ecoride.fr | password |
+
+> Adaptez ces valeurs selon votre base de données locale.
+
+---
+
+## Structure du projet
+
+```
+src/
+├── Controller/       # Contrôleurs (Default, Covoiturage, Avis, Chatbot…)
+├── Entity/           # Entités Doctrine (User, Covoiturage, Avis, Voiture…)
+├── Repository/       # Requêtes personnalisées
+├── Enum/             # Statuts (CovoiturageStatut, AvisStatut…)
+├── Document/         # Documents MongoDB (UserCredit)
+└── Form/             # Formulaires Symfony
+
+templates/
+├── default/          # Accueil, carousel, avis
+├── covoiturage/      # Liste, détail, création
+├── user/             # Profil, trajets, réservations
+├── partials/         # Navbar, footer
+└── bundles/          # Pages d'erreur personnalisées (404…)
+
+assets/
+├── app.js            # JS principal (recherche AJAX, chatbot, toasts…)
+└── styles/app.css    # CSS global + variables + composants
+```
+
+---
+
+## Auteur
+
+Développé par **Claudiu Abutnariti** — ESGI 2025

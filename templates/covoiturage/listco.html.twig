@@ -18,6 +18,55 @@
       {% endif %}
     </div>
 
+    {# ── Barre de recherche AJAX ── #}
+    <form id="formRecherche" class="row g-3 align-items-end mb-4">
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="map-pin" class="icon-xs me-1"></i>Départ
+        </label>
+        <input type="text" id="depart" name="depart" class="form-control" placeholder="Ville de départ">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="map-pin" class="icon-xs me-1"></i>Arrivée
+        </label>
+        <input type="text" id="arrivee" name="arrivee" class="form-control" placeholder="Ville d'arrivée">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="calendar" class="icon-xs me-1"></i>Date
+        </label>
+        <input type="date" id="date" name="date" class="form-control">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="banknote" class="icon-xs me-1"></i>Prix max (€)
+        </label>
+        <input type="number" id="prix" name="prix" class="form-control" placeholder="Ex: 30">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">
+          <i data-lucide="zap" class="icon-xs me-1"></i>Énergie
+        </label>
+        <select id="energie" name="energie" class="form-select">
+          <option value="">Toutes</option>
+          <option value="électrique">Électrique</option>
+          <option value="essence">Essence</option>
+          <option value="diesel">Diesel</option>
+        </select>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-success w-100">
+          <i data-lucide="search" class="icon-sm me-1"></i>Rechercher
+        </button>
+      </div>
+    </form>
+    <div id="recentSearches"></div>
+    <div id="loadingSpinner" class="d-none"></div>
+    <div id="resultatsTrajets"></div>
+
+    <hr class="my-4" style="border-color:var(--eco-border);">
+
     {% if covoiturages is empty %}
       <div class="text-center py-5">
         <i data-lucide="car" style="width:56px;height:56px;stroke:var(--eco-border);margin-bottom:1rem;"></i>

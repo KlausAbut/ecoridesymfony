@@ -44,32 +44,46 @@
 
   {# ── STATS CARDS ── #}
   <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
       <div class="stat-card">
-        <i data-lucide="coins" style="width:28px;height:28px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
-        <div class="stat-value">{{ credit.amount ?? 0 }}</div>
-        <div class="stat-label">Crédits</div>
+        <i data-lucide="coins" style="width:26px;height:26px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value">{{ credit.amount ?? 0 }}</div>
+        <div class="stat-card__label">Crédits</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
       <div class="stat-card">
-        <i data-lucide="route" style="width:28px;height:28px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
-        <div class="stat-value">{{ nombreTrajets }}</div>
-        <div class="stat-label">Trajets proposés</div>
+        <i data-lucide="route" style="width:26px;height:26px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value">{{ nombreTrajets }}</div>
+        <div class="stat-card__label">Trajets proposés</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
       <div class="stat-card">
-        <i data-lucide="calendar" style="width:28px;height:28px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
-        <div class="stat-value">{{ nombreReservations }}</div>
-        <div class="stat-label">Réservations</div>
+        <i data-lucide="calendar" style="width:26px;height:26px;stroke:var(--eco-secondary);margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value">{{ nombreReservations }}</div>
+        <div class="stat-card__label">Réservations</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
       <div class="stat-card">
-        <i data-lucide="star" style="width:28px;height:28px;stroke:#f59e0b;fill:#f59e0b;margin-bottom:0.4rem;"></i>
-        <div class="stat-value">{{ noteMoyenne is not null ? noteMoyenne|number_format(1) : '—' }}</div>
-        <div class="stat-label">Note moyenne</div>
+        <i data-lucide="star" style="width:26px;height:26px;stroke:#f59e0b;fill:#f59e0b;margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value">{{ noteMoyenne is not null ? noteMoyenne|number_format(1) : '—' }}</div>
+        <div class="stat-card__label">Note moyenne</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-2">
+      <div class="stat-card">
+        <i data-lucide="leaf" style="width:26px;height:26px;stroke:#22c55e;margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value" style="color:#22c55e;">{{ (nombreReservations * 2.1)|number_format(0) }}</div>
+        <div class="stat-card__label">kg CO₂ économisé</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-2">
+      <div class="stat-card">
+        <i data-lucide="trending-up" style="width:26px;height:26px;stroke:var(--eco-accent);margin-bottom:0.4rem;"></i>
+        <div class="stat-card__value" style="color:var(--eco-accent);">{{ nombreTrajets + nombreReservations }}</div>
+        <div class="stat-card__label">Total trajets</div>
       </div>
     </div>
   </div>

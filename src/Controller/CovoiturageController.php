@@ -235,17 +235,20 @@ class CovoiturageController extends AbstractController
                 'date' => $trajet->getDateDepart()->format('d/m/Y'),
                 'heure' => $trajet->getHeureDepart()->format('H:i'),
                 'conducteur' => $trajet->getCreatedBy()->getFirstname(),
-                'ecologique' => $trajet->getVoiture()->getEnergie() === 'électique',
+                'ecologique' => $trajet->getVoiture()->getEnergie() === 'électrique',
             ];
         }
 
         return new JsonResponse($data);
     }
 
-    #[Route('/covoiturage/demarrer/{id}', name: 'covoiturage_demarrer')]
-    public function demarrer(Covoiturage $covoiturage, EntityManagerInterface $em): Response
+    #[Route('/demarrer/{id}', name: 'covoiturage_demarrer', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function demarrer(Request $request, Covoiturage $covoiturage, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        if (!$this->isCsrfTokenValid('demarrer' . $covoiturage->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide');
+        }
 
         if ($this->getUser() !== $covoiturage->getCreatedBy()) {
             throw $this->createAccessDeniedException();
@@ -258,12 +261,13 @@ class CovoiturageController extends AbstractController
         return $this->redirectToRoute('user_trajets');
     }
 
-
-
-    #[Route('/covoiturage/arriver/{id}', name: 'covoiturage_arriver')]
-    public function arriver(Covoiturage $covoiturage, EntityManagerInterface $em): Response
+    #[Route('/arriver/{id}', name: 'covoiturage_arriver', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function arriver(Request $request, Covoiturage $covoiturage, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        if (!$this->isCsrfTokenValid('arriver' . $covoiturage->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide');
+        }
 
         if ($this->getUser() !== $covoiturage->getCreatedBy()) {
             throw $this->createAccessDeniedException();

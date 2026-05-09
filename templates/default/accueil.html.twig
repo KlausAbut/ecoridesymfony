@@ -4,81 +4,112 @@
 
 {% block body %}
 
-  {# --- Carousel d'accueil --- #}
-  {% include 'default/carousel.html.twig' %}
+{# --- Carousel --- #}
+{% include 'default/carousel.html.twig' %}
 
-  {# --- Section mission --- #}
-    <section class="section-box text-center">
-      <h2 class="mb-4 text-success">Bienvenue sur EcoRide</h2>
-      <p class="lead mb-5">
-        Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
-      </p>
-      <div class="row justify-content-center">
-        <div class="col-md-5 mb-4">
-          <div class="card p-3 shadow-sm">
-            <img src="{{ asset('build/images/eco9.jpg') }}" alt="Mission" class="mb-3 img-fluid">
-            <div class="card-body">
-              <h5 class="card-title">Notre mission</h5>
-              <p class="card-text">Faites des économies… nouvelles rencontres !</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-5 mb-4">
-          <div class="card p-3 shadow-sm">
-            <img src="{{ asset('build/images/eco10.jpg') }}" alt="Mission" class="mb-3 img-fluid">
-            <div class="card-body">
-              <h5 class="card-title">Rejoignez la communauté</h5>
-              <p class="card-text">Des centaines de trajets proposés… le vôtre !</p>
-            </div>
+<div class="page-wrapper">
+
+  {# --- Mission --- #}
+  <section class="section-box text-center">
+    <h2 class="mb-2">🌿 Bienvenue sur EcoRide</h2>
+    <p class="lead mb-5" style="max-width: 600px; margin: 0 auto 2rem;">
+      Réduisez votre impact carbone et faites des économies grâce au covoiturage responsable.
+    </p>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-5">
+        <div class="card h-100 text-start">
+          <img src="{{ asset('build/images/eco9.jpg') }}" alt="Mission" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          <div class="card-body p-4">
+            <h5 class="card-title">🎯 Notre mission</h5>
+            <p class="card-text">Faites des économies tout en réduisant votre empreinte carbone. Chaque trajet partagé compte.</p>
           </div>
         </div>
       </div>
-    </section>
+      <div class="col-md-5">
+        <div class="card h-100 text-start">
+          <img src="{{ asset('build/images/eco10.jpg') }}" alt="Communauté" class="card-img-top" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          <div class="card-body p-4">
+            <h5 class="card-title">👥 Rejoignez la communauté</h5>
+            <p class="card-text">Des centaines de trajets proposés chaque jour. Trouvez le vôtre en quelques clics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    {# --- Recherche de covoiturages --- #}
-    <section id="recherche" class="section-box text-center">
-      <h2 class="mb-4 text-success">Rechercher covoiturage</h2>
-
-      <form id="formRecherche" class="d-flex flex-wrap gap-2 justify-content-center bg-white p-3 rounded shadow-sm">
-        <input type="text" id="depart" name="depart" class="form-control w-auto" placeholder="Départ">
-        <input type="text" id="arrivee" name="arrivee" class="form-control w-auto" placeholder="Arrivée">
-        <input type="date" id="date" name="date" class="form-control w-auto">
-        <input type="number" id="prix" name="prix" class="form-control w-auto" placeholder="Prix max (€)">
-        <input type="number" id="note" name="note" class="form-control w-auto" placeholder="Note min">
-        <select id="energie" name="energie" class="form-select w-auto">
-          <option value="">Énergie</option>
+  {# --- Recherche --- #}
+  <section id="recherche" class="section-box">
+    <h2 class="text-center mb-4">🔍 Rechercher un covoiturage</h2>
+    <form id="formRecherche" class="row g-3 align-items-end justify-content-center">
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">Départ</label>
+        <input type="text" id="depart" name="depart" class="form-control" placeholder="Ville de départ">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">Arrivée</label>
+        <input type="text" id="arrivee" name="arrivee" class="form-control" placeholder="Ville d'arrivée">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">Date</label>
+        <input type="date" id="date" name="date" class="form-control">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">Prix max (€)</label>
+        <input type="number" id="prix" name="prix" class="form-control" placeholder="Ex: 30">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <label class="form-label small fw-semibold">Énergie</label>
+        <select id="energie" name="energie" class="form-select">
+          <option value="">Toutes</option>
           <option value="électrique">Électrique</option>
           <option value="essence">Essence</option>
           <option value="diesel">Diesel</option>
         </select>
-        <button type="submit" class="btn btn-success">Rechercher</button>
-      </form>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-2">
+        <button type="submit" class="btn btn-success w-100">Rechercher</button>
+      </div>
+    </form>
 
-      <div id="loadingSpinner" class="text-center my-3 d-none">Chargement...</div>
-      <div id="resultatsTrajets"></div>
-    </section>
+    <div id="loadingSpinner" class="text-center my-4 d-none">
+      <div class="spinner-border text-success" role="status"></div>
+      <p class="mt-2 text-muted small">Recherche en cours…</p>
+    </div>
+    <div id="resultatsTrajets" class="mt-4"></div>
+  </section>
 
-    {# --- Avis utilisateurs --- #}
-    <section id="avis" class="text-center">
-      <h2 class="mb-4 text-success"></h2>
-      {% include 'default/avis.html.twig' %}
-    </section>
+  {# --- Avis --- #}
+  <section id="avis" class="section-box text-center">
+    <h2 class="mb-4">⭐ Avis de nos utilisateurs</h2>
+    {% include 'default/avis.html.twig' %}
+  </section>
 
-    {# --- Contact --- #}
-  <section id="contact" class="py-5 rounded">
-    <div class="container">
-      <h2 class="text-center mb-4">📬 Contactez-nous</h2>
-
-      <form method="post" class="d-flex flex-column gap-3 p-3 bg-white rounded shadow-sm mx-auto" style="max-width: 500px;">
-        <input type="text" name="nom" class="form-control" placeholder="Nom" required>
-        <input type="email" name="email" class="form-control" placeholder="Email" required>
-        <textarea name="message" rows="5" class="form-control" placeholder="Message" required></textarea>
-
-        <div class="text-center pt-2">
-          <button type="submit" class="btn btn-success">Envoyer</button>
-        </div>
-      </form>
+  {# --- Contact --- #}
+  <section id="contact" class="section-box">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <h2 class="text-center mb-4">📬 Contactez-nous</h2>
+        <form method="post" class="d-flex flex-column gap-3">
+          <div>
+            <label class="form-label small fw-semibold">Nom</label>
+            <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
+          </div>
+          <div>
+            <label class="form-label small fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="votre@email.com" required>
+          </div>
+          <div>
+            <label class="form-label small fw-semibold">Message</label>
+            <textarea name="message" rows="5" class="form-control" placeholder="Votre message…" required></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-success px-5">Envoyer</button>
+          </div>
+        </form>
+      </div>
     </div>
   </section>
+
+</div>
 
 {% endblock %}

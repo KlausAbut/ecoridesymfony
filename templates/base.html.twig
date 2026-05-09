@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,34 +7,101 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
-        window.routes = {
-                recherche: "{{ path('covoiturage_ajax_recherche') }}"
-            };
+        window.routes = { recherche: "{{ path('covoiturage_ajax_recherche') }}" };
+        // Applique le thème avant le premier rendu pour éviter le flash
+        (function() {
+            const theme = localStorage.getItem('ecoride-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
     </script>
     {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 </head>
 <body>
 
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success text-center mt-3">{{ message }}</div>
-        {% endfor %}
-    
-        {% include 'partials/navbar.html.twig' %}
-        <main class="main-content mt-4">
-            {% block body %}{% endblock %}
-        </main>
-        {% include 'partials/footer.html.twig' %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center mt-3 mx-3">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center mt-3 mx-3">{{ message }}</div>
+    {% endfor %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-            <script 
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        {% endblock %}
+    {% include 'partials/navbar.html.twig' %}
+
+    <main class="main-content mt-4">
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include 'partials/footer.html.twig' %}
+
+    {# Bouton flottant dark mode #}
+    <button id="darkModeToggle" aria-label="Basculer mode sombre">
+        <span id="darkModeIcon">🌙</span>
+    </button>
+    <div id="darkModeTooltip" style="
+        position: fixed; bottom: 5.4rem; right: 1.8rem;
+        background: var(--eco-surface); color: var(--eco-text);
+        border: 1px solid var(--eco-border); border-radius: 8px;
+        padding: 0.3rem 0.7rem; font-size: 0.78rem; font-weight: 500;
+        box-shadow: var(--shadow-md); pointer-events: none;
+        opacity: 0; transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        white-space: nowrap; z-index: 9998;
+    ">Mode sombre</div>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}
+
+    <script>
+        (function () {
+            const btn     = document.getElementById('darkModeToggle');
+            const icon    = document.getElementById('darkModeIcon');
+            const tooltip = document.getElementById('darkModeTooltip');
+            const html    = document.documentElement;
+
+            function applyTheme(theme, animate) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('ecoride-theme', theme);
+
+                if (animate) {
+                    icon.style.transform = 'rotate(-180deg) scale(0.5)';
+                    icon.style.opacity   = '0';
+                    setTimeout(function () {
+                        icon.textContent     = theme === 'dark' ? '☀️' : '🌙';
+                        tooltip.textContent  = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
+                        icon.style.transform = '';
+                        icon.style.opacity   = '';
+                    }, 180);
+                } else {
+                    icon.textContent    = theme === 'dark' ? '☀️' : '🌙';
+                    tooltip.textContent = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
+                }
+            }
+
+            icon.style.transition = 'transform 0.18s ease, opacity 0.18s ease';
+
+            applyTheme(localStorage.getItem('ecoride-theme') || 'light', false);
+
+            btn.addEventListener('click', function () {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(next, true);
+            });
+
+            btn.addEventListener('mouseenter', function () {
+                tooltip.style.opacity   = '1';
+                tooltip.style.transform = 'translateY(0)';
+            });
+            btn.addEventListener('mouseleave', function () {
+                tooltip.style.opacity   = '0';
+                tooltip.style.transform = 'translateY(6px)';
+            });
+        })();
+    </script>
 </body>
 </html>

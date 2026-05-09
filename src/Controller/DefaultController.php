@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Participation;
+use App\Enum\AvisStatut;
 use App\Enum\CovoiturageStatut;
 use App\Document\UserCredit;
 use App\Repository\AvisRepository;
@@ -32,21 +33,13 @@ class DefaultController extends AbstractController
         );
     }
 
-    $avisList = $avisRepo->findBy(['statut' => 'VALIDÉ'], ['id' => 'DESC'], 10);
+    $avisList = $avisRepo->findBy(['statut' => AvisStatut::VALIDE], ['id' => 'DESC'], 10);
 
     $credit = null;
     $user = $this->getUser();
 
     if ($user) {
         $credit = $dm->getRepository(UserCredit::class)->findOneBy(['userId' => $user->getId()]);
-
-        if (!$credit) {
-            $credit = new UserCredit();
-            $credit->setUserId($user->getId()); 
-            $credit->setAmount(20);
-            $dm->persist($credit);
-            $dm->flush();
-        }
     }
 
     return $this->render('default/accueil.html.twig', [
@@ -119,7 +112,7 @@ class DefaultController extends AbstractController
     $nombreTrajets = $covoiturageRepo->count(['createdBy' => $user]);
     $nombreReservations = $participationRepo->count(['user' => $user]);
 
-    $avis = $avisRepo->findBy(['user' => $user, 'statut' => 'VALIDÉ']);
+    $avis = $avisRepo->findBy(['user' => $user, 'statut' => AvisStatut::VALIDE]);
     $noteMoyenne = null;
     if (count($avis) > 0) {
         $noteMoyenne = array_sum(array_map(fn($a) => $a->getNote(), $avis)) / count($avis);

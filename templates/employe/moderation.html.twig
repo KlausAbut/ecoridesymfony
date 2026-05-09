@@ -15,12 +15,19 @@
         <div class="col-md-6 mb-4">
           <div class="card shadow-sm p-3">
             <p><strong>⭐ {{ a.note }}/5</strong></p>
-            <p class="fst-italic">“{{ a.commentaire }}”</p>
+            <p class="fst-italic">"{{ a.commentaire }}"</p>
             <p class="text-muted mb-2">Par : {{ a.user.firstname }}</p>
 
             <div class="d-flex gap-2">
-              <a href="{{ path('employe_avis_valider', {id: a.id}) }}" class="btn btn-outline-success btn-sm">✅ Valider</a>
-              <a href="{{ path('employe_avis_supprimer', {id: a.id}) }}" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</a>
+              <form method="post" action="{{ path('employe_avis_valider', {id: a.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('avis_valider' ~ a.id) }}">
+                <button type="submit" class="btn btn-outline-success btn-sm">✅ Valider</button>
+              </form>
+              <form method="post" action="{{ path('employe_avis_supprimer', {id: a.id}) }}"
+                    onsubmit="return confirm('Supprimer cet avis ?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('avis_supprimer' ~ a.id) }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">🗑️ Supprimer</button>
+              </form>
             </div>
           </div>
         </div>

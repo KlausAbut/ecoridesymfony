@@ -1,26 +1,62 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Covoiturages{% endblock %}
+
 {% block body %}
+<div class="page-wrapper">
+  <div class="section-box">
 
-    <h1>List des covoiturage</h1>
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+      <h1 class="mb-0">🚗 Covoiturages disponibles</h1>
+      {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.isConducteur %}
+        <a href="{{ path('covoiturage_create') }}" class="btn btn-success">➕ Proposer un trajet</a>
+      {% endif %}
+    </div>
 
-   <h1 class="mb-4">🚗 Liste des covoiturages</h1>
-
+    {% if covoiturages is empty %}
+      <div class="text-center py-5">
+        <p class="text-muted fs-5">Aucun covoiturage disponible pour le moment.</p>
+        <a href="{{ path('index') }}#recherche" class="btn btn-outline-success mt-2">🔍 Faire une recherche</a>
+      </div>
+    {% else %}
+      <div class="row g-4">
         {% for covoiturage in covoiturages %}
-        <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}" class="text-decoration-none text-dark">
-            <div class="card mb-3 p-3 shadow-sm hover-shadow-sm">
-            <h5 class="mb-1">{{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</h5>
-            <p class="mb-0">
-                <small>
-                🗓️ {{ covoiturage.dateDepart|date('d/m/Y') }} à {{ covoiturage.heureDepart|date('H:i') }}<br>
-                🚘 Voiture : {{ covoiturage.voiture.modele ?? 'Non spécifiée' }}<br>
-                👤 Conducteur : {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}
-                </small>
-            </p>
-            </div>
-        </a>
-        {% else %}
-        <p class="text-muted">Aucun covoiturage disponible.</p>
-        {% endfor %}
+          <div class="col-md-6 col-xl-4">
+            <a href="{{ path('covoiturage_show', {'id': covoiturage.id}) }}" class="text-decoration-none">
+              <div class="card h-100 hover-shadow-sm">
+                <div class="card-body p-4">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0">
+                      {{ covoiturage.lieuDepart }}
+                      <span style="color: var(--eco-secondary);">→</span>
+                      {{ covoiturage.lieuArrivee }}
+                    </h5>
+                    {% if covoiturage.voiture.energie == 'électrique' %}
+                      <span class="badge-eco ms-2 flex-shrink-0">🌿 Éco</span>
+                    {% endif %}
+                  </div>
 
-{% endblock %} 
+                  <ul class="list-unstyled mb-3" style="font-size: 0.9rem; color: var(--eco-text-muted);">
+                    <li class="mb-1">🗓️ {{ covoiturage.dateDepart|date('d/m/Y') }} à {{ covoiturage.heureDepart|date('H:i') }}</li>
+                    <li class="mb-1">🚘 {{ covoiturage.voiture.modele ?? 'Véhicule non spécifié' }}</li>
+                    <li class="mb-1">👤 {{ covoiturage.createdBy.firstname }} {{ covoiturage.createdBy.lastname }}</li>
+                    <li>💺 {{ covoiturage.nbPlace }} place{{ covoiturage.nbPlace > 1 ? 's' : '' }} restante{{ covoiturage.nbPlace > 1 ? 's' : '' }}</li>
+                  </ul>
+
+                  <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--eco-border);">
+                    <span style="font-size: 1.1rem; font-weight: 600; color: var(--eco-primary);">
+                      {{ covoiturage.prixPersonne }} €
+                    </span>
+                    <span class="btn btn-outline-success btn-sm">Voir le trajet →</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Enum\AvisStatut;
 use App\Repository\AvisRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,22 +25,30 @@ class EmployeController extends AbstractController
         ]);
     }
 
-    #[Route('/moderation/valider/{id}', name: 'avis_valider')]
-    public function validerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/moderation/valider/{id}', name: 'avis_valider', methods: ['POST'])]
+    public function validerAvis(int $id, Request $request, AvisRepository $repo, EntityManagerInterface $em): Response
     {
+        if (!$this->isCsrfTokenValid('avis_valider' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide');
+        }
+
         $avis = $repo->find($id);
         if ($avis) {
             $avis->setValide(true);
-            $avis->setStatut('VALIDÉ');
+            $avis->setStatut(AvisStatut::VALIDE);
             $em->flush();
             $this->addFlash('success', 'Avis validé avec succès.');
         }
         return $this->redirectToRoute('employe_moderation');
     }
 
-    #[Route('/moderation/supprimer/{id}', name: 'avis_supprimer')]
-    public function supprimerAvis(int $id, AvisRepository $repo, EntityManagerInterface $em): Response
+    #[Route('/moderation/supprimer/{id}', name: 'avis_supprimer', methods: ['POST'])]
+    public function supprimerAvis(int $id, Request $request, AvisRepository $repo, EntityManagerInterface $em): Response
     {
+        if (!$this->isCsrfTokenValid('avis_supprimer' . $id, $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide');
+        }
+
         $avis = $repo->find($id);
         if ($avis) {
             $em->remove($avis);

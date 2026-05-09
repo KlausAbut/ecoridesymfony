@@ -3,7 +3,7 @@ services:
     build: docker/php
     container_name: ecoride_symfony_php
     ports:
-      - 8080:80
+      - 8082:80
     volumes:
       - ./:/var/www
       - ./docker/php/vhosts:/etc/apache2/sites-enabled

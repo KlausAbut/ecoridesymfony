@@ -3,25 +3,57 @@
 {% block title %}À propos - EcoRide{% endblock %}
 
 {% block body %}
-<section class="py-5">
-  <div class="container">
-    <h1 class="text-success mb-4 text-center">À propos d’EcoRide</h1>
-    <div class="card p-4 shadow-sm">
-      <p>
-        <strong>EcoRide</strong> est une plateforme de covoiturage écologique pensée pour favoriser les trajets partagés, réduire les émissions de CO₂ et encourager une mobilité responsable.
-      </p>
-      <p>
-        Nous croyons que chaque trajet compte. En mettant en relation conducteurs et passagers, EcoRide permet d’optimiser les déplacements et de faire des économies tout en protégeant la planète.
-      </p>
-      <p>
-        🚗 Moins de voitures sur les routes<br>
-        💸 Moins de frais pour tous<br>
-        🌱 Un impact positif sur l’environnement
-      </p>
-      <p>
-        Rejoignez la communauté EcoRide et participez à une nouvelle manière de voyager, plus durable et solidaire.
-      </p>
+<div class="page-wrapper">
+
+  <div class="text-center mb-5">
+    <h1 class="mb-2">À propos d'EcoRide</h1>
+    <p class="lead text-muted" style="max-width: 600px; margin: 0 auto;">
+      Une plateforme de covoiturage écologique pensée pour favoriser les trajets partagés et encourager une mobilité responsable.
+    </p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card p-4 text-center h-100">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚗</div>
+        <h5>Moins de voitures</h5>
+        <p class="text-muted mb-0">Moins de véhicules sur les routes, moins d'embouteillages et une empreinte carbone réduite pour tous.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 text-center h-100">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">💸</div>
+        <h5>Économies partagées</h5>
+        <p class="text-muted mb-0">Conducteurs et passagers partagent les frais. Chaque trajet devient plus économique pour tout le monde.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 text-center h-100">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🌱</div>
+        <h5>Impact positif</h5>
+        <p class="text-muted mb-0">Chaque covoiturage compte. En voyageant ensemble, vous contribuez activement à la protection de la planète.</p>
+      </div>
     </div>
   </div>
-</section>
+
+  <div class="section-box">
+    <div class="row align-items-center g-4">
+      <div class="col-md-6">
+        <h2 class="mb-3">Notre mission</h2>
+        <p>
+          <strong>EcoRide</strong> met en relation conducteurs et passagers pour optimiser les déplacements du quotidien. Nous croyons que chaque trajet compte et que voyager ensemble est la clé d'un avenir plus durable.
+        </p>
+        <p class="mb-4">
+          Rejoignez notre communauté et participez à une nouvelle manière de voyager — plus solidaire, plus économique, plus verte.
+        </p>
+        <a href="{{ path('app_register') }}" class="btn btn-success px-4">Rejoindre EcoRide</a>
+      </div>
+      <div class="col-md-6 text-center">
+        <div style="font-size: 6rem; line-height: 1;">🌍</div>
+        <p class="text-muted mt-2">Ensemble, changeons nos habitudes</p>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

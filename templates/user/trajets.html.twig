@@ -62,9 +62,15 @@
               </td>
               <td class="d-flex flex-column gap-1">
                 {% if c.statut.value == 'DRAFT' %}
-                  <a href="{{ path('covoiturage_covoiturage_demarrer', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">🚦 Démarrer</a>
+                  <form method="post" action="{{ path('covoiturage_covoiturage_demarrer', {'id': c.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('demarrer' ~ c.id) }}">
+                    <button type="submit" class="btn btn-outline-primary btn-sm w-100">🚦 Démarrer</button>
+                  </form>
                 {% elseif c.statut.value == 'PUBLISHED' %}
-                  <a href="{{ path('covoiturage_covoiturage_arriver', {'id': c.id}) }}" class="btn btn-outline-success btn-sm">✅ Arrivée</a>
+                  <form method="post" action="{{ path('covoiturage_covoiturage_arriver', {'id': c.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('arriver' ~ c.id) }}">
+                    <button type="submit" class="btn btn-outline-success btn-sm w-100">✅ Arrivée</button>
+                  </form>
                 {% endif %}
 
                 <a href="{{ path('covoiturage_edit', {'id': c.id}) }}" class="btn btn-outline-primary btn-sm">✏️</a>
@@ -83,7 +89,7 @@
               </td>
 
               <td>
-                {% set avisValides = c.getAvis|filter(v => v.statut == 'VALIDÉ') %}
+                {% set avisValides = c.getAvis|filter(v => v.statut.value == 'VALIDÉ') %}
                 {% if avisValides is empty %}
                   <span class="text-muted small">Aucun</span>
                 {% else %}

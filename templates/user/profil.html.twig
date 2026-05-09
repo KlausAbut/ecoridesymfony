@@ -1,116 +1,279 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon profil{% endblock %}
+{% block title %}Dashboard — EcoRide{% endblock %}
 
 {% block body %}
-{% if app.user %}
-<section class="section-box">
-  <h2 class="text-center text-success mb-4">👤 Mon Profil</h2>
+{% if not app.user %}
+  <div class="page-wrapper">
+    <div class="section-box text-center py-5">
+      <p class="fs-5 text-muted mb-4">Connectez-vous pour accéder à votre espace.</p>
+      <a href="{{ path('app_login') }}" class="btn btn-success px-5">Se connecter</a>
+    </div>
+  </div>
+{% else %}
+<div class="page-wrapper">
 
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="card shadow-sm p-4 bg-white mb-4">
-        <div class="row g-4 align-items-center">
-          <div class="col-md-4 text-center">
-            {% if app.user.photo %}
-              <img src="data:image/jpeg;base64,{{ user.photo|convert_base64 }}" alt="Photo de profil" class="rounded-circle img-fluid" style="max-width: 150px;">
-            {% else %}
-              <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 150px;">
-            {% endif %}
-            <p class="mt-2 fw-semibold">{{ app.user.firstname }} {{ app.user.lastname }}</p>
-            <span class="badge bg-success">{{ credit.amount ?? 0 }} crédits</span>
+  {# ── HEADER DASHBOARD ── #}
+  <div class="dashboard-header mb-4">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      {% if app.user.photo %}
+        <img src="data:image/jpeg;base64,{{ user.photo|convert_base64 }}"
+             class="rounded-circle" style="width:64px;height:64px;object-fit:cover;border:3px solid var(--eco-secondary);">
+      {% else %}
+        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+             style="width:64px;height:64px;background:var(--eco-mint);font-size:1.8rem;border:3px solid var(--eco-secondary);">👤</div>
+      {% endif %}
+      <div>
+        <h1 class="mb-0" style="font-size:1.7rem;">
+          Bonjour, {{ app.user.firstname }} 👋
+        </h1>
+        <p class="mb-0 text-muted" style="font-size:0.9rem;">
+          @{{ app.user.username }}
+          {% if app.user.isConducteur %}
+            &nbsp;·&nbsp;<span style="color:var(--eco-secondary);">🚘 Conducteur</span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {# ── STATS CARDS ── #}
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">🪙</div>
+        <div class="stat-value">{{ credit.amount ?? 0 }}</div>
+        <div class="stat-label">Crédits</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">🚗</div>
+        <div class="stat-value">{{ nombreTrajets }}</div>
+        <div class="stat-label">Trajets proposés</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value">{{ nombreReservations }}</div>
+        <div class="stat-label">Réservations</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">{{ noteMoyenne is not null ? noteMoyenne|number_format(1) : '—' }}</div>
+        <div class="stat-label">Note moyenne</div>
+      </div>
+    </div>
+  </div>
+
+  {# ── CONTENU PRINCIPAL ── #}
+  <div class="row g-4">
+
+    {# Colonne principale #}
+    <div class="col-lg-8">
+
+      {# Actions rapides #}
+      <div class="card p-4 mb-4">
+        <h5 class="mb-3" style="color:var(--eco-primary);">⚡ Actions rapides</h5>
+        <div class="row g-2">
+          {% if app.user.isConducteur %}
+            <div class="col-6 col-sm-3">
+              <a href="{{ path('covoiturage_create') }}" class="quick-action">
+                <span style="font-size:1.6rem;">➕</span>
+                <span>Proposer un trajet</span>
+              </a>
+            </div>
+            <div class="col-6 col-sm-3">
+              <a href="{{ path('user_trajets') }}" class="quick-action">
+                <span style="font-size:1.6rem;">🛣️</span>
+                <span>Mes trajets</span>
+              </a>
+            </div>
+            <div class="col-6 col-sm-3">
+              <a href="{{ path('voiture_create') }}" class="quick-action">
+                <span style="font-size:1.6rem;">🚘</span>
+                <span>Ajouter voiture</span>
+              </a>
+            </div>
+          {% else %}
+            <div class="col-6 col-sm-3">
+              <a href="{{ path('covoiturage_list') }}" class="quick-action">
+                <span style="font-size:1.6rem;">🔍</span>
+                <span>Chercher trajet</span>
+              </a>
+            </div>
+            <div class="col-6 col-sm-3">
+              <a href="{{ path('user_become_conducteur') }}" class="quick-action"
+                 onclick="return confirm('Devenir conducteur ?')">
+                <span style="font-size:1.6rem;">🚘</span>
+                <span>Devenir conducteur</span>
+              </a>
+            </div>
+          {% endif %}
+          <div class="col-6 col-sm-3">
+            <a href="{{ path('user_reservations') }}" class="quick-action">
+              <span style="font-size:1.6rem;">📋</span>
+              <span>Mes réservations</span>
+            </a>
           </div>
-
-          <div class="col-md-8">
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item"><strong>Nom d’utilisateur :</strong> {{ app.user.username }}</li>
-              <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
-              <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
-              <li class="list-group-item"><strong>Adresse :</strong> {{ app.user.adresse }}</li>
-              <li class="list-group-item"><strong>Date de naissance :</strong> {{ app.user.dateNaissance|date('d/m/Y') }}</li>
-              <li class="list-group-item"><strong>Statut :</strong>
-                {% if app.user.isConducteur %}
-                  <span class="text-success">Conducteur</span>
-                {% else %}
-                  <span class="text-secondary">Utilisateur</span>
-                {% endif %}
-              </li>
-            </ul>
-
-            <h5 class="text-success mt-4"><i class="bi bi-bar-chart-line"></i> Statistiques</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">🚗 Trajets proposés : {{ nombreTrajets }}</li>
-              <li class="list-group-item">📅 Trajets réservés : {{ nombreReservations }}</li>
-              <li class="list-group-item">⭐ Note moyenne : {{ noteMoyenne is not null ? noteMoyenne|number_format(1) ~ '/5' : 'Aucune' }}</li>
-              <li class="list-group-item">📝 Nombre d’avis reçus : {{ nbAvis }}</li>
-            </ul>
-
-            {% if not app.user.isConducteur %}
-              <form method="post" action="{{ path('user_become_conducteur') }}" class="mt-3">
-                <button class="btn btn-success w-100">🚘 Devenir conducteur</button>
-              </form>
-            {% endif %}
+          <div class="col-6 col-sm-3">
+            <a href="{{ path('avis_list') }}" class="quick-action">
+              <span style="font-size:1.6rem;">⭐</span>
+              <span>Voir les avis</span>
+            </a>
           </div>
         </div>
       </div>
 
-      {# --- Trajets à rejoindre --- #}
+      {# Trajets disponibles (passager) #}
       {% if not app.user.isConducteur and 'ROLE_ADMIN' not in app.user.roles %}
-        <div class="section-box bg-white">
-          <h3 class="text-success">🌍 Trajets disponibles</h3>
-          {% for trajet in all_covoiturages %}
-            <div class="card mb-2 p-3">
-              <strong>{{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}</strong> — {{ trajet.dateDepart|date('d/m/Y') }}
-              <form method="post" action="{{ path('covoiturage_covoiturage_participer', {'id': trajet.id}) }}" class="mt-2">
-                <input type="hidden" name="_token" value="{{ csrf_token('participer' ~ trajet.id) }}">
-                <button type="submit" class="btn btn-sm btn-success">Participer (1 crédit)</button>
-              </form>
-            </div>
+        <div class="card p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0" style="color:var(--eco-primary);">🌍 Trajets disponibles</h5>
+            <a href="{{ path('covoiturage_list') }}" style="font-size:0.85rem;color:var(--eco-secondary);">Voir tout →</a>
+          </div>
+          {% if all_covoiturages is empty %}
+            <p class="text-muted mb-0">Aucun trajet disponible pour le moment.</p>
           {% else %}
-            <p class="text-muted">Aucun trajet disponible actuellement.</p>
-          {% endfor %}
+            <div class="d-flex flex-column gap-2">
+              {% for trajet in all_covoiturages|slice(0, 5) %}
+                <div class="trip-row">
+                  <div class="trip-info">
+                    <div class="fw-semibold">{{ trajet.lieuDepart }} → {{ trajet.lieuArrivee }}</div>
+                    <div class="text-muted" style="font-size:0.82rem;">{{ trajet.dateDepart|date('d/m/Y') }} · {{ trajet.prixPersonne }} €</div>
+                  </div>
+                  <form method="post" action="{{ path('covoiturage_covoiturage_participer', {'id': trajet.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('participer' ~ trajet.id) }}">
+                    <button type="submit" class="btn btn-sm btn-success">1 💰</button>
+                  </form>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
       {% endif %}
 
-      {# --- Si conducteur : voitures + trajets --- #}
+      {# Covoiturages conducteur #}
       {% if app.user.isConducteur %}
-        <div class="section-box bg-white">
-          <h3 class="text-success">🚗 Mes voitures</h3>
-          {% for voiture in voitures %}
-            <div class="card mb-2 p-3">
-              <strong>{{ voiture.modele }}</strong> – {{ voiture.immatriculation }}
-              <div class="mt-2">
-                <a href="{{ path('voiture_edit', {'id': voiture.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
-                <a href="{{ path('voiture_delete', {'id': voiture.id}) }}" class="btn btn-sm btn-danger">🗑️ Supprimer</a>
-              </div>
-            </div>
+        <div class="card p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0" style="color:var(--eco-primary);">🛣️ Mes derniers trajets</h5>
+            <a href="{{ path('user_trajets') }}" style="font-size:0.85rem;color:var(--eco-secondary);">Voir tout →</a>
+          </div>
+          {% if covoiturages is empty %}
+            <p class="text-muted mb-0">Aucun trajet proposé.</p>
+            <a href="{{ path('covoiturage_create') }}" class="btn btn-success btn-sm mt-3">➕ Proposer mon premier trajet</a>
           {% else %}
-            <p class="text-muted">Aucune voiture enregistrée.</p>
-          {% endfor %}
-          <a href="{{ path('voiture_create') }}" class="btn btn-success mt-3">➕ Ajouter une voiture</a>
+            <div class="d-flex flex-column gap-2">
+              {% for cov in covoiturages|slice(0, 5) %}
+                <div class="trip-row">
+                  <div class="trip-info">
+                    <div class="fw-semibold">{{ cov.lieuDepart }} → {{ cov.lieuArrivee }}</div>
+                    <div class="text-muted" style="font-size:0.82rem;">{{ cov.dateDepart|date('d/m/Y') }}</div>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge-eco" style="font-size:0.75rem;">{{ cov.statut.value }}</span>
+                    <a href="{{ path('covoiturage_edit', {'id': cov.id}) }}" class="btn btn-sm btn-outline-primary">✏️</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
 
-          <hr class="my-4">
-          <h3 class="text-success">🛣️ Mes covoiturages</h3>
-          {% for covoiturage in covoiturages %}
-            <div class="card mb-2 p-3">
-              <strong>{{ covoiturage.lieuDepart }} → {{ covoiturage.lieuArrivee }}</strong> — {{ covoiturage.dateDepart|date('d/m/Y') }}
-              <div class="mt-2">
-                <a href="{{ path('covoiturage_edit', {'id': covoiturage.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
-                <a href="{{ path('covoiturage_delete', {'id': covoiturage.id}) }}" class="btn btn-sm btn-danger">🗑️ Supprimer</a>
-              </div>
-            </div>
+        {# Voitures #}
+        <div class="card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0" style="color:var(--eco-primary);">🚘 Mes voitures</h5>
+            <a href="{{ path('voiture_create') }}" class="btn btn-success btn-sm">➕ Ajouter</a>
+          </div>
+          {% if voitures is empty %}
+            <p class="text-muted mb-0">Aucune voiture enregistrée.</p>
           {% else %}
-            <p class="text-muted">Aucun covoiturage proposé.</p>
-          {% endfor %}
-          <a href="{{ path('covoiturage_create') }}" class="btn btn-success mt-3">➕ Proposer un trajet</a>
+            <div class="d-flex flex-column gap-2">
+              {% for voiture in voitures %}
+                <div class="trip-row">
+                  <div class="trip-info">
+                    <div class="fw-semibold">{{ voiture.modele }}</div>
+                    <div class="text-muted" style="font-size:0.82rem;">{{ voiture.immatriculation }} · {{ voiture.energie }}</div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="{{ path('voiture_edit', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-primary">✏️</a>
+                    <a href="{{ path('voiture_delete', {'id': voiture.id}) }}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Supprimer ?')">🗑️</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
       {% endif %}
+
+    </div>
+
+    {# Sidebar #}
+    <div class="col-lg-4">
+
+      {# Profil card #}
+      <div class="card p-4 mb-4">
+        <h5 class="mb-3" style="color:var(--eco-primary);">📋 Mon profil</h5>
+        <ul class="list-unstyled mb-0" style="font-size:0.88rem;">
+          <li class="profile-row">
+            <span class="text-muted">Email</span>
+            <span class="fw-semibold text-truncate">{{ app.user.email }}</span>
+          </li>
+          <li class="profile-row">
+            <span class="text-muted">Téléphone</span>
+            <span class="fw-semibold">{{ app.user.telephone }}</span>
+          </li>
+          <li class="profile-row">
+            <span class="text-muted">Adresse</span>
+            <span class="fw-semibold">{{ app.user.adresse }}</span>
+          </li>
+          <li class="profile-row" style="border:none;">
+            <span class="text-muted">Naissance</span>
+            <span class="fw-semibold">{{ app.user.dateNaissance|date('d/m/Y') }}</span>
+          </li>
+        </ul>
+      </div>
+
+      {# Crédits card #}
+      <div class="card p-4 mb-4 text-center" style="border-top-color: var(--eco-light);">
+        <div style="font-size:2.5rem;">🪙</div>
+        <div style="font-size:2.4rem;font-weight:700;color:var(--eco-primary);">{{ credit.amount ?? 0 }}</div>
+        <div class="text-muted mb-3">crédits disponibles</div>
+        <div class="progress" style="height:8px;background:var(--eco-border);border-radius:4px;">
+          <div class="progress-bar" style="width:{{ [(credit.amount ?? 0) * 5, 100]|min }}%;background:linear-gradient(90deg,var(--eco-secondary),var(--eco-primary));border-radius:4px;"></div>
+        </div>
+        <div class="text-muted mt-2" style="font-size:0.78rem;">1 crédit = 1 trajet</div>
+      </div>
+
+      {# Statut conducteur #}
+      {% if not app.user.isConducteur %}
+        <div class="card p-4 text-center" style="border-top-color: #f59e0b;">
+          <div style="font-size:2rem;">🚘</div>
+          <h6 class="mt-2 mb-2">Devenez conducteur</h6>
+          <p class="text-muted mb-3" style="font-size:0.85rem;">Proposez vos propres trajets et gagnez des crédits.</p>
+          <form method="post" action="{{ path('user_become_conducteur') }}">
+            <button class="btn btn-success w-100">Devenir conducteur</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="card p-4 text-center" style="border-top-color: var(--eco-secondary);">
+          <div style="font-size:2rem;">✅</div>
+          <h6 class="mt-2 mb-1">Conducteur actif</h6>
+          <p class="text-muted mb-3" style="font-size:0.85rem;">
+            {{ nombreTrajets }} trajet{{ nombreTrajets > 1 ? 's' : '' }} proposé{{ nombreTrajets > 1 ? 's' : '' }}
+          </p>
+          <a href="{{ path('covoiturage_create') }}" class="btn btn-success w-100">➕ Nouveau trajet</a>
+        </div>
+      {% endif %}
+
     </div>
   </div>
-</section>
-{% else %}
-<div class="alert alert-warning text-center my-5">
-  Veuillez vous connecter pour accéder à votre profil.
 </div>
 {% endif %}
 {% endblock %}

@@ -211,11 +211,6 @@ class CovoiturageController extends AbstractController
         $noteMin = $request->query->get('note');
         $energie = $request->query->get('energie');
 
-        if (!$depart || !$arrivee) {
-            return new JsonResponse(['error' => 'Départ et arrivée sont requis.'], 400);
-        }
-        
-
         $dateObj = null;
         if (!empty($date)) {
             $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
@@ -235,6 +230,7 @@ class CovoiturageController extends AbstractController
                 'date' => $trajet->getDateDepart()->format('d/m/Y'),
                 'heure' => $trajet->getHeureDepart()->format('H:i'),
                 'conducteur' => $trajet->getCreatedBy()->getFirstname(),
+                'prix' => $trajet->getPrixPersonne(),
                 'ecologique' => $trajet->getVoiture()->getEnergie() === 'électrique',
             ];
         }

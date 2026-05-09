@@ -7,23 +7,23 @@
 }" x-init="setInterval(() => next(), 5000)">
 
   {# Carte principale #}
-  <div class="position-relative" style="min-height: 200px;">
+  <div class="position-relative mx-auto" style="max-width: 620px; height: 220px;">
     {% for avis in avisList %}
       <div x-show="current === {{ loop.index0 }}"
-           x-transition:enter="transition ease-out duration-300"
-           x-transition:enter-start="opacity-0 transform translate-y-2"
-           x-transition:enter-end="opacity-100 transform translate-y-0"
+           x-transition:enter="transition ease-out duration-400"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
            x-transition:leave="transition ease-in duration-200"
            x-transition:leave-start="opacity-100"
            x-transition:leave-end="opacity-0"
-           style="display:none;">
-        <div class="card p-4 mx-auto" style="max-width: 620px; border-left: 4px solid var(--eco-secondary);">
+           style="display:none; position:absolute; top:0; left:0; right:0;">
+        <div class="card p-4" style="border-left: 4px solid var(--eco-secondary);">
           <div class="mb-3">
             {% for i in 1..5 %}
               <i data-lucide="star" style="width:18px;height:18px;stroke:#f59e0b;{{ i <= avis.note ? 'fill:#f59e0b;' : '' }}"></i>
             {% endfor %}
           </div>
-          <p class="fst-italic mb-3" style="font-size: 1.05rem; color: var(--eco-text); line-height: 1.7;">
+          <p class="fst-italic mb-3" style="font-size: 1rem; color: var(--eco-text); line-height: 1.6;">
             "{{ avis.commentaire }}"
           </p>
           <div class="d-flex align-items-center gap-2">

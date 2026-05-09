@@ -42,15 +42,21 @@ class CovoiturageRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function rechercherTrajets(string $depart, string $arrivee, ?\DateTime $date = null, ?float $prixMax = null, ?float $noteMin = null, ?string $energie = null): array
+    public function rechercherTrajets(?string $depart, ?string $arrivee, ?\DateTime $date = null, ?float $prixMax = null, ?float $noteMin = null, ?string $energie = null): array
     {
         $qb = $this->createQueryBuilder('c')
-        ->andWhere('LOWER(c.lieu_depart) = :depart')
-        ->andWhere('LOWER(c.lieu_arrivee) = :arrivee')
         ->andWhere('c.statut = :statut')
-        ->setParameter('depart', strtolower($depart))
-        ->setParameter('arrivee', strtolower($arrivee))
         ->setParameter('statut', CovoiturageStatut::PUBLISHED);
+
+        if (!empty($depart)) {
+            $qb->andWhere('LOWER(c.lieu_depart) LIKE :depart')
+               ->setParameter('depart', '%' . strtolower($depart) . '%');
+        }
+
+        if (!empty($arrivee)) {
+            $qb->andWhere('LOWER(c.lieu_arrivee) LIKE :arrivee')
+               ->setParameter('arrivee', '%' . strtolower($arrivee) . '%');
+        }
     
     if ($date) {
         $start = (clone $date)->setTime(0, 0);

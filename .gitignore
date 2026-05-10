@@ -31,3 +31,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+.env
+.DS_Store
+dump.sql
+*.dump
